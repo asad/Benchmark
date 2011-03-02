@@ -1,8 +1,5 @@
 package mcsbenchmark;
 
-import com.metamolecular.mx.io.daylight.SMILESReader;
-import com.metamolecular.mx.map.DefaultMapper;
-import com.metamolecular.mx.map.Mapper;
 import com.metamolecular.mx.model.Molecule;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,13 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.openscience.cdk.exception.CDKException;
-import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecule;
 import org.openscience.cdk.io.iterator.IIteratingChemObjectReader;
 import org.openscience.cdk.io.iterator.IteratingMDLReader;
 import org.openscience.cdk.isomorphism.UniversalIsomorphismTester;
 import org.openscience.cdk.nonotify.NoNotificationChemObjectBuilder;
-import org.openscience.cdk.smiles.SmilesGenerator;
 
 /**
  *
