@@ -54,7 +54,6 @@ public class MCSBenchMark {
             IMolecule query = (IMolecule) qFileReader.next();
             int smsdSolutionCount = 0;
             int uitSolutionCount = 0;
-            int mxSolutionCount = 0;
             long t0 = System.currentTimeMillis();
             for (IMolecule target : targets) {
                 smsdSolutionCount += getSMSDSolutionCount(query, target);
@@ -70,24 +69,8 @@ public class MCSBenchMark {
             timeNow = System.currentTimeMillis();
             long uitTime = timeNow - tUIT0;
 
-            Molecule queryMX = getMXMolecule(query);
-            for (IMolecule target : targets) {
-                Molecule targetMX = getMXMolecule(target);
-                targetsMX.add(targetMX);
-            }
-
-            long tMX0 = System.currentTimeMillis();
-            for (Molecule target : targetsMX) {
-                mxSolutionCount += getMXSolutionCount(queryMX, target);
-            }
-            timeNow = System.currentTimeMillis();
-            long mxTime = timeNow - tMX0;
-
-
-
-            String out = String.format("%d SMSDt %d SMSDs %d UITt %d UITs %d MXt %d MXs %d",
-                    counter, smsdTime, smsdSolutionCount, uitTime, uitSolutionCount,
-                    mxTime, mxSolutionCount);
+            String out = String.format("%d SMSDt %d SMSDs %d UITt %d UITs %d ",
+                    counter, smsdTime, smsdSolutionCount, uitTime, uitSolutionCount);
             System.out.println(out);
             counter++;
         }
@@ -100,16 +83,6 @@ public class MCSBenchMark {
         substructure.set(query, target);
 
         if (substructure.isSubgraph(true)) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    private static int getMXSolutionCount(Molecule query, Molecule target) throws CDKException {
-
-        Mapper mapper = new DefaultMapper(query);
-        if (mapper.hasMap(target)) {
             return 1;
         } else {
             return 0;
@@ -139,14 +112,5 @@ public class MCSBenchMark {
         return new IteratingMDLReader(
                 in, NoNotificationChemObjectBuilder.getInstance());
 
-    }
-
-    public static Molecule getMXMolecule(IAtomContainer cdkMolecule) throws CDKException, IOException {
-        SmilesGenerator sg = new SmilesGenerator(true);
-        String smiles = "";
-        smiles = sg.createSMILESWithoutCheckForMultipleMolecules(cdkMolecule, false, new boolean[cdkMolecule.getBondCount()]);
-        System.out.println("SMILE " + smiles);
-        Molecule mxMol = SMILESReader.read(smiles);
-        return mxMol;
     }
 }
