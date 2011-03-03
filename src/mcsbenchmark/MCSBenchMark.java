@@ -1,6 +1,5 @@
 package mcsbenchmark;
 
-import com.metamolecular.mx.model.Molecule;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -38,7 +37,6 @@ public class MCSBenchMark {
             throw new IOException("Unknown input type ");
         }
         List<IMolecule> targets = new ArrayList<IMolecule>();
-        List<Molecule> targetsMX = new ArrayList<Molecule>();
         IIteratingChemObjectReader tFileReader = read(tFile);
         while (tFileReader.hasNext()) {
             targets.add((IMolecule) tFileReader.next());
