@@ -38,12 +38,13 @@ import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.isomorphism.matchers.IQueryAtomContainer;
 import org.openscience.cdk.tools.ILoggingTool;
 import org.openscience.cdk.tools.LoggingToolFactory;
+import org.openscience.smsd.algorithm.rgraph.CDKMCS;
 import org.openscience.smsd.algorithm.vflib.interfaces.IMapper;
 import org.openscience.smsd.algorithm.vflib.interfaces.INode;
 import org.openscience.smsd.algorithm.vflib.interfaces.IQuery;
 import org.openscience.smsd.algorithm.vflib.map.VFMapper;
 import org.openscience.smsd.algorithm.vflib.query.QueryCompiler;
-import org.openscience.smsd.interfaces.AbstractSubGraph;
+import org.openscience.smsd.global.TimeOut;
 
 /**
  * This is an ultra fast method to report if query
@@ -62,7 +63,7 @@ import org.openscience.smsd.interfaces.AbstractSubGraph;
  * @author Syed Asad Rahman <asad@ebi.ac.uk>
  */
 @TestClass("org.openscience.cdk.smsd.algorithm.vflib.VFlibTurboHandlerTest")
-public class SubStructure extends AbstractSubGraph {
+public class SubStructure {
 
     private static List<Map<IAtom, IAtom>> allAtomMCS = null;
     private static Map<IAtom, IAtom> atomsMCS = null;
@@ -85,6 +86,11 @@ public class SubStructure extends AbstractSubGraph {
         atomsMCS = new HashMap<IAtom, IAtom>();
         firstMCS = new TreeMap<Integer, Integer>();
         allMCS = new ArrayList<Map<Integer, Integer>>();
+
+        TimeOut tmo = TimeOut.getInstance();
+        tmo.setCDKMCSTimeOut(0.15);
+        tmo.setMCSPlusTimeout(0.15);
+        tmo.setVFTimeout(0.15);
     }
 
     private void setFirstMappings() {
@@ -192,35 +198,34 @@ public class SubStructure extends AbstractSubGraph {
         }
     }
 
-    @Override
-    public boolean isSubgraph(boolean shouldMatchBonds) {
+    public boolean isSubgraph(boolean shouldMatchBonds) throws CDKException {
 
         setBondMatchFlag(shouldMatchBonds);
         if (getReactantMol().getAtomCount() > getProductMol().getAtomCount()) {
             return false;
         } else if ((isBondMatchFlag() && testIsSubgraphHeuristics(getReactantMol(), getProductMol()))
                 || !isBondMatchFlag()) {
-
-            IQuery query = null;
-            IMapper mapper = null;
-            vfLibSolutions = new ArrayList<Map<INode, IAtom>>();
-            if (queryMol != null) {
-                query = new QueryCompiler(queryMol).compile();
-                mapper = new VFMapper(query);
-                if (mapper.hasMap(getProductMol())) {
-                    return true;
-                } else {
-                    return false;
-                }
-
+            boolean flag = CDKMCS.isSubgraph(getProductMol(), getReactantMol(), shouldMatchBonds);
+            if (!CDKMCS.isTimeOut()) {
+                return flag;
             } else {
-                query = new QueryCompiler(mol1, isBondMatchFlag()).compile();
-                mapper = new VFMapper(query);
-                if (mapper.hasMap(getProductMol())) {
-                    return true;
+                IQuery query = null;
+                IMapper mapper = null;
+                vfLibSolutions = new ArrayList<Map<INode, IAtom>>();
+                if (queryMol != null) {
+                    query = new QueryCompiler(queryMol).compile();
+                    mapper = new VFMapper(query);
+                    if (mapper.hasMap(getProductMol())) {
+                        return true;
+                    }
                 } else {
-                    return false;
+                    query = new QueryCompiler(mol1, isBondMatchFlag()).compile();
+                    mapper = new VFMapper(query);
+                    if (mapper.hasMap(getProductMol())) {
+                        return true;
+                    }
                 }
+                return false;
             }
         } else {
             return false;
@@ -262,6 +267,54 @@ public class SubStructure extends AbstractSubGraph {
                     List<Map<INode, IAtom>> maps = mapper.getMaps(getProductMol());
                     if (maps != null) {
                         vfLibSolutions.addAll(maps);
+                    }
+                } else {
+                    return false;
+                }
+            }
+            setVFMappings(query);
+        }
+        if (!allAtomMCS.isEmpty()) {
+            setFirstMappings();
+        }
+        return (!allMCS.isEmpty() && allMCS.iterator().next().size() == getReactantMol().getAtomCount()) ? true : false;
+    }
+
+    /**
+     * 
+     * @param shouldMatchBonds
+     * @return
+     */
+    public boolean findSubgraph(boolean shouldMatchBonds) {
+
+        setBondMatchFlag(shouldMatchBonds);
+        if (getReactantMol().getAtomCount() > getProductMol().getAtomCount()) {
+            return false;
+        } else if ((isBondMatchFlag() && testIsSubgraphHeuristics(getReactantMol(), getProductMol()))
+                || !isBondMatchFlag()) {
+
+            IQuery query = null;
+            IMapper mapper = null;
+            vfLibSolutions = new ArrayList<Map<INode, IAtom>>();
+            if (queryMol != null) {
+                query = new QueryCompiler(queryMol).compile();
+                mapper = new VFMapper(query);
+                if (mapper.hasMap(getProductMol())) {
+                    Map<INode, IAtom> map = mapper.getFirstMap(getProductMol());
+                    if (map != null) {
+                        vfLibSolutions.add(map);
+                    }
+                } else {
+                    return false;
+                }
+
+            } else {
+                query = new QueryCompiler(mol1, isBondMatchFlag()).compile();
+                mapper = new VFMapper(query);
+                if (mapper.hasMap(getProductMol())) {
+                    Map<INode, IAtom> map = mapper.getFirstMap(getProductMol());
+                    if (map != null) {
+                        vfLibSolutions.add(map);
                     }
                 } else {
                     return false;
