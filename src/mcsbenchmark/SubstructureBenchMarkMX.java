@@ -16,7 +16,7 @@ import org.openscience.cdk.exception.CDKException;
  *
  * @author Asad
  */
-public class MCSBenchMarkMX {
+public class SubstructureBenchMarkMX {
 
     /**
      * @param args the command line arguments
