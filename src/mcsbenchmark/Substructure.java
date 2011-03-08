@@ -203,10 +203,10 @@ public class Substructure {
             return false;
         } else if ((isBondMatchFlag() && testIsSubgraphHeuristics(getReactantMol(), getProductMol()))
                 || !isBondMatchFlag()) {
-            boolean flag = CDKMCS.isSubgraph(getProductMol(), getReactantMol(), shouldMatchBonds);
-            if (!CDKMCS.isTimeOut()) {
-                return flag;
-            } else {
+            //boolean flag = CDKMCS.isSubgraph(getProductMol(), getReactantMol(), shouldMatchBonds);
+//            if (!CDKMCS.isTimeOut()) {
+//                return flag;
+//            } else {
                 IQuery query = null;
                 IMapper mapper = null;
                 vfLibSolutions = new ArrayList<Map<INode, IAtom>>();
@@ -224,7 +224,7 @@ public class Substructure {
                     }
                 }
                 return false;
-            }
+//            }
         } else {
             return false;
         }
