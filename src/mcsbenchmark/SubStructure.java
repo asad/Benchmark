@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import org.openscience.cdk.CDKConstants;
-import org.openscience.cdk.annotations.TestClass;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -62,8 +61,7 @@ import org.openscience.smsd.global.TimeOut;
  * @cdk.githash
  * @author Syed Asad Rahman <asad@ebi.ac.uk>
  */
-@TestClass("org.openscience.cdk.smsd.algorithm.vflib.VFlibTurboHandlerTest")
-public class SubStructure {
+public class Substructure {
 
     private static List<Map<IAtom, IAtom>> allAtomMCS = null;
     private static Map<IAtom, IAtom> atomsMCS = null;
@@ -76,12 +74,12 @@ public class SubStructure {
     private int vfMCSSize = -1;
     private boolean bond_Match_Flag = false;
     private final static ILoggingTool Logger =
-            LoggingToolFactory.createLoggingTool(SubStructure.class);
+            LoggingToolFactory.createLoggingTool(Substructure.class);
 
     /**
      * Constructor for VF Substructure Algorithm 
      */
-    public SubStructure() {
+    public Substructure() {
         allAtomMCS = new ArrayList<Map<IAtom, IAtom>>();
         atomsMCS = new HashMap<IAtom, IAtom>();
         firstMCS = new TreeMap<Integer, Integer>();

@@ -4,17 +4,15 @@ import gui.ImageGenerator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecule;
-import org.openscience.cdk.io.MDLV2000Writer;
 import org.openscience.cdk.io.iterator.IIteratingChemObjectReader;
 import org.openscience.cdk.io.iterator.IteratingMDLReader;
 import org.openscience.cdk.nonotify.NoNotificationChemObjectBuilder;
@@ -54,7 +52,7 @@ public class MCSBenchMark {
         int counter = 1;
 
         while (qFileReader.hasNext()) {
-            Map<Integer, List<Integer>> mapSol = new HashMap<Integer, List<Integer>>();
+            Map<Integer, List<Integer>> mapSol = new TreeMap<Integer, List<Integer>>();
             IMolecule query = (IMolecule) qFileReader.next();
 
             int index = 1;
@@ -66,36 +64,38 @@ public class MCSBenchMark {
                 l.add(3, 0);
                 l.add(4, 0);
                 l.add(5, 0);
-                mapSol.put(index, l);
-                MDLV2000Writer writer = new MDLV2000Writer(
-                        new FileWriter(new File(Integer.toString(index++) + ".mol")));
-                writer.write(target);
-                writer.close();
+                mapSol.put(index++, l);
+//                MDLV2000Writer writer = new MDLV2000Writer(
+//                        new FileWriter(new File(Integer.toString(index++) + ".mol")));
+//                writer.write(target);
+//                writer.close();
             }
-
 
             int smsdSolutionCount = 0;
             int uitSolutionCount = 0;
-            long t0 = System.currentTimeMillis();
+
+//            tFileReader = read(tFile);
+            long tUIT0 = System.currentTimeMillis();
             int tCounter = 1;
+            for (IMolecule target : targets) {
+                uitSolutionCount += getUITSolutionCount(tCounter, query, target, mapSol);
+                tCounter++;
+            }
+            long timeNow = System.currentTimeMillis();
+            long uitTime = timeNow - tUIT0;
+
+
+            long t0 = System.currentTimeMillis();
+            tCounter = 1;
             for (IMolecule target : targets) {
 //                System.out.println("ID " + target.getID());
                 smsdSolutionCount += getSMSDSolutionCount(tCounter, query, target, mapSol);
                 tCounter++;
             }
 //            
-            long timeNow = System.currentTimeMillis();
+            timeNow = System.currentTimeMillis();
             long smsdTime = (timeNow - t0);
 
-//            tFileReader = read(tFile);
-            long tUIT0 = System.currentTimeMillis();
-            tCounter = 1;
-            for (IMolecule target : targets) {
-                uitSolutionCount += getUITSolutionCount(tCounter, query, target, mapSol);
-                tCounter++;
-            }
-            timeNow = System.currentTimeMillis();
-            long uitTime = timeNow - tUIT0;
 //
 //            long tMCSPlus0 = System.currentTimeMillis();
 //            tCounter = 1;
