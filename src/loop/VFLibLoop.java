@@ -1,9 +1,9 @@
 package loop;
 
-import mcsbenchmark.VF2;
-import mcsbenchmark.VF2.AtomMapping;
 
 import org.openscience.cdk.interfaces.IMolecule;
+import vf2.AtomMapping;
+import vf2.VF2;
 
 public class VFLibLoop extends AbstractSubgraphIsomorphismLoop 
                        implements TimedSubgraphIsomorphismLoop {
