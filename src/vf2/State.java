@@ -1,4 +1,4 @@
-package vf;
+package vf2;
 
 import java.util.List;
 import org.openscience.cdk.CDKConstants;

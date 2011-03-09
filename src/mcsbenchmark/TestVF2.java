@@ -4,8 +4,8 @@ import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.exception.InvalidSmilesException;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.smiles.SmilesParser;
-import vf.AtomMapping;
-import vf.VF2;
+import vf2.AtomMapping;
+import vf2.VF2;
 
 public class TestVF2 {
 

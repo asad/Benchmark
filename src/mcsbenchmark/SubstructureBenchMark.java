@@ -12,8 +12,8 @@ import org.openscience.cdk.io.iterator.IIteratingChemObjectReader;
 import org.openscience.cdk.io.iterator.IteratingMDLReader;
 import org.openscience.cdk.isomorphism.UniversalIsomorphismTester;
 import org.openscience.cdk.nonotify.NoNotificationChemObjectBuilder;
-import vf.AtomMapping;
-import vf.VF2;
+import vf2.AtomMapping;
+import vf2.VF2;
 
 /**
  *
