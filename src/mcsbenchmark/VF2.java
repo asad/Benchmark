@@ -20,7 +20,7 @@ public class VF2 {
     // The SharedState class holds four vectors containing the mapping between
     // the two graphs and the terminal sets. It is shared between all the states
     // in each isomorphism test.
-    class SharedState {
+    public class SharedState {
 
         int[] sourceMapping;
         int[] targetMapping;
@@ -42,7 +42,7 @@ public class VF2 {
         }
     }
 
-    class Pair<T, S> {
+    public class Pair<T, S> {
 
         T first;
         S second;
@@ -58,7 +58,7 @@ public class VF2 {
         }
     }
 
-    class AtomMapping {
+    public class AtomMapping {
 
         private IAtomContainer a;
         private IAtomContainer b;
@@ -92,7 +92,7 @@ public class VF2 {
 
     // The State class represents a single state in the isomorphism detection
     // algorithm. Every state uses and modifies the same SharedState object.
-    class State {
+    public class State {
 
         int getSize() {
             return size;
@@ -412,7 +412,7 @@ public class VF2 {
         return sourceAtom.getSymbol().equals(targetAtom.getSymbol()) ? true : false;
     }
 
-    boolean match(State state, List<AtomMapping> mappings) {
+    boolean match(State state, List<AtomMapping> mappings, boolean getFirst) {
 //        System.out.println("Matched " + state.size + " out of " + state.source.getAtomCount());
         if (state.succeeded()) {
             mappings.add(state.getMapping());
@@ -435,8 +435,8 @@ public class VF2 {
             if (state.isFeasible(candidate)) {
                 State nextState = state;
                 nextState.addPair(candidate);
-                found = match(nextState, mappings);
-                if (found) {
+                found = match(nextState, mappings, getFirst);
+                if (getFirst && found) {
                     return true;
                 }
                 nextState.backTrack();
@@ -458,7 +458,7 @@ public class VF2 {
     // case
     // graph 'a' is the subgraph, implying a.size() < b.size(). In the case that
     // no isomorphism is found an empty mapping is returned.
-    AtomMapping isomorphism(IAtomContainer a, IAtomContainer b) {
+    public AtomMapping isomorphism(IAtomContainer a, IAtomContainer b) {
 //        AtomContainerPrinter printer = new AtomContainerPrinter();
         setIDs(a);
 //        System.out.println(printer.toString(a));
@@ -467,10 +467,17 @@ public class VF2 {
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
         if (testIsSubgraphHeuristics(a, b)) {
             State state = new State(a, b);
-            match(state, mappings);
+            match(state, mappings, true);
         }
 //        System.out.println("mapping count " + mappings.size());
         return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
+    }
+    
+    public List<AtomMapping> getAllMappings(IAtomContainer query, IAtomContainer target) {
+        State state = new State(query, target);
+        List<AtomMapping> mappings = new ArrayList<AtomMapping>();
+        match(state, mappings, false);
+        return mappings;
     }
 
     /**
