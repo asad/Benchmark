@@ -5,15 +5,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import loop.UITLoop;
+import loop.VFLibLoop;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.interfaces.IMolecule;
 import org.openscience.cdk.io.iterator.IIteratingChemObjectReader;
 import org.openscience.cdk.io.iterator.IteratingMDLReader;
-import org.openscience.cdk.isomorphism.UniversalIsomorphismTester;
+import org.openscience.cdk.io.iterator.IteratingSMILESReader;
 import org.openscience.cdk.nonotify.NoNotificationChemObjectBuilder;
-import vf2.AtomMapping;
-import vf2.VF2;
 
 /**
  *
@@ -27,13 +29,9 @@ public class SubstructureBenchMark {
      * @throws IOException
      * @throws CDKException  
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException, CDKException {
-        String queryFilePath = (args.length > 0) ? args[0] : "data/some.sdf";//"data/actives.sdf";
-        String targetFilePath = (args.length > 1) ? args[1] : "data/some.sdf";//"data/t.sdf";
-
-//        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
-//        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
-
+    public static void main(String[] args) throws FileNotFoundException, Exception {
+        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
+        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
         File qFile = new File(queryFilePath);
         File tFile = new File(targetFilePath);
 
@@ -42,95 +40,45 @@ public class SubstructureBenchMark {
         if (qFileReader == null) {
             throw new IOException("Unknown input type ");
         }
-        List<IAtomContainer> targets = new ArrayList<IAtomContainer>();
+        List<IMolecule> queries = new ArrayList<IMolecule>();
+        while (qFileReader.hasNext()) {
+            queries.add((IMolecule) qFileReader.next());
+        }
+        Collections.shuffle(queries);
+
+        List<IMolecule> targets = new ArrayList<IMolecule>();
         IIteratingChemObjectReader tFileReader = read(tFile);
         while (tFileReader.hasNext()) {
-            IAtomContainer ac = configure((IAtomContainer) tFileReader.next());
-            targets.add(ac);
+            targets.add((IMolecule) tFileReader.next());
         }
+        int counter = 1;
+        System.out.println(
+                "number of queries " + queries.size()
+                + " number of targets " + targets.size());
 
-        int counter = 0;
-        while (qFileReader.hasNext()) {
-            IAtomContainer query = (IAtomContainer) qFileReader.next();
-            query = configure(query);
+        for (IMolecule query : queries) {
+            String out = String.format("%d ", counter);
 
-//            AtomContainerPrinter printer = new AtomContainerPrinter();
-//            System.out.println(printer.toString(query));
+            UITLoop uitLoop = new UITLoop();
+            uitLoop.run(query, targets);
+            out += uitLoop;
 
+//            SMSDLoop smsdLoop = new SMSDLoop();
+//            smsdLoop.run(query, targets);
+//            out += smsdLoop;
 
-            int smsdSolutionCount = 0;
-            int uitSolutionCount = 0;
-            long t0 = System.currentTimeMillis();
-            for (IAtomContainer target : targets) {
-                smsdSolutionCount += getSMSDSolutionCount(query, target);
-            }
-            long timeNow = System.currentTimeMillis();
-            long smsdTime = (timeNow - t0);
+            VFLibLoop vfLibLoop = new VFLibLoop();
+            vfLibLoop.run(query, targets);
+            out += vfLibLoop;
 
-//            tFileReader = read(tFile);
-            long tUIT0 = System.currentTimeMillis();
-            for (IAtomContainer target : targets) {
-                uitSolutionCount += getUITSolutionCount(query, target);
-            }
-            timeNow = System.currentTimeMillis();
-            long uitTime = timeNow - tUIT0;
+//            MCSPlusLoop mcsPlusLoop = new MCSPlusLoop();
+//            mcsPlusLoop.run(query, targets);
+//            out += mcsPlusLoop;
 
-            String out = String.format("%d SMSDt %d SMSDs %d UITt %d UITs %d ",
-                    counter, smsdTime, smsdSolutionCount, uitTime, uitSolutionCount);
             System.out.println(out);
             counter++;
         }
 
-    }
-
-    private static int getSMSDSolutionCount(IAtomContainer query, IAtomContainer target) throws CDKException {
-
-//        Substructure substructure = new Substructure();
-//        substructure.set(query, target);
-//
-//        if (substructure.isSubgraph(true)) {
-//            return 1;
-//        } else {
-//            return 0;
-//        }
-
-        if (query.getAtomCount() <= target.getAtomCount()) {
-            VF2 matcher = new VF2();
-//            CDKSMILES cdkSmiles = new CDKSMILES();
-//            String a = cdkSmiles.getSMILES(query);
-//            String b = cdkSmiles.getSMILES(target);
-//            AtomMapping mapping = matcher.isomorphism(a, b);
-//            System.out.println("mapping " + mapping);
-            AtomMapping mapping = matcher.isomorphism(query, target);
-            if (!mapping.isEmpty()) {
-//                
-//                System.out.println("\nVF");
-//                System.out.println(cdkSmiles.getSMILES(query));
-//                System.out.println(cdkSmiles.getSMILES(target));
-//                System.out.println();
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-
-        return 0;
-    }
-
-    private static int getUITSolutionCount(IAtomContainer query, IAtomContainer target) throws CDKException {
-//       List bondMapping = UniversalIsomorphismTester.getSubgraphMaps(target, query);
-//       List<List<RMap>> sol = UniversalIsomorphismTester.makeAtomsMapsOfBondsMaps(bondMapping, target, query);
-        if (UniversalIsomorphismTester.isSubgraph(target, query)) {
-//            CDKSMILES cdkSmiles = new CDKSMILES();
-//            System.out.println("\nUIT");
-//            System.out.println(cdkSmiles.getSMILES(query));
-//            System.out.println(cdkSmiles.getSMILES(target));
-//            System.out.println();
-            return 1;
-        } else {
-            return 0;
-        }
-//       return sol.size();
     }
 
     /**
@@ -139,11 +87,18 @@ public class SubstructureBenchMark {
      * @return
      * @throws FileNotFoundException
      */
-    public static IIteratingChemObjectReader read(File file) throws FileNotFoundException {
-
+    public static IIteratingChemObjectReader read(File file) throws Exception {
         FileReader in = new FileReader(file);
-        return new IteratingMDLReader(
-                in, NoNotificationChemObjectBuilder.getInstance());
+        String path = file.getAbsolutePath();
+        if (path.endsWith(".sdf")) {
+            return new IteratingMDLReader(
+                    in, NoNotificationChemObjectBuilder.getInstance());
+        } else if (path.endsWith(".smi")) {
+            return new IteratingSMILESReader(
+                    in, NoNotificationChemObjectBuilder.getInstance());
+        } else {
+            throw new Exception("Unrecognised filetype " + path);
+        }
 
     }
 
