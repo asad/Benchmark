@@ -12,6 +12,10 @@ import org.openscience.cdk.io.iterator.IIteratingChemObjectReader;
 import org.openscience.cdk.io.iterator.IteratingMDLReader;
 import org.openscience.cdk.isomorphism.UniversalIsomorphismTester;
 import org.openscience.cdk.nonotify.NoNotificationChemObjectBuilder;
+import org.openscience.smsd.algorithm.vflib.interfaces.IMapper;
+import org.openscience.smsd.algorithm.vflib.interfaces.IQuery;
+import org.openscience.smsd.algorithm.vflib.map.VFMapper;
+import org.openscience.smsd.algorithm.vflib.query.QueryCompiler;
 
 /**
  *
@@ -70,16 +74,27 @@ public class SubstructureBenchMark {
 
     }
 
-    private static int getSMSDSolutionCount(IMolecule query, IMolecule target) throws CDKException {
+    private static int getSMSDSolutionCount(IMolecule queryMol, IMolecule target) throws CDKException {
 
-        Substructure substructure = new Substructure();
-        substructure.set(query, target);
+//        Substructure substructure = new Substructure();
+//        substructure.set(query, target);
+//
+//        if (substructure.isSubgraph(true)) {
+//            return 1;
+//        } else {
+//            return 0;
+//        }
 
-        if (substructure.isSubgraph(true)) {
+        IQuery query = null;
+        IMapper mapper = null;
+
+        query = new QueryCompiler(queryMol, true).compile();
+        mapper = new VFMapper(query);
+        if (mapper.hasMap(target)) {
             return 1;
-        } else {
-            return 0;
         }
+
+        return 0;
     }
 
     private static int getUITSolutionCount(IMolecule query, IMolecule target) throws CDKException {
