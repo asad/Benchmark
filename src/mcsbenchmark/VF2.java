@@ -18,59 +18,59 @@ public class VF2 {
     // the two graphs and the terminal sets. It is shared between all the states
     // in each isomorphism test.
     class SharedState {
-
+        
         int[] sourceMapping;
         int[] targetMapping;
         int[] sourceTerminalSet;
         int[] targetTerminalSet;
-
+        
         public SharedState(int sourceSize, int targetSize) {
             sourceMapping = new int[sourceSize];
             Arrays.fill(sourceMapping, -1);
-
+            
             targetMapping = new int[targetSize];
             Arrays.fill(targetMapping, -1);
-
+            
             sourceTerminalSet = new int[sourceSize];
             Arrays.fill(sourceTerminalSet, 0);
-
+            
             targetTerminalSet = new int[targetSize];
             Arrays.fill(targetTerminalSet, 0);
         }
     }
-
+    
     class Pair<T, S> {
-
+        
         T first;
         S second;
-
+        
         Pair(T a, S b) {
             this.first = a;
             this.second = b;
         }
-
+        
         @Override
         public String toString() {
             return "(" + first + ", " + second + ")";
         }
     }
-
+    
     class AtomMapping {
-
+        
         private IAtomContainer a;
         private IAtomContainer b;
         private Map<IAtom, IAtom> mapping;
-
+        
         public AtomMapping(IAtomContainer a, IAtomContainer b) {
             this.a = a;
             this.b = b;
             this.mapping = new HashMap<IAtom, IAtom>();
         }
-
+        
         public void add(IAtom atom1, IAtom atom2) {
             mapping.put(atom1, atom2);
         }
-
+        
         @Override
         public String toString() {
             String s = "[";
@@ -81,7 +81,7 @@ public class VF2 {
             }
             return s + "]";
         }
-
+        
         public boolean isEmpty() {
             return mapping.isEmpty();
         }
@@ -90,23 +90,23 @@ public class VF2 {
     // The State class represents a single state in the isomorphism detection
     // algorithm. Every state uses and modifies the same SharedState object.
     class State {
-
+        
         int getSize() {
             return size;
         }
-
+        
         IAtomContainer getSource() {
             return source;
         }
-
+        
         IAtomContainer getTarget() {
             return target;
         }
-
+        
         IAtom sourceAtom(int index) {
             return source.getAtom(index);
         }
-
+        
         IAtom targetAtom(int index) {
             return target.getAtom(index);
         }
@@ -118,7 +118,7 @@ public class VF2 {
         Pair<Integer, Integer> lastAddition;
         SharedState sharedState;
         boolean ownSharedState;
-
+        
         State(IAtomContainer source, IAtomContainer target) {
             this.size = 0;
             this.sourceTerminalSize = 0;
@@ -130,7 +130,7 @@ public class VF2 {
                     target.getAtomCount());
             this.ownSharedState = true;
         }
-
+        
         State(State state) {
             this.size = state.size;
             this.sourceTerminalSize = state.sourceTerminalSize;
@@ -151,12 +151,12 @@ public class VF2 {
         // object.
         AtomMapping getMapping() {
             AtomMapping mapping = new AtomMapping(source, target);
-
+            
             for (int i = 0; i < size; i++) {
                 mapping.add(source.getAtom(i),
                         target.getAtom(sharedState.sourceMapping[i]));
             }
-
+            
             return mapping;
         }
 
@@ -169,20 +169,20 @@ public class VF2 {
                 Pair<Integer, Integer> lastCandidate) {
             int lastSourceAtom = lastCandidate.first;
             int lastTargetAtom = lastCandidate.second;
-
+            
             int sourceSize = source.getAtomCount();
             int targetSize = target.getAtomCount();
-
+            
             if (lastSourceAtom == -1) {
                 lastSourceAtom = 0;
             }
-
+            
             if (lastTargetAtom == -1) {
                 lastTargetAtom = 0;
             } else {
                 lastTargetAtom++;
             }
-
+            
             if (sourceTerminalSize > size && targetTerminalSize > size) {
                 while (lastSourceAtom < sourceSize
                         && (sharedState.sourceMapping[lastSourceAtom] != -1 || sharedState.sourceTerminalSet[lastSourceAtom] == 0)) {
@@ -196,7 +196,7 @@ public class VF2 {
                     lastTargetAtom = 0;
                 }
             }
-
+            
             if (sourceTerminalSize > size && targetTerminalSize > size) {
                 while (lastTargetAtom < targetSize
                         && (sharedState.targetMapping[lastTargetAtom] != -1 || sharedState.targetTerminalSet[lastTargetAtom] == 0)) {
@@ -208,11 +208,11 @@ public class VF2 {
                     lastTargetAtom++;
                 }
             }
-
+            
             if (lastSourceAtom < sourceSize && lastTargetAtom < targetSize) {
                 return new Pair<Integer, Integer>(lastSourceAtom, lastTargetAtom);
             }
-
+            
             return new Pair<Integer, Integer>(-1, -1);
         }
 
@@ -222,23 +222,23 @@ public class VF2 {
         void addPair(Pair<Integer, Integer> candidate) {
             size++;
             lastAddition = candidate;
-
+            
             int sourceAtom = candidate.first;
             int targetAtom = candidate.second;
-
+            
             if (sharedState.sourceTerminalSet[sourceAtom] < 1) {
                 sharedState.sourceTerminalSet[sourceAtom] = size;
                 // m_sourceTerminalSize++;
             }
-
+            
             if (sharedState.targetTerminalSet[targetAtom] < 1) {
                 sharedState.targetTerminalSet[targetAtom] = size;
                 // m_targetTerminalSize++;
             }
-
+            
             sharedState.sourceMapping[sourceAtom] = targetAtom;
             sharedState.targetMapping[targetAtom] = sourceAtom;
-
+            
             List<IAtom> sourceNeighbours =
                     source.getConnectedAtomsList(source.getAtom(sourceAtom));
             for (IAtom neighbor : sourceNeighbours) {
@@ -248,7 +248,7 @@ public class VF2 {
                     sourceTerminalSize++;
                 }
             }
-
+            
             List<IAtom> targetNeighbours = target.getConnectedAtomsList(target.getAtom(targetAtom));
             for (IAtom neighbor : targetNeighbours) {
                 int neighbourIndex = target.getAtomNumber(neighbor);
@@ -268,11 +268,11 @@ public class VF2 {
                 return;   // XXX hack
             }
             int addedSourceAtom = lastAddition.first;
-
+            
             if (sharedState.sourceTerminalSet[addedSourceAtom] == size) {
                 sharedState.sourceTerminalSet[addedSourceAtom] = 0;
             }
-
+            
             List<IAtom> sourceNeighbours =
                     source.getConnectedAtomsList(source.getAtom(addedSourceAtom));
             for (IAtom neighbor : sourceNeighbours) {
@@ -281,13 +281,13 @@ public class VF2 {
                     sharedState.sourceTerminalSet[neighbourIndex] = 0;
                 }
             }
-
+            
             int addedTargetAtom = lastAddition.second;
-
+            
             if (sharedState.targetTerminalSet[addedTargetAtom] == size) {
                 sharedState.targetTerminalSet[addedTargetAtom] = 0;
             }
-
+            
             List<IAtom> targetNeighbours =
                     target.getConnectedAtomsList(target.getAtom(addedTargetAtom));
             for (IAtom neighbor : targetNeighbours) {
@@ -296,22 +296,22 @@ public class VF2 {
                     sharedState.targetTerminalSet[neighbourIndex] = 0;
                 }
             }
-
+            
             sharedState.sourceMapping[addedSourceAtom] = -1;
             sharedState.targetMapping[addedTargetAtom] = -1;
             size--;
             lastAddition = new Pair<Integer, Integer>(-1, -1);
         }
-
+        
         boolean isFeasible(Pair<Integer, Integer> candidate) {
             int sourceAtom = candidate.first;
             int targetAtom = candidate.second;
-
+            
             if (!source.getAtom(sourceAtom).getSymbol().equals(
                     target.getAtom(targetAtom).getSymbol())) {
                 return false;
             }
-
+            
             int sourceTerminalNeighborCount = 0;
             int targetTerminalNeighborCount = 0;
             int sourceNewNeighborCount = 0;
@@ -328,26 +328,26 @@ public class VF2 {
 
                 IAtom sourceAtomAtom = source.getAtom(sourceAtom);
                 IBond sourceBond = source.getBond(sourceAtomAtom, neighbour);
-
+                
                 if (sharedState.sourceMapping[neighbourIndex] != -1) {
                     int targetNeighbor = sharedState.sourceMapping[neighbourIndex];
 //                    System.out.println("targetNeighbour = " + targetNeighbor);
                     IAtom targetNeighbourAtom = target.getAtom(targetNeighbor);
                     IAtom targetAtomAtom = target.getAtom(targetAtom);
-
+                    
                     if (target.getBond(targetAtomAtom, targetNeighbourAtom) == null) {
                         return false;
                     }
-
+                    
                     IBond targetBond =
                             target.getBond(targetAtomAtom, targetNeighbourAtom);
-
+                    
                     if (!matchBonds(sourceBond, targetBond)) {
 //                        System.out.println("Bond order mismatch "
 //                                + sourceBond.getOrder() + " " + targetBond.getOrder());
                         return false;
                     }
-
+                    
                 } else {
 //                    System.out.println("Not mapped sourceTerminalSet = " + sharedState.sourceTerminalSet[neighbourIndex]);
                     if (sharedState.sourceTerminalSet[neighbourIndex] > 0) {
@@ -357,7 +357,7 @@ public class VF2 {
                     }
                 }
             }
-
+            
             List<IAtom> targetNeighbours =
                     target.getConnectedAtomsList(target.getAtom(targetAtom));
             for (IAtom neighbour : targetNeighbours) {
@@ -385,7 +385,7 @@ public class VF2 {
                     && (sourceNewNeighborCount <= targetNewNeighborCount);
         }
     }
-
+    
     boolean matchBonds(IBond sourceBond, IBond targetBond) {
         if ((sourceBond.getFlag(CDKConstants.ISAROMATIC) == targetBond.getFlag(CDKConstants.ISAROMATIC))
                 && (sourceBond.getOrder() == targetBond.getOrder())) {
@@ -395,24 +395,24 @@ public class VF2 {
         }
         return false;
     }
-
+    
     boolean match(State state, List<AtomMapping> mappings) {
 //        System.out.println("Matched " + state.size + " out of " + state.source.getAtomCount());
         if (state.succeeded()) {
             mappings.add(state.getMapping());
             return true;
         }
-
+        
         Pair<Integer, Integer> lastCandidate = new Pair<Integer, Integer>(-1, -1);
-
+        
         boolean found = false;
         while (!found) {
             Pair<Integer, Integer> candidate = state.nextCandidate(lastCandidate);
-
+            
             if (candidate.first == -1) {
                 return false;
             }
-
+            
             lastCandidate = candidate;
 //            System.out.println("lastCandidate " + lastCandidate);
 
@@ -426,10 +426,10 @@ public class VF2 {
                 nextState.backTrack();
             }
         }
-
+        
         return found;
     }
-
+    
     void setIDs(IAtomContainer atomContainer) {
         for (int i = 0; i < atomContainer.getAtomCount(); i++) {
             atomContainer.getAtom(i).setID(String.valueOf(i));
@@ -454,7 +454,7 @@ public class VF2 {
 //        System.out.println("mapping count " + mappings.size());
         return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
     }
-
+    
     public static void main(String[] args) {
         IAtomContainer benzene = MoleculeFactory.makeBenzene();
         IAtomContainer phenylAmine = MoleculeFactory.makePhenylAmine();

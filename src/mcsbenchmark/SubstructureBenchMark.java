@@ -38,7 +38,7 @@ public class SubstructureBenchMark {
             throw new IOException("Unknown input type ");
         }
         List<IMolecule> targets = new ArrayList<IMolecule>();
-        IIteratingChemObjectReader tFileReader = read(qFile);
+        IIteratingChemObjectReader tFileReader = read(tFile);
         while (tFileReader.hasNext()) {
             targets.add((IMolecule) tFileReader.next());
         }
