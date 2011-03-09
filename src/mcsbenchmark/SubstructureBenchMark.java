@@ -81,8 +81,8 @@ public class SubstructureBenchMark {
 //        } else {
 //            return 0;
 //        }
-        
-        if (queryMol.getAtomCount() < target.getAtomCount()) {
+
+        if (queryMol.getAtomCount() <= target.getAtomCount()) {
             VF2 matcher = new VF2();
             AtomMapping mapping = matcher.isomorphism(queryMol, target);
 //            System.out.println("mapping " + mapping);

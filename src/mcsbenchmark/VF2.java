@@ -458,7 +458,7 @@ public class VF2 {
     public static void main(String[] args) {
         IAtomContainer benzene = MoleculeFactory.makeBenzene();
         IAtomContainer phenylAmine = MoleculeFactory.makePhenylAmine();
-        if (benzene.getAtomCount() < phenylAmine.getAtomCount()) {
+        if (benzene.getAtomCount() <= phenylAmine.getAtomCount()) {
             VF2 matcher = new VF2();
             AtomMapping mapping = matcher.isomorphism(benzene, phenylAmine);
             System.out.println("mapping " + mapping);
