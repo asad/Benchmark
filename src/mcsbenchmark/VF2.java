@@ -13,6 +13,7 @@ import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.smiles.SmilesParser;
+import org.openscience.smsd.labelling.AtomContainerPrinter;
 
 public class VF2 {
 
@@ -158,7 +159,6 @@ public class VF2 {
                 mapping.add(source.getAtom(i),
                         target.getAtom(sharedState.sourceMapping[i]));
             }
-
             return mapping;
         }
 
@@ -309,6 +309,15 @@ public class VF2 {
             int sourceAtom = candidate.first;
             int targetAtom = candidate.second;
 
+            int sourceAtomLabel =
+                    Integer.parseInt(source.getAtom(sourceAtom).getID());
+            int targetAtomLabel =
+                    Integer.parseInt(target.getAtom(targetAtom).getID());
+
+            if (sourceAtomLabel != targetAtomLabel) {
+                return false;
+            }
+
             if (!matchAtoms(source.getAtom(sourceAtom), target.getAtom(targetAtom))) {
                 return false;
             }
@@ -361,11 +370,13 @@ public class VF2 {
             for (IAtom neighbour : targetNeighbours) {
                 int neighbourIndex = target.getAtomNumber(neighbour);
                 if (sharedState.targetMapping[neighbourIndex] != -1) {
-//                     int sourceNeighbor =
-//                     m_sharedState.targetMapping[neighbor];
-//                     if(!m_source.adjacent(sourceAtom, sourceNeighbor)){
-//                     return false;
-//                     }
+                    int sourceNeighbor = sharedState.targetMapping[neighbourIndex];
+                    IAtom sourceNeighbourAtom = source.getAtom(sourceNeighbor);
+                    IAtom sourceAtomAtom = source.getAtom(targetAtom);
+
+                    if (source.getBond(sourceAtomAtom, sourceNeighbourAtom) == null) {
+                        return false;
+                    }
                 } else {
                     if (sharedState.targetTerminalSet[neighbourIndex] > 0) {
                         targetTerminalNeighborCount++;
@@ -555,11 +566,11 @@ public class VF2 {
 
     public static void main(String[] args) throws InvalidSmilesException {
         SmilesParser sp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
-//        IAtomContainer query = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
-//        IAtomContainer target = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
+        IAtomContainer query = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
+        IAtomContainer target = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
 ////        IAtomContainer target = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
-        IAtomContainer query = sp.parseSmiles("CCO");
-        IAtomContainer target = sp.parseSmiles("CCOC");
+//        IAtomContainer query = sp.parseSmiles("CCO");
+//        IAtomContainer target = sp.parseSmiles("CCOCN");
         if (query.getAtomCount() <= target.getAtomCount()) {
             VF2 matcher = new VF2();
             AtomMapping mapping = matcher.isomorphism(query, target);
