@@ -6,16 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import mcsbenchmark.VF2.AtomMapping;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IMolecule;
 import org.openscience.cdk.io.iterator.IIteratingChemObjectReader;
 import org.openscience.cdk.io.iterator.IteratingMDLReader;
 import org.openscience.cdk.isomorphism.UniversalIsomorphismTester;
 import org.openscience.cdk.nonotify.NoNotificationChemObjectBuilder;
-import org.openscience.smsd.algorithm.vflib.interfaces.IMapper;
-import org.openscience.smsd.algorithm.vflib.interfaces.IQuery;
-import org.openscience.smsd.algorithm.vflib.map.VFMapper;
-import org.openscience.smsd.algorithm.vflib.query.QueryCompiler;
 
 /**
  *
@@ -41,7 +38,7 @@ public class SubstructureBenchMark {
             throw new IOException("Unknown input type ");
         }
         List<IMolecule> targets = new ArrayList<IMolecule>();
-        IIteratingChemObjectReader tFileReader = read(tFile);
+        IIteratingChemObjectReader tFileReader = read(qFile);
         while (tFileReader.hasNext()) {
             targets.add((IMolecule) tFileReader.next());
         }
@@ -85,13 +82,24 @@ public class SubstructureBenchMark {
 //            return 0;
 //        }
 
-        IQuery query = null;
-        IMapper mapper = null;
+//        IQuery query = null;
+//        IMapper mapper = null;
+//
+//        query = new QueryCompiler(queryMol, true).compile();
+//        mapper = new VFMapper(query);
+//        if (mapper.hasMap(target)) {
+//            return 1;
+//        }
 
-        query = new QueryCompiler(queryMol, true).compile();
-        mapper = new VFMapper(query);
-        if (mapper.hasMap(target)) {
-            return 1;
+        if (queryMol.getAtomCount() < target.getAtomCount()) {
+            VF2 matcher = new VF2();
+            AtomMapping mapping = matcher.isomorphim(queryMol, target);
+//            System.out.println("mapping " + mapping);
+            if (mapping != null) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
 
         return 0;
