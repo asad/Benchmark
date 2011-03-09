@@ -1,8 +1,5 @@
 package loop;
 
-import java.util.List;
-import java.util.Map;
-
 import org.openscience.cdk.interfaces.IMolecule;
 import org.openscience.smsd.algorithm.mcsplus.MCSPlusHandler;
 import org.openscience.smsd.tools.MolHandler;
@@ -21,7 +18,6 @@ public class MCSPlusLoop extends AbstractSubgraphIsomorphismLoop implements
         mcsplus.searchMCS(true);
 
         if (mcsplus.getFirstMapping() != null && !mcsplus.getFirstMapping().isEmpty()) {
-//            List<Map<Integer, Integer>> map = mcsplus.getAllMapping();
             numberOfResults++;
         }
     }

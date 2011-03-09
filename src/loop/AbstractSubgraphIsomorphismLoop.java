@@ -42,7 +42,7 @@ public abstract class AbstractSubgraphIsomorphismLoop {
         stopTimer();
     }
     
-    private void generateImage(String outPutFileName, IAtomContainer query, IAtomContainer target, List<Map<Integer, Integer>> smsd) throws Exception {
+    public void generateImage(String outPutFileName, IAtomContainer query, IAtomContainer target, List<Map<Integer, Integer>> smsd) throws Exception {
 
         ImageGenerator imageGenerator = new ImageGenerator();
 

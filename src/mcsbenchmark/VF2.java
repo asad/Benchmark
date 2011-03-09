@@ -6,14 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.openscience.cdk.CDKConstants;
-import org.openscience.cdk.DefaultChemObjectBuilder;
-import org.openscience.cdk.exception.InvalidSmilesException;
 
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
-import org.openscience.cdk.smiles.SmilesParser;
-import org.openscience.smsd.labelling.AtomContainerPrinter;
 
 public class VF2 {
 
@@ -261,11 +257,12 @@ public class VF2 {
             }
         }
 
-        // Restores the shared state to how it was before adding the last
-        // candidate
-        // pair. Assumes addPair() has been called on the state only once.
+        /**
+         * Restores the shared state to how it was before adding the last
+         * candidate pair. Assumes addPair() has been called on the state only
+         * once.
+         */
         void backTrack() {
-//            System.out.println("backtracking " + lastAddition);
             if (lastAddition.first == -1) {
                 return;   // XXX hack
             }
@@ -309,14 +306,6 @@ public class VF2 {
             int sourceAtom = candidate.first;
             int targetAtom = candidate.second;
 
-            int sourceAtomLabel =
-                    Integer.parseInt(source.getAtom(sourceAtom).getID());
-            int targetAtomLabel =
-                    Integer.parseInt(target.getAtom(targetAtom).getID());
-
-            if (sourceAtomLabel != targetAtomLabel) {
-                return false;
-            }
 
             if (!matchAtoms(source.getAtom(sourceAtom), target.getAtom(targetAtom))) {
                 return false;
@@ -327,21 +316,16 @@ public class VF2 {
             int sourceNewNeighborCount = 0;
             int targetNewNeighborCount = 0;
 
-//            System.out.println("Source : " + Arrays.toString(sharedState.sourceMapping));
-//            System.out.println("Target : " + Arrays.toString(sharedState.targetMapping));
-//            System.out.println("Source atom " + sourceAtom);
             List<IAtom> sourceNeighbours =
                     source.getConnectedAtomsList(source.getAtom(sourceAtom));
             for (IAtom neighbour : sourceNeighbours) {
                 int neighbourIndex = source.getAtomNumber(neighbour);
-//                System.out.println("Source neighbour " + neighbourIndex);
 
                 IAtom sourceAtomAtom = source.getAtom(sourceAtom);
                 IBond sourceBond = source.getBond(sourceAtomAtom, neighbour);
 
                 if (sharedState.sourceMapping[neighbourIndex] != -1) {
                     int targetNeighbor = sharedState.sourceMapping[neighbourIndex];
-//                    System.out.println("targetNeighbour = " + targetNeighbor);
                     IAtom targetNeighbourAtom = target.getAtom(targetNeighbor);
                     IAtom targetAtomAtom = target.getAtom(targetAtom);
 
@@ -356,7 +340,6 @@ public class VF2 {
                     }
 
                 } else {
-//                    System.out.println("Not mapped sourceTerminalSet = " + sharedState.sourceTerminalSet[neighbourIndex]);
                     if (sharedState.sourceTerminalSet[neighbourIndex] > 0) {
                         sourceTerminalNeighborCount++;
                     } else {
@@ -386,10 +369,6 @@ public class VF2 {
                 }
             }
 
-//            System.out.println(sourceTerminalNeighborCount + " "
-//                    + targetTerminalNeighborCount + " "
-//                    + sourceNewNeighborCount + " "
-//                    + targetNewNeighborCount);
             return (sourceTerminalNeighborCount <= targetTerminalNeighborCount)
                     && (sourceNewNeighborCount <= targetNewNeighborCount);
         }
@@ -402,9 +381,6 @@ public class VF2 {
         } else if (sourceBond.getFlag(CDKConstants.ISAROMATIC) && targetBond.getFlag(CDKConstants.ISAROMATIC)) {
             return true;
         }
-
-//        System.out.println("Bond order mismatch "
-//                + sourceBond.getOrder() + " " + targetBond.getOrder());
         return false;
     }
 
@@ -413,7 +389,6 @@ public class VF2 {
     }
 
     boolean match(State state, List<AtomMapping> mappings, boolean getFirst) {
-//        System.out.println("Matched " + state.size + " out of " + state.source.getAtomCount());
         if (state.succeeded()) {
             mappings.add(state.getMapping());
             return true;
@@ -430,7 +405,6 @@ public class VF2 {
             }
 
             lastCandidate = candidate;
-//            System.out.println("lastCandidate " + lastCandidate);
 
             if (state.isFeasible(candidate)) {
                 State nextState = state;
@@ -459,17 +433,13 @@ public class VF2 {
     // graph 'a' is the subgraph, implying a.size() < b.size(). In the case that
     // no isomorphism is found an empty mapping is returned.
     public AtomMapping isomorphism(IAtomContainer a, IAtomContainer b) {
-//        AtomContainerPrinter printer = new AtomContainerPrinter();
         setIDs(a);
-//        System.out.println(printer.toString(a));
         setIDs(b);
-//        System.out.println(printer.toString(b));
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
         if (testIsSubgraphHeuristics(a, b)) {
             State state = new State(a, b);
             match(state, mappings, true);
         }
-//        System.out.println("mapping count " + mappings.size());
         return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
     }
     
@@ -567,21 +537,7 @@ public class VF2 {
                 }
             }
         }
-//        System.out.println("Map " + map);
         return map.isEmpty();
     }
-
-    public static void main(String[] args) throws InvalidSmilesException {
-        SmilesParser sp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
-        IAtomContainer query = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
-        IAtomContainer target = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
-////        IAtomContainer target = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
-//        IAtomContainer query = sp.parseSmiles("CCO");
-//        IAtomContainer target = sp.parseSmiles("CCOCN");
-        if (query.getAtomCount() <= target.getAtomCount()) {
-            VF2 matcher = new VF2();
-            AtomMapping mapping = matcher.isomorphism(query, target);
-            System.out.println("mapping " + mapping);
-        }
-    }
+  
 }
