@@ -442,7 +442,7 @@ public class VF2 {
     // case
     // graph 'a' is the subgraph, implying a.size() < b.size(). In the case that
     // no isomorphism is found an empty mapping is returned.
-    AtomMapping isomorphim(IAtomContainer a, IAtomContainer b) {
+    AtomMapping isomorphism(IAtomContainer a, IAtomContainer b) {
 //        AtomContainerPrinter printer = new AtomContainerPrinter();
         setIDs(a);
 //        System.out.println(printer.toString(a));
@@ -460,7 +460,7 @@ public class VF2 {
         IAtomContainer phenylAmine = MoleculeFactory.makePhenylAmine();
         if (benzene.getAtomCount() < phenylAmine.getAtomCount()) {
             VF2 matcher = new VF2();
-            AtomMapping mapping = matcher.isomorphim(benzene, phenylAmine);
+            AtomMapping mapping = matcher.isomorphism(benzene, phenylAmine);
             System.out.println("mapping " + mapping);
         }
     }
