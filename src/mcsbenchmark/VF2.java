@@ -452,7 +452,7 @@ public class VF2 {
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
         match(state, mappings);
 //        System.out.println("mapping count " + mappings.size());
-        return mappings.isEmpty() ? null : mappings.get(0);
+        return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
     }
 
     public static void main(String[] args) {
