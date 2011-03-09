@@ -81,16 +81,7 @@ public class SubstructureBenchMark {
 //        } else {
 //            return 0;
 //        }
-
-//        IQuery query = null;
-//        IMapper mapper = null;
-//
-//        query = new QueryCompiler(queryMol, true).compile();
-//        mapper = new VFMapper(query);
-//        if (mapper.hasMap(target)) {
-//            return 1;
-//        }
-
+        
         if (queryMol.getAtomCount() < target.getAtomCount()) {
             VF2 matcher = new VF2();
             AtomMapping mapping = matcher.isomorphim(queryMol, target);
