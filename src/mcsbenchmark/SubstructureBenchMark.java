@@ -28,11 +28,11 @@ public class SubstructureBenchMark {
      * @throws CDKException  
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, CDKException {
-        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
-        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
+//        String queryFilePath = (args.length > 0) ? args[0] : "data/t.sdf";//"data/actives.sdf";
+//        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
 
-//        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
-//        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
+        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
+        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
 
         File qFile = new File(queryFilePath);
         File tFile = new File(targetFilePath);
@@ -57,6 +57,8 @@ public class SubstructureBenchMark {
             int uitSolutionCount = 0;
             long t0 = System.currentTimeMillis();
             for (IAtomContainer target : targets) {
+//                query = query.getBuilder().newInstance(IAtomContainer.class, query);
+//                target = target.getBuilder().newInstance(IAtomContainer.class, target);
                 smsdSolutionCount += getSMSDSolutionCount(query, target);
             }
             long timeNow = System.currentTimeMillis();
