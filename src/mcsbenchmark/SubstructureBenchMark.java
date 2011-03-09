@@ -6,14 +6,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import mcsbenchmark.VF2.AtomMapping;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtomContainer;
-import org.openscience.cdk.interfaces.IMolecule;
 import org.openscience.cdk.io.iterator.IIteratingChemObjectReader;
 import org.openscience.cdk.io.iterator.IteratingMDLReader;
 import org.openscience.cdk.isomorphism.UniversalIsomorphismTester;
 import org.openscience.cdk.nonotify.NoNotificationChemObjectBuilder;
+import vf.AtomMapping;
+import vf.VF2;
 
 /**
  *
@@ -28,11 +28,11 @@ public class SubstructureBenchMark {
      * @throws CDKException  
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, CDKException {
-//        String queryFilePath = (args.length > 0) ? args[0] : "data/t.sdf";//"data/actives.sdf";
-//        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
+        String queryFilePath = (args.length > 0) ? args[0] : "data/some.sdf";//"data/actives.sdf";
+        String targetFilePath = (args.length > 1) ? args[1] : "data/some.sdf";//"data/t.sdf";
 
-        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
-        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
+//        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
+//        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
 
         File qFile = new File(queryFilePath);
         File tFile = new File(targetFilePath);
@@ -45,20 +45,23 @@ public class SubstructureBenchMark {
         List<IAtomContainer> targets = new ArrayList<IAtomContainer>();
         IIteratingChemObjectReader tFileReader = read(tFile);
         while (tFileReader.hasNext()) {
-            IAtomContainer ac = configure((IMolecule) tFileReader.next());
+            IAtomContainer ac = configure((IAtomContainer) tFileReader.next());
             targets.add(ac);
         }
 
         int counter = 0;
         while (qFileReader.hasNext()) {
-            IAtomContainer query = (IMolecule) qFileReader.next();
+            IAtomContainer query = (IAtomContainer) qFileReader.next();
             query = configure(query);
+
+//            AtomContainerPrinter printer = new AtomContainerPrinter();
+//            System.out.println(printer.toString(query));
+
+
             int smsdSolutionCount = 0;
             int uitSolutionCount = 0;
             long t0 = System.currentTimeMillis();
             for (IAtomContainer target : targets) {
-//                query = query.getBuilder().newInstance(IAtomContainer.class, query);
-//                target = target.getBuilder().newInstance(IAtomContainer.class, target);
                 smsdSolutionCount += getSMSDSolutionCount(query, target);
             }
             long timeNow = System.currentTimeMillis();
