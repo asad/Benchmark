@@ -19,16 +19,15 @@ import org.openscience.cdk.interfaces.IBond;
  */
 public class VF2 {
 
-    // The isomorphism_vf2() method returns an isomorphism between two molecular
+    // The isomorphism method returns an isomorphism between two molecular
     // graphs using the VF2 algorithm. This can be used for finding both
     // graph-graph isomorphisms and graph-subgraph isomorphisms. In the latter
-    // case
-    // graph 'a' is the subgraph, implying a.size() < b.size(). In the case that
+    // case graph 'a' is the subgraph, implying a.size() < b.size(). In the case that
     // no isomorphism is found an empty mapping is returned.
     /**
      * 
-     * @param a
-     * @param b
+     * @param a query molecule
+     * @param b target molecule
      * @return
      */
     public AtomMapping isomorphism(IAtomContainer a, IAtomContainer b) {

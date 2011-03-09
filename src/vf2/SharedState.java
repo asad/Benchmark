@@ -2,7 +2,7 @@ package vf2;
 
 import java.util.Arrays;
 
-// The SharedState class holds four vectors containing the mapping between
+// The SharedState class holds four arrays containing the mapping between
 // the two graphs and the terminal sets. It is shared between all the states
 // in each isomorphism test.
 class SharedState {

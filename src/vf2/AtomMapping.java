@@ -15,12 +15,22 @@ public class AtomMapping {
     private IAtomContainer b;
     private Map<IAtom, IAtom> mapping;
 
+    /**
+     * 
+     * @param a source mol
+     * @param b target mol
+     */
     public AtomMapping(IAtomContainer a, IAtomContainer b) {
         this.a = a;
         this.b = b;
         this.mapping = new HashMap<IAtom, IAtom>();
     }
 
+    /**
+     * 
+     * @param atom1
+     * @param atom2
+     */
     public void add(IAtom atom1, IAtom atom2) {
         mapping.put(atom1, atom2);
     }
@@ -36,6 +46,10 @@ public class AtomMapping {
         return s + "]";
     }
 
+    /**
+     * 
+     * @return true if 'a' is not a subgraph of 'b'
+     */
     public boolean isEmpty() {
         return mapping.isEmpty();
     }

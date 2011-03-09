@@ -79,10 +79,8 @@ class State {
     }
 
     // Returns the next candidate pair (sourceAtom, targetAtom) to be added
-    // to the
-    // state. The candidate should be checked for feasibility and then added
-    // using
-    // the addPair() method.
+    // to the state. The candidate should be checked for feasibility and then added
+    // using the addPair() method.
     Pair<Integer, Integer> nextCandidate(
             Pair<Integer, Integer> lastCandidate) {
         int lastSourceAtom = lastCandidate.getFirst();
@@ -135,8 +133,7 @@ class State {
     }
 
     // Adds the candidate pair (sourceAtom, targetAtom) to the state. The
-    // candidate
-    // pair must be feasible to add it to the state.
+    // candidate pair must be feasible to add it to the state.
     void addPair(Pair<Integer, Integer> candidate) {
         size++;
         lastAddition = candidate;
@@ -178,10 +175,8 @@ class State {
     }
 
     // Restores the shared state to how it was before adding the last
-    // candidate
-    // pair. Assumes addPair() has been called on the state only once.
+    // candidate pair. Assumes addPair() has been called on the state only once.
     void backTrack() {
-//            System.out.println("backtracking " + lastAddition);
         if (lastAddition.getFirst() == -1) {
             return;   // XXX hack
         }
@@ -243,21 +238,16 @@ class State {
         int sourceNewNeighborCount = 0;
         int targetNewNeighborCount = 0;
 
-//            System.out.println("Source : " + Arrays.toString(sharedState.sourceMapping));
-//            System.out.println("Target : " + Arrays.toString(sharedState.targetMapping));
-//            System.out.println("Source atom " + sourceAtom);
         List<IAtom> sourceNeighbours =
                 source.getConnectedAtomsList(source.getAtom(sourceAtom));
         for (IAtom neighbour : sourceNeighbours) {
             int neighbourIndex = source.getAtomNumber(neighbour);
-//                System.out.println("Source neighbour " + neighbourIndex);
 
             IAtom sourceAtomAtom = source.getAtom(sourceAtom);
             IBond sourceBond = source.getBond(sourceAtomAtom, neighbour);
 
             if (sharedState.sourceMapping[neighbourIndex] != -1) {
                 int targetNeighbor = sharedState.sourceMapping[neighbourIndex];
-//                    System.out.println("targetNeighbour = " + targetNeighbor);
                 IAtom targetNeighbourAtom = target.getAtom(targetNeighbor);
                 IAtom targetAtomAtom = target.getAtom(targetAtom);
 
@@ -272,7 +262,6 @@ class State {
                 }
 
             } else {
-//                    System.out.println("Not mapped sourceTerminalSet = " + sharedState.sourceTerminalSet[neighbourIndex]);
                 if (sharedState.sourceTerminalSet[neighbourIndex] > 0) {
                     sourceTerminalNeighborCount++;
                 } else {
@@ -301,11 +290,6 @@ class State {
                 }
             }
         }
-
-//            System.out.println(sourceTerminalNeighborCount + " "
-//                    + targetTerminalNeighborCount + " "
-//                    + sourceNewNeighborCount + " "
-//                    + targetNewNeighborCount);
         return (sourceTerminalNeighborCount <= targetTerminalNeighborCount)
                 && (sourceNewNeighborCount <= targetNewNeighborCount);
     }
@@ -328,7 +312,6 @@ class State {
             }
 
             lastCandidate = candidate;
-//            System.out.println("lastCandidate " + lastCandidate);
 
             if (state.isFeasible(candidate)) {
                 State nextState = state;
@@ -360,5 +343,4 @@ class State {
     boolean matchAtoms(IAtom sourceAtom, IAtom targetAtom) {
         return sourceAtom.getSymbol().equals(targetAtom.getSymbol()) ? true : false;
     }
-    
 }
