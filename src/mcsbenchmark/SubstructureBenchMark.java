@@ -58,6 +58,7 @@ public class SubstructureBenchMark {
 
         for (IMolecule query : queries) {
             String out = String.format("%d ", counter);
+            out+=String.format(" %d ", query.getAtomCount());
 
             UITLoop uitLoop = new UITLoop();
             uitLoop.run(query, targets);
