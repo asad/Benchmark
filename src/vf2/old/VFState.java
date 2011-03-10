@@ -74,7 +74,7 @@ public class VFState implements IState {
     private IAtomContainer target;
     private List<IAtom> queryPath;
     private List<IAtom> targetPath;
-    private Map<IAtom, IAtom> map;
+    private AtomMapping map;
 
     /**
      * initialize the VFState with query and target
@@ -82,7 +82,7 @@ public class VFState implements IState {
      * @param target
      */
     public VFState(IAtomContainer query, IAtomContainer target) {
-        this.map = new HashMap<IAtom, IAtom>();
+        this.map = new AtomMapping(target, query);
         this.queryPath = new ArrayList<IAtom>();
         this.targetPath = new ArrayList<IAtom>();
 
@@ -102,7 +102,7 @@ public class VFState implements IState {
         this.query = state.query;
         this.target = state.target;
 
-        map.put(match.getQueryAtom(), match.getTargetAtom());
+        map.add(match.getQueryAtom(), match.getTargetAtom());
         queryPath.add(match.getQueryAtom());
         targetPath.add(match.getTargetAtom());
         loadCandidates(match);
@@ -121,7 +121,7 @@ public class VFState implements IState {
         }
         map.clear();
         for (int i = 0; i < queryPath.size() - 1; i++) {
-            map.put(queryPath.get(i), targetPath.get(i));
+            map.add(queryPath.get(i), targetPath.get(i));
         }
     }
 
@@ -129,7 +129,7 @@ public class VFState implements IState {
      */
     @Override
     public Map<IAtom, IAtom> getMap() {
-        return new HashMap<IAtom, IAtom>(map);
+        return new HashMap(map.getMapping());
     }
 
     /** {@inheritDoc}
@@ -157,8 +157,8 @@ public class VFState implements IState {
      */
     @Override
     public boolean isMatchFeasible(Match match) {
-        if (map.containsKey(match.getQueryAtom())
-                || map.containsValue(match.getTargetAtom())) {
+        if (map.containsQueryAtom(match.getQueryAtom())
+                || map.containsTargetAtom(match.getTargetAtom())) {
             return false;
         }
         if (!matchAtoms(match)) {
@@ -213,9 +213,9 @@ public class VFState implements IState {
     }
 
     private boolean candidateFeasible(Match candidate) {
-        for (IAtom queryAtom : map.keySet()) {
+        for (IAtom queryAtom : map.queryAtoms()) {
             if (queryAtom.equals(candidate.getQueryAtom())
-                    || map.get(queryAtom).equals(candidate.getTargetAtom())) {
+                    || map.getMappedTargetAtom(queryAtom).equals(candidate.getTargetAtom())) {
                 return false;
             }
         }
@@ -261,7 +261,7 @@ public class VFState implements IState {
         IAtom head = queryPath.get(queryPath.size() - 1);
         List<IAtom> queryHeadNeighbors = query.getConnectedAtomsList(head);
         for (IAtom neighbor : queryHeadNeighbors) {
-            if (!map.containsKey(neighbor)) {
+            if (!map.containsQueryAtom(neighbor)) {
                 return false;
             }
         }

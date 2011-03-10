@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.openscience.cdk.annotations.TestClass;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 
@@ -95,7 +94,8 @@ public class VFMapper implements IMapper {
     public boolean hasMap(IAtomContainer targetMolecule) {
         IState state = new VFState(query, targetMolecule);
         maps.clear();
-        return mapFirst(state);
+        boolean flag = mapFirst(state);
+        return flag;
     }
 
     /** {@inheritDoc}
@@ -116,7 +116,6 @@ public class VFMapper implements IMapper {
     @Override
     public Map<IAtom, IAtom> getFirstMap(IAtomContainer target) {
         IState state = new VFState(query, target);
-        maps.clear();
         mapFirst(state);
         return maps.isEmpty() ? new HashMap<IAtom, IAtom>() : maps.get(0);
     }

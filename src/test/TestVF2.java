@@ -8,6 +8,7 @@ public class TestVF2 {
     public static void main(String[] args) throws InvalidSmilesException, CDKException {
         TestVF2Coverage vfTest = new TestVF2Coverage();
         vfTest.TestCovergare();
+        vfTest.TestCovergareOldVF2();
         PermutationTest pt = new PermutationTest();
         pt.cyclopentane();
     }

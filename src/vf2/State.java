@@ -256,7 +256,6 @@ class State {
                 }
 
                 IBond targetBond = target.getBond(targetAtomAtom, targetNeighbourAtom);
-
                 if (!matchBonds(sourceBond, targetBond)) {
                     return false;
                 }

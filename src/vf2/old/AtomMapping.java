@@ -1,6 +1,5 @@
 package vf2.old;
 
-import vf2.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.openscience.cdk.interfaces.IAtom;
@@ -53,5 +52,41 @@ public class AtomMapping {
      */
     public boolean isEmpty() {
         return mapping.isEmpty();
+    }
+
+    /**
+     * 
+     * clear mapping
+     */
+    public void clear() {
+        mapping.clear();
+    }
+
+    /**
+     *size of the mapping
+     * @return size of the mapping
+     */
+    public int size() {
+        return mapping.size();
+    }
+
+    boolean containsQueryAtom(IAtom atom) {
+        return mapping.containsKey(atom);
+    }
+
+    Iterable<IAtom> queryAtoms() {
+        return mapping.keySet();
+    }
+
+    IAtom getMappedTargetAtom(IAtom atom) {
+        return mapping.get(atom);
+    }
+
+    boolean containsTargetAtom(IAtom atom) {
+        return mapping.containsValue(atom);
+    }
+
+    Map<IAtom, IAtom> getMapping() {
+        return mapping;
     }
 }

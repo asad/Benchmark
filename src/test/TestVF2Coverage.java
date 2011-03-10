@@ -13,6 +13,7 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.smiles.SmilesParser;
 import vf2.AtomMapping;
 import vf2.VF2;
+import vf2.old.VFMapper;
 
 /**
  *
@@ -43,6 +44,19 @@ public class TestVF2Coverage {
             VF2 matcher = new VF2();
             AtomMapping mapping = matcher.isomorphism(query, target);
             System.out.println("mapping " + mapping);
+        }
+    }
+
+    @Test
+    public void TestCovergareOldVF2() throws InvalidSmilesException {
+        SmilesParser sp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
+        IAtomContainer query = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
+        IAtomContainer target = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
+        if (query.getAtomCount() <= target.getAtomCount()) {
+            VFMapper matcher = new VFMapper(query);
+            if (matcher.hasMap(target)) {
+                System.out.println("mapping " + matcher.getFirstMap(target).size());
+            }
         }
     }
 }

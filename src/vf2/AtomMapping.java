@@ -53,4 +53,12 @@ public class AtomMapping {
     public boolean isEmpty() {
         return mapping.isEmpty();
     }
+
+    /**
+     * 
+     * clear mapping
+     */
+    public void clear() {
+        mapping.clear();
+    }
 }
