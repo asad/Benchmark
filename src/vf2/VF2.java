@@ -12,8 +12,6 @@ import org.openscience.cdk.CDKConstants;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
-import tools.labelling.CanonicalLabellingAdaptor;
-import tools.labelling.ICanonicalMoleculeLabeller;
 
 /**
  *
