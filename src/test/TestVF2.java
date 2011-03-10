@@ -11,5 +11,6 @@ public class TestVF2 {
         vfTest.TestCovergareOldVF2();
         PermutationTest pt = new PermutationTest();
         pt.cyclopentane();
+        pt.cyclobutane();
     }
 }
