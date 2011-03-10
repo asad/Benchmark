@@ -19,5 +19,6 @@ public class TestVF2 {
         pt.cyclopentane();
         pt.cyclobutane();
         pt.permuteSubgraph();
+        pt.permuteSubgraph2();
     }
 }

@@ -30,12 +30,28 @@ public class CDKSMILES {
      * @param mol
      * @return
      */
-    public String getSMILES(IAtomContainer mol) {
+    public String getCanonicalSMILES(IAtomContainer mol) {
         this.molecule = ExtAtomContainerManipulator.makeDeepCopy(mol);
         if (!isPseudoAtoms()) {
             ICanonicalMoleculeLabeller canonLabeler = new CanonicalLabellingAdaptor();
             molecule = canonLabeler.getCanonicalMolecule(molecule);
         }
+        SmilesGenerator sg = new SmilesGenerator(true);
+        String smiles = "";
+        try {
+            smiles = sg.createSMILESWithoutCheckForMultipleMolecules(molecule, false, new boolean[molecule.getBondCount()]);
+        } catch (CDKException ex) {
+            logger.warn("SmilesGenerator error: ", ex.getMessage());
+        }
+        return smiles;
+    }
+
+    /**
+     * 
+     * @param mol
+     * @return
+     */
+    public String getSMILES(IAtomContainer mol) {
         SmilesGenerator sg = new SmilesGenerator(true);
         String smiles = "";
         try {

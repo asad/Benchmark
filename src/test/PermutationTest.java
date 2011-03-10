@@ -11,6 +11,7 @@ import org.openscience.cdk.interfaces.IMolecule;
 import org.openscience.cdk.isomorphism.UniversalIsomorphismTester;
 import org.openscience.cdk.smiles.SmilesParser;
 import tools.labelling.AtomContainerAtomPermutor;
+import tools.labelling.AtomContainerPrinter;
 
 import vf2.AtomMapping;
 import vf2.VF2;
@@ -82,7 +83,13 @@ public class PermutationTest {
         IAtomContainer query = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
         IAtomContainer target = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
 
+        AtomContainerPrinter printer = new AtomContainerPrinter();
+
+
         System.out.println("\n Step 1");
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
 
         testWithVF2(query, target);
         testWithUIT(target, query);
@@ -92,16 +99,24 @@ public class PermutationTest {
 
         System.out.println("\n Step 2");
 
+
         query = acpQuery.next();
         target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
 
         testWithVF2(query, target);
         testWithUIT(target, query);
 
         System.out.println("\n Step 3");
 
+
         query = acpQuery.next();
         target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
 
         testWithVF2(query, target);
         testWithUIT(target, query);
@@ -111,13 +126,20 @@ public class PermutationTest {
         query = acpQuery.next();
         target = acpTarget.next();
 
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
+
         testWithVF2(query, target);
         testWithUIT(target, query);
 
         System.out.println("\n Step 5");
 
+
         query = acpQuery.next();
         target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
 
         testWithVF2(query, target);
         testWithUIT(target, query);
@@ -127,6 +149,9 @@ public class PermutationTest {
         query = acpQuery.next();
         target = acpTarget.next();
 
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
+
         testWithVF2(query, target);
         testWithUIT(target, query);
 
@@ -134,6 +159,100 @@ public class PermutationTest {
 
         query = acpQuery.next();
         target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
+
+        testWithVF2(query, target);
+        testWithUIT(target, query);
+
+    }
+
+    @Test
+    public void permuteSubgraph2() throws CDKException {
+        SmilesParser sp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
+        IAtomContainer query = sp.parseSmiles("NC1=CC=C(O)[N+]2=C1C=CC=C2");
+        IAtomContainer target = sp.parseSmiles("NC1=CC(P(O)C2=CNC=C2)=C(O)[N+]2=C1C=CC=C2");
+
+        AtomContainerPrinter printer = new AtomContainerPrinter();
+
+
+        System.out.println("\n Step 1");
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
+
+        testWithVF2(query, target);
+        testWithUIT(target, query);
+
+        AtomContainerAtomPermutor acpQuery = new AtomContainerAtomPermutor(query);
+        AtomContainerAtomPermutor acpTarget = new AtomContainerAtomPermutor(target);
+
+        System.out.println("\n Step 2");
+
+
+        query = acpQuery.next();
+        target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
+
+        testWithVF2(query, target);
+        testWithUIT(target, query);
+
+        System.out.println("\n Step 3");
+
+
+        query = acpQuery.next();
+        target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
+
+        testWithVF2(query, target);
+        testWithUIT(target, query);
+
+        System.out.println("\n Step 4");
+
+        query = acpQuery.next();
+        target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
+
+        testWithVF2(query, target);
+        testWithUIT(target, query);
+
+        System.out.println("\n Step 5");
+
+
+        query = acpQuery.next();
+        target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
+
+        testWithVF2(query, target);
+        testWithUIT(target, query);
+
+        System.out.println("\n Step 6");
+
+        query = acpQuery.next();
+        target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
+
+        testWithVF2(query, target);
+        testWithUIT(target, query);
+
+        System.out.println("\n Step 7");
+
+        query = acpQuery.next();
+        target = acpTarget.next();
+
+        System.out.println("Input Q: " + printer.toString(query));
+        System.out.println("Input T: " + printer.toString(target));
 
         testWithVF2(query, target);
         testWithUIT(target, query);
