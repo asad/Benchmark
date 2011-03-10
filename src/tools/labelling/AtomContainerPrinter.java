@@ -40,7 +40,7 @@ public class AtomContainerPrinter {
     }
     
     public String toString(IAtomContainer atomContainer) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (IAtom atom : atomContainer.atoms()) {
             sb.append(atom.getSymbol());
         }
