@@ -225,9 +225,9 @@ class State {
         int targetAtomLabel =
                 Integer.parseInt(target.getAtom(targetAtom).getID());
 
-        if (sourceAtomLabel != targetAtomLabel) {
-            return false;
-        }
+//        if (sourceAtomLabel != targetAtomLabel) {
+//            return false;
+//        }
 
         if (!matchAtoms(source.getAtom(sourceAtom), target.getAtom(targetAtom))) {
             return false;
