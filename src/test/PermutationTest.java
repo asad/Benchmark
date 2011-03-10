@@ -80,28 +80,28 @@ public class PermutationTest {
     @Test
     public void permuteSubgraph() throws CDKException {
         SmilesParser sp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
-        IAtomContainer query = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
-        IAtomContainer target = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
+        IAtomContainer q = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
+        IAtomContainer t = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
 
         AtomContainerPrinter printer = new AtomContainerPrinter();
 
 
         System.out.println("\n Step 1");
 
-        System.out.println("Input Q: " + printer.toString(query));
-        System.out.println("Input T: " + printer.toString(target));
+        System.out.println("Input Q: " + printer.toString(q));
+        System.out.println("Input T: " + printer.toString(t));
 
-        testWithVF2(query, target);
-        testWithUIT(target, query);
+        testWithVF2(q, t);
+        testWithUIT(t, q);
 
-        AtomContainerAtomPermutor acpQuery = new AtomContainerAtomPermutor(query);
-        AtomContainerAtomPermutor acpTarget = new AtomContainerAtomPermutor(target);
+        AtomContainerAtomPermutor acpQuery = new AtomContainerAtomPermutor(q);
+        AtomContainerAtomPermutor acpTarget = new AtomContainerAtomPermutor(t);
 
         System.out.println("\n Step 2");
 
 
-        query = acpQuery.next();
-        target = acpTarget.next();
+        IAtomContainer query = acpQuery.next();
+        IAtomContainer target = acpTarget.next();
 
         System.out.println("Input Q: " + printer.toString(query));
         System.out.println("Input T: " + printer.toString(target));
@@ -171,28 +171,28 @@ public class PermutationTest {
     @Test
     public void permuteSubgraph2() throws CDKException {
         SmilesParser sp = new SmilesParser(DefaultChemObjectBuilder.getInstance());
-        IAtomContainer query = sp.parseSmiles("NC1=CC=C(O)[N+]2=C1C=CC=C2");
-        IAtomContainer target = sp.parseSmiles("NC1=CC(P(O)C2=CNC=C2)=C(O)[N+]2=C1C=CC=C2");
+        IAtomContainer q = sp.parseSmiles("NC1=CC=C(O)[N+]2=C1C=CC=C2");
+        IAtomContainer t = sp.parseSmiles("NC1=CC(P(O)C2=CNC=C2)=C(O)[N+]2=C1C=CC=C2");
 
         AtomContainerPrinter printer = new AtomContainerPrinter();
 
 
         System.out.println("\n Step 1");
 
-        System.out.println("Input Q: " + printer.toString(query));
-        System.out.println("Input T: " + printer.toString(target));
+        System.out.println("Input Q: " + printer.toString(q));
+        System.out.println("Input T: " + printer.toString(t));
 
-        testWithVF2(query, target);
-        testWithUIT(target, query);
+        testWithVF2(q, t);
+        testWithUIT(t, q);
 
-        AtomContainerAtomPermutor acpQuery = new AtomContainerAtomPermutor(query);
-        AtomContainerAtomPermutor acpTarget = new AtomContainerAtomPermutor(target);
+        AtomContainerAtomPermutor acpQuery = new AtomContainerAtomPermutor(q);
+        AtomContainerAtomPermutor acpTarget = new AtomContainerAtomPermutor(t);
 
         System.out.println("\n Step 2");
 
 
-        query = acpQuery.next();
-        target = acpTarget.next();
+        IAtomContainer query = acpQuery.next();
+        IAtomContainer target = acpTarget.next();
 
         System.out.println("Input Q: " + printer.toString(query));
         System.out.println("Input T: " + printer.toString(target));
