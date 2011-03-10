@@ -185,14 +185,26 @@ public class VFState implements IState {
     }
 
     private void loadRootCandidates() {
-        for (int i = 0; i < query.getAtomCount(); i++) {
-            for (int j = 0; j < target.getAtomCount(); j++) {
-                if (matchAtoms(query.getAtom(i), target.getAtom(j))) {
-                    Match match = new Match(query.getAtom(i), target.getAtom(j));
-                    candidates.add(match);
+        for (int i = 0; i < query.getBondCount(); i++) {
+            IBond qBond = query.getBond(i);
+            for (int j = 0; j < target.getBondCount(); j++) {
+                IBond tBond = target.getBond(j);
+                if (matchBond(qBond, tBond)) {
+                    if (matchAtomTypes1(qBond, tBond)) {
+                        Match match1 = new Match(qBond.getAtom(0), tBond.getAtom(0));
+                        Match match2 = new Match(qBond.getAtom(1), tBond.getAtom(1));
+                        candidates.add(match1);
+                        candidates.add(match2);
+                    } else if (matchAtomTypes2(qBond, tBond)) {
+                        Match match1 = new Match(qBond.getAtom(0), tBond.getAtom(1));
+                        Match match2 = new Match(qBond.getAtom(1), tBond.getAtom(0));
+                        candidates.add(match1);
+                        candidates.add(match2);
+                    }
                 }
             }
         }
+        //System.out.println("Compatibility graph " + candidates.size());
     }
 
 //@TODO Asad Check the Neighbour count
@@ -304,5 +316,21 @@ public class VFState implements IState {
 
     boolean matchAtoms(IAtom sourceAtom, IAtom targetAtom) {
         return sourceAtom.getSymbol().equals(targetAtom.getSymbol()) ? true : false;
+    }
+
+    private boolean matchAtomTypes1(IBond qbond, IBond tbond) {
+        if (qbond.getAtom(0).getSymbol().equals(tbond.getAtom(0).getSymbol())
+                && qbond.getAtom(1).getSymbol().equals(tbond.getAtom(1).getSymbol())) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean matchAtomTypes2(IBond qbond, IBond tbond) {
+        if (qbond.getAtom(0).getSymbol().equals(tbond.getAtom(1).getSymbol())
+                && qbond.getAtom(1).getSymbol().equals(tbond.getAtom(0).getSymbol())) {
+            return true;
+        }
+        return false;
     }
 }
