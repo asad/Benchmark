@@ -36,9 +36,6 @@ public class VF2 {
 
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
         if (testIsSubgraphHeuristics(a, b)) {
-            ICanonicalMoleculeLabeller can = new CanonicalLabellingAdaptor();
-            a = can.getCanonicalMolecule(a);
-            b = can.getCanonicalMolecule(b);
 //            AtomContainerPrinter printer = new AtomContainerPrinter();
             setIDs(a);
 //            System.out.println(printer.toString(a));
