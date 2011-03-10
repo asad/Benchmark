@@ -276,7 +276,7 @@ class State {
             if (sharedState.targetMapping[neighbourIndex] != -1) {
                 int sourceNeighbor = sharedState.targetMapping[neighbourIndex];
                 IAtom sourceNeighbourAtom = source.getAtom(sourceNeighbor);
-                IAtom sourceAtomAtom = source.getAtom(targetAtom);
+                IAtom sourceAtomAtom = source.getAtom(sourceAtom);
 
                 if (source.getBond(sourceAtomAtom, sourceNeighbourAtom) == null) {
                     return false;
