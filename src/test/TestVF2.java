@@ -1,4 +1,4 @@
-package mcsbenchmark;
+package test;
 
 import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.exception.InvalidSmilesException;
