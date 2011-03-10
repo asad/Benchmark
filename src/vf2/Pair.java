@@ -8,44 +8,44 @@ package vf2;
  */
 class Pair<T, S> {
 
-    private T first;
-    private S second;
+    private T source;
+    private S target;
 
     public Pair(T a, S b) {
-        this.first = a;
-        this.second = b;
+        this.source = a;
+        this.target = b;
     }
 
     @Override
     public String toString() {
-        return "(" + getFirst() + ", " + getSecond() + ")";
+        return "(" + getSourceAtom() + ", " + getTargetAtom() + ")";
     }
 
     /**
-     * @return the first
+     * @return the source
      */
-    public T getFirst() {
-        return first;
+    public T getSourceAtom() {
+        return source;
     }
 
     /**
-     * @param first the first to set
+     * @param source the source to set
      */
-    public void setFirst(T first) {
-        this.first = first;
+    public void setSourceAtom(T first) {
+        this.source = first;
     }
 
     /**
-     * @return the second
+     * @return the target
      */
-    public S getSecond() {
-        return second;
+    public S getTargetAtom() {
+        return target;
     }
 
     /**
-     * @param second the second to set
+     * @param target the target to set
      */
-    public void setSecond(S second) {
-        this.second = second;
+    public void setTargetAtom(S second) {
+        this.target = second;
     }
 }

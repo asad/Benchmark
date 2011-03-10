@@ -83,8 +83,8 @@ class State {
     // using the addPair() method.
     Pair<Integer, Integer> nextCandidate(
             Pair<Integer, Integer> lastCandidate) {
-        int lastSourceAtom = lastCandidate.getFirst();
-        int lastTargetAtom = lastCandidate.getSecond();
+        int lastSourceAtom = lastCandidate.getSourceAtom();
+        int lastTargetAtom = lastCandidate.getTargetAtom();
 
         int sourceSize = source.getAtomCount();
         int targetSize = target.getAtomCount();
@@ -138,8 +138,8 @@ class State {
         size++;
         lastAddition = candidate;
 
-        int sourceAtom = candidate.getFirst();
-        int targetAtom = candidate.getSecond();
+        int sourceAtom = candidate.getSourceAtom();
+        int targetAtom = candidate.getTargetAtom();
 
         if (sharedState.sourceTerminalSet[sourceAtom] < 1) {
             sharedState.sourceTerminalSet[sourceAtom] = size;
@@ -177,10 +177,10 @@ class State {
     // Restores the shared state to how it was before adding the last
     // candidate pair. Assumes addPair() has been called on the state only once.
     void backTrack() {
-        if (lastAddition.getFirst() == -1) {
+        if (lastAddition.getSourceAtom() == -1) {
             return;   // XXX hack
         }
-        int addedSourceAtom = lastAddition.getFirst();
+        int addedSourceAtom = lastAddition.getSourceAtom();
 
         if (sharedState.sourceTerminalSet[addedSourceAtom] == size) {
             sharedState.sourceTerminalSet[addedSourceAtom] = 0;
@@ -195,7 +195,7 @@ class State {
             }
         }
 
-        int addedTargetAtom = lastAddition.getFirst();
+        int addedTargetAtom = lastAddition.getTargetAtom();
 
         if (sharedState.targetTerminalSet[addedTargetAtom] == size) {
             sharedState.targetTerminalSet[addedTargetAtom] = 0;
@@ -217,8 +217,8 @@ class State {
     }
 
     boolean isFeasible(Pair<Integer, Integer> candidate) {
-        int sourceAtom = candidate.getFirst();
-        int targetAtom = candidate.getSecond();
+        int sourceAtom = candidate.getSourceAtom();
+        int targetAtom = candidate.getTargetAtom();
 
         int sourceAtomLabel =
                 Integer.parseInt(source.getAtom(sourceAtom).getID());
@@ -307,7 +307,7 @@ class State {
         while (!found) {
             Pair<Integer, Integer> candidate = state.nextCandidate(lastCandidate);
 
-            if (candidate.getFirst() == -1) {
+            if (candidate.getSourceAtom() == -1) {
                 return false;
             }
 
