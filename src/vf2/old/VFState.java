@@ -129,7 +129,7 @@ public class VFState implements IState {
      */
     @Override
     public Map<IAtom, IAtom> getMap() {
-        return new HashMap(map.getMapping());
+        return new HashMap<IAtom, IAtom>(map.getMapping());
     }
 
     /** {@inheritDoc}
