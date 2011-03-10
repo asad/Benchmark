@@ -34,7 +34,7 @@ class State {
     int targetTerminalSize;
     IAtomContainer source;
     IAtomContainer target;
-    Pair<Integer, Integer> lastAddition;
+    Match<Integer, Integer> lastAddition;
     SharedState sharedState;
     boolean ownSharedState;
 
@@ -44,7 +44,7 @@ class State {
         this.targetTerminalSize = 0;
         this.source = source;
         this.target = target;
-        this.lastAddition = new Pair<Integer, Integer>(-1, -1);
+        this.lastAddition = new Match<Integer, Integer>(-1, -1);
         this.sharedState = new SharedState(source.getAtomCount(),
                 target.getAtomCount());
         this.ownSharedState = true;
@@ -56,14 +56,22 @@ class State {
         this.targetTerminalSize = state.targetTerminalSize;
         this.source = state.source;
         this.target = state.target;
-        this.lastAddition = new Pair<Integer, Integer>(-1, -1);
+        this.lastAddition = new Match<Integer, Integer>(-1, -1);
         this.sharedState = state.sharedState;
         this.ownSharedState = false;
     }
 
     // Returns true if the state contains an isomorphism.
-    boolean succeeded() {
+    boolean isGoal() {
         return size == source.getAtomCount();
+    }
+
+    public boolean isDead() {
+        return source.getAtomCount() > target.getAtomCount();
+    }
+
+    public boolean hasNextCandidate(Match<Integer, Integer> candidate) {
+        return candidate.getSourceAtom() == -1 ? false : true;
     }
 
     // Returns the current isomorphism for the state in an AtomMapping
@@ -81,8 +89,8 @@ class State {
     // Returns the next candidate pair (sourceAtom, targetAtom) to be added
     // to the state. The candidate should be checked for feasibility and then added
     // using the addPair() method.
-    Pair<Integer, Integer> nextCandidate(
-            Pair<Integer, Integer> lastCandidate) {
+    Match<Integer, Integer> nextCandidate(
+            Match<Integer, Integer> lastCandidate) {
         int lastSourceAtom = lastCandidate.getSourceAtom();
         int lastTargetAtom = lastCandidate.getTargetAtom();
 
@@ -126,15 +134,15 @@ class State {
         }
 
         if (lastSourceAtom < sourceSize && lastTargetAtom < targetSize) {
-            return new Pair<Integer, Integer>(lastSourceAtom, lastTargetAtom);
+            return new Match<Integer, Integer>(lastSourceAtom, lastTargetAtom);
         }
 
-        return new Pair<Integer, Integer>(-1, -1);
+        return new Match<Integer, Integer>(-1, -1);
     }
 
     // Adds the candidate pair (sourceAtom, targetAtom) to the state. The
     // candidate pair must be feasible to add it to the state.
-    void addPair(Pair<Integer, Integer> candidate) {
+    void addPair(Match<Integer, Integer> candidate) {
         size++;
         lastAddition = candidate;
 
@@ -213,10 +221,10 @@ class State {
         sharedState.sourceMapping[addedSourceAtom] = -1;
         sharedState.targetMapping[addedTargetAtom] = -1;
         size--;
-        lastAddition = new Pair<Integer, Integer>(-1, -1);
+        lastAddition = new Match<Integer, Integer>(-1, -1);
     }
 
-    boolean isFeasible(Pair<Integer, Integer> candidate) {
+    boolean isFeasible(Match<Integer, Integer> candidate) {
         int sourceAtom = candidate.getSourceAtom();
         int targetAtom = candidate.getTargetAtom();
 
@@ -291,39 +299,6 @@ class State {
         }
         return (sourceTerminalNeighborCount <= targetTerminalNeighborCount)
                 && (sourceNewNeighborCount <= targetNewNeighborCount);
-    }
-
-    boolean match(State state, List<AtomMapping> mappings) {
-//        System.out.println("Matched " + state.size + " out of " + state.source.getAtomCount());
-        if (state.succeeded()) {
-            mappings.add(state.getMapping());
-            return true;
-        }
-
-        Pair<Integer, Integer> lastCandidate = new Pair<Integer, Integer>(-1, -1);
-
-        boolean found = false;
-        while (!found) {
-            Pair<Integer, Integer> candidate = state.nextCandidate(lastCandidate);
-
-            if (candidate.getSourceAtom() == -1) {
-                return false;
-            }
-
-            lastCandidate = candidate;
-
-            if (state.isFeasible(candidate)) {
-                State nextState = state;
-                nextState.addPair(candidate);
-                found = match(nextState, mappings);
-                if (found) {
-                    return true;
-                }
-                nextState.backTrack();
-            }
-        }
-
-        return found;
     }
 
     boolean matchBonds(IBond sourceBond, IBond targetBond) {

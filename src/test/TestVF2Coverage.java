@@ -43,7 +43,13 @@ public class TestVF2Coverage {
         if (query.getAtomCount() <= target.getAtomCount()) {
             VF2 matcher = new VF2();
             AtomMapping mapping = matcher.isomorphism(query, target);
+
             System.out.println("mapping " + mapping);
+
+//            List<AtomMapping> mapping = matcher.isomorphisms(query, target);
+//            for (AtomMapping map : mapping) {
+//                System.out.println("mapping " + map);
+//            }
         }
     }
 

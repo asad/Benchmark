@@ -40,16 +40,105 @@ public class VF2 {
             setIDs(b);
 //            System.out.println(printer.toString(b));
             State state = new State(a, b);
-            state.match(state, mappings);
+            mapFirst(state, mappings);
         }
 //        System.out.println("mapping count " + mappings.size());
         return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
+    }
+
+    /**
+     * 
+     * @param a query molecule
+     * @param b target molecule
+     * @return
+     */
+    public List<AtomMapping> isomorphisms(IAtomContainer a, IAtomContainer b) {
+
+        List<AtomMapping> mappings = new ArrayList<AtomMapping>();
+        if (testIsSubgraphHeuristics(a, b)) {
+//            AtomContainerPrinter printer = new AtomContainerPrinter();
+            setIDs(a);
+//            System.out.println(printer.toString(a));
+            setIDs(b);
+//            System.out.println(printer.toString(b));
+            State state = new State(a, b);
+            mapAll(state, mappings);
+        }
+        return mappings;
     }
 
     void setIDs(IAtomContainer atomContainer) {
         for (int i = 0; i < atomContainer.getAtomCount(); i++) {
             atomContainer.getAtom(i).setID(String.valueOf(i));
         }
+    }
+
+    private boolean mapFirst(State state, List<AtomMapping> mappings) {
+        if (state.isDead()) {
+            return false;
+        }
+        if (state.isGoal()) {
+            mappings.add(state.getMapping());
+            return true;
+        }
+
+        Match<Integer, Integer> lastCandidate = new Match<Integer, Integer>(-1, -1);
+        boolean found = false;
+        while (!found) {
+            Match<Integer, Integer> candidate = state.nextCandidate(lastCandidate);
+            if (!state.hasNextCandidate(candidate)) {
+                return false;
+            }
+            lastCandidate = candidate;
+            if (state.isFeasible(candidate)) {
+                State nextState = state;
+                nextState.addPair(candidate);
+                found = mapFirst(nextState, mappings);
+                if (found) {
+                    return true;
+                }
+                nextState.backTrack();
+            }
+        }
+        return found;
+    }
+
+    private void mapAll(State state, List<AtomMapping> mappings) {
+        if (state.isDead()) {
+            return;
+        }
+
+        if (state.isGoal()) {
+            AtomMapping map = state.getMapping();
+            if (!hasMap(map, mappings)) {
+                mappings.add(state.getMapping());
+            }
+        }
+
+        Match<Integer, Integer> lastCandidate = new Match<Integer, Integer>(-1, -1);
+        Match<Integer, Integer> candidate = state.nextCandidate(lastCandidate);
+
+        if (!state.hasNextCandidate(candidate)) {
+            return;
+        }
+
+        lastCandidate = candidate;
+
+        if (state.isFeasible(candidate)) {
+            State nextState = state;
+            nextState.addPair(candidate);
+            mapAll(nextState, mappings);
+            nextState.backTrack();
+        }
+    }
+
+    private boolean hasMap(AtomMapping map, List<AtomMapping> mappings) {
+        for (AtomMapping test : mappings) {
+            if (test.equals(map)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

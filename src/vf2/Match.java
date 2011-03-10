@@ -6,12 +6,12 @@ package vf2;
  * @param <T>
  * @param <S>
  */
-class Pair<T, S> {
+class Match<T, S> {
 
     private T source;
     private S target;
 
-    public Pair(T a, S b) {
+    public Match(T a, S b) {
         this.source = a;
         this.target = b;
     }
