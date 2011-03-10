@@ -19,6 +19,37 @@ public class PermutationTest {
         }
     }
     
+    private void testWithUIT(IMolecule molA, IMolecule molB) throws CDKException {
+      boolean uitThinks = UniversalIsomorphismTester.isIsomorph(molA, molB);
+      System.out.println("UIT thinks " + uitThinks);
+    }
+    
+    private void testWithVF2(IMolecule molA, IMolecule molB) {
+        VF2 vf2 = new VF2();
+        AtomMapping mapping = vf2.isomorphism(molA, molB);
+        System.out.println(mapping);
+    }
+    
+    @Test
+    public void cyclobutane() throws CDKException {
+        IMolecule cycA = new Molecule();
+        addAtoms(cycA, 4, "C");
+        cycA.addBond(0, 1, IBond.Order.SINGLE);
+        cycA.addBond(0, 2, IBond.Order.SINGLE);
+        cycA.addBond(1, 3, IBond.Order.SINGLE);
+        cycA.addBond(2, 3, IBond.Order.SINGLE);
+        
+        IMolecule cycB = new Molecule();
+        addAtoms(cycB, 4, "C");
+        cycB.addBond(0, 2, IBond.Order.SINGLE);
+        cycB.addBond(0, 3, IBond.Order.SINGLE);
+        cycB.addBond(1, 2, IBond.Order.SINGLE);
+        cycB.addBond(1, 3, IBond.Order.SINGLE);
+        
+        testWithVF2(cycA, cycB);
+        testWithUIT(cycA, cycB);
+    }
+    
     @Test
     public void cyclopentane() throws CDKException {
         IMolecule cycA = new Molecule();
@@ -37,12 +68,8 @@ public class PermutationTest {
         cycB.addBond(1, 3, IBond.Order.SINGLE);
         cycB.addBond(2, 4, IBond.Order.SINGLE);
         
-        VF2 vf2 = new VF2();
-        AtomMapping mapping = vf2.isomorphism(cycA, cycB);
-        System.out.println(mapping);
-        
-        boolean uitThinks = UniversalIsomorphismTester.isIsomorph(cycA, cycB);
-        System.out.println("UIT thinks " + uitThinks);
+        testWithVF2(cycA, cycB);
+        testWithUIT(cycA, cycB);
     }
 
 }

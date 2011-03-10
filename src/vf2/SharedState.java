@@ -25,4 +25,11 @@ class SharedState {
         targetTerminalSet = new int[targetSize];
         Arrays.fill(targetTerminalSet, 0);
     }
+    
+    public String toString() {
+        return "src: " + Arrays.toString(sourceMapping)
+             + " trg: " + Arrays.toString(targetMapping)
+             + " sTS: " + Arrays.toString(sourceTerminalSet)
+             + " tTS: " + Arrays.toString(targetTerminalSet);
+    }
 }
