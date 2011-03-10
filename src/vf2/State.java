@@ -220,11 +220,11 @@ class State {
         int sourceAtom = candidate.getSourceAtom();
         int targetAtom = candidate.getTargetAtom();
 
-        int sourceAtomLabel =
-                Integer.parseInt(source.getAtom(sourceAtom).getID());
-        int targetAtomLabel =
-                Integer.parseInt(target.getAtom(targetAtom).getID());
-
+//        int sourceAtomLabel =
+//                Integer.parseInt(source.getAtom(sourceAtom).getID());
+//        int targetAtomLabel =
+//                Integer.parseInt(target.getAtom(targetAtom).getID());
+//
 //        if (sourceAtomLabel != targetAtomLabel) {
 //            return false;
 //        }
