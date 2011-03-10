@@ -18,5 +18,6 @@ public class TestVF2 {
         PermutationTest pt = new PermutationTest();
         pt.cyclopentane();
         pt.cyclobutane();
+        pt.permuteSubgraph();
     }
 }
