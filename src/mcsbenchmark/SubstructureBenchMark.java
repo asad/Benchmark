@@ -30,8 +30,14 @@ public class SubstructureBenchMark {
      * @throws CDKException  
      */
     public static void main(String[] args) throws FileNotFoundException, Exception {
-        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
-        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
+//        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
+//        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
+//        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
+//        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
+
+        String queryFilePath = (args.length > 0) ? args[0] : "data/some.sdf";
+        String targetFilePath = (args.length > 1) ? args[1] : "data/some.sdf";
+
         File qFile = new File(queryFilePath);
         File tFile = new File(targetFilePath);
 
@@ -58,7 +64,7 @@ public class SubstructureBenchMark {
 
         for (IMolecule query : queries) {
             String out = String.format("%d ", counter);
-            out+=String.format("\t%d ", query.getAtomCount());
+            out += String.format("\t%d ", query.getAtomCount());
 
             UITLoop uitLoop = new UITLoop();
             uitLoop.run(query, targets);
