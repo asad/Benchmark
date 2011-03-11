@@ -42,7 +42,6 @@ public class VF2 {
             IState state = new State(a, b);
             mapFirst(state, mappings);
         }
-//        System.out.println("mapping count " + mappings.size());
         return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
     }
 
