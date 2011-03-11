@@ -309,13 +309,13 @@ class State implements IState {
     }
 
     boolean matchBonds(IBond sourceBond, IBond targetBond) {
-        VFBondMatcher bondMatcher = new DefaultVFBondMatcher(source, sourceBond, true);
+        BondMatcher bondMatcher = new VFBondMatcher(source, sourceBond, true);
         return bondMatcher.matches(target, targetBond);
 
     }
 
     boolean matchAtoms(IAtom sourceAtom, IAtom targetAtom) {
-        VFAtomMatcher atomMatcher = new DefaultVFAtomMatcher(source, sourceAtom, true);
+        AtomMatcher atomMatcher = new VFAtomMatcher(source, sourceAtom, true);
         return atomMatcher.matches(target, targetAtom);
     }
 }

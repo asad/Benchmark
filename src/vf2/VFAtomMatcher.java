@@ -23,14 +23,148 @@
  */
 package vf2;
 
+import org.openscience.cdk.annotations.TestClass;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.isomorphism.matchers.IQueryAtom;
+import org.openscience.cdk.isomorphism.matchers.IQueryAtomContainer;
 
 /**
- * Interface for the AtomMatcher (atoms) in graph.
+ * Checks if atom is matching between query and target molecules.
  * @author Syed Asad Rahman <asad@ebi.ac.uk>
  */
-public interface VFAtomMatcher {
+@TestClass("org.openscience.cdk.smsd.algorithm.vflib.VFLibTest")
+public class VFAtomMatcher implements AtomMatcher {
 
-    boolean matches(IAtomContainer container, IAtom atom);
+    static final long serialVersionUID = -7861469841127327812L;
+    private int maximumNeighbors;
+    private String symbol = null;
+    private IAtom qAtom = null;
+    private IQueryAtom smartQueryAtom = null;
+    private boolean shouldMatchBonds = false;
+
+    /**
+     * @return the shouldMatchBonds
+     */
+    public boolean isBondMatchFlag() {
+        return shouldMatchBonds;
+    }
+
+    /**
+     * @param shouldMatchBonds the shouldMatchBonds to set
+     */
+    public final void setBondMatchFlag(boolean shouldMatchBonds) {
+        this.shouldMatchBonds = shouldMatchBonds;
+    }
+
+    /**
+     * Constructor
+     */
+    public VFAtomMatcher() {
+        this.qAtom = null;
+        symbol = null;
+        maximumNeighbors = -1;
+    }
+
+    /**
+     * Constructor
+     * @param queryContainer query atom container
+     * @param atom query atom
+     * @param shouldMatchBonds bond matching flag
+     */
+    public VFAtomMatcher(IAtomContainer queryContainer, IAtom atom, boolean shouldMatchBonds) {
+        this();
+        this.qAtom = atom;
+        this.symbol = atom.getSymbol();
+        setBondMatchFlag(shouldMatchBonds);
+//        this.maximumNeighbors = countImplicitHydrogens(atom)
+//                + queryContainer.getConnectedAtomsCount(atom);
+
+//        System.out.println("Atom " + atom.getSymbol());
+//        System.out.println("MAX allowed " + maximumNeighbors);
+    }
+
+    /**
+     * Constructor
+     * @param smartQueryAtom query atom
+     * @param container 
+     */
+    public VFAtomMatcher(IQueryAtom smartQueryAtom, IQueryAtomContainer container) {
+        this();
+        this.smartQueryAtom = smartQueryAtom;
+        this.symbol = smartQueryAtom.getSymbol();
+    }
+
+    /**
+     * Constructor
+     * @param queryContainer query atom container
+     * @param template query atom
+     * @param blockedPositions
+     * @param shouldMatchBonds bond matching flag
+     */
+    public VFAtomMatcher(IAtomContainer queryContainer, IAtom template, int blockedPositions, boolean shouldMatchBonds) {
+        this(queryContainer, template, shouldMatchBonds);
+        this.maximumNeighbors = countImplicitHydrogens(template)
+                + queryContainer.getConnectedAtomsCount(template)
+                - blockedPositions;
+    }
+
+    /**
+     *
+     * @param maximum numbers of connected atoms allowed
+     */
+    public void setMaximumNeighbors(int maximum) {
+        this.maximumNeighbors = maximum;
+    }
+
+    /** {@inheritDoc}
+     * @param symbol
+     */
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
+    /** {@inheritDoc}
+     *
+     * @param targetContainer
+     * @param targetAtom
+     * @return
+     */
+    @Override
+    public boolean matches(IAtomContainer targetContainer, IAtom targetAtom) {
+        if (smartQueryAtom != null && qAtom == null) {
+            if (!smartQueryAtom.matches(targetAtom)) {
+                return false;
+            }
+        } else if (!matchSymbol(targetAtom)) {
+            return false;
+        }
+
+//        if (!matchMaximumNeighbors(targetContainer, targetAtom)) {
+//            return false;
+//        }
+        return true;
+    }
+
+    private boolean matchSymbol(IAtom atom) {
+        if (symbol == null) {
+            return false;
+        }
+        return symbol.equals(atom.getSymbol());
+    }
+
+    private boolean matchMaximumNeighbors(IAtomContainer targetContainer, IAtom targetAtom) {
+        if (maximumNeighbors == -1 || !isBondMatchFlag()) {
+            return true;
+        }
+
+        int maximumTargetNeighbors = targetContainer.getConnectedAtomsCount(targetAtom)
+                + countImplicitHydrogens(targetAtom);
+        return maximumTargetNeighbors <= maximumNeighbors;
+    }
+
+    private int countImplicitHydrogens(IAtom atom) {
+        return (atom.getImplicitHydrogenCount() == null)
+                ? 0 : atom.getImplicitHydrogenCount();
+    }
 }
