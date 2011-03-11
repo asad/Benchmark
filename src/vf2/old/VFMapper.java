@@ -169,7 +169,10 @@ public class VFMapper implements IMapper {
         }
 
         boolean found = false;
-        while (!found && state.hasNextCandidate()) {
+        while (!found) {
+            if (!state.hasNextCandidate()) {
+                return false;
+            }
             Match candidate = state.nextCandidate();
             if (state.isMatchFeasible(candidate)) {
                 IState nextState = state.nextState(candidate);
