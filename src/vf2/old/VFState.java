@@ -90,7 +90,6 @@ public class VFState implements IState {
         this.target = target;
         this.candidates = new ArrayList<Match>();
         loadRootCandidates();
-
     }
 
     private VFState(VFState state, Match match) {
@@ -185,26 +184,17 @@ public class VFState implements IState {
     }
 
     private void loadRootCandidates() {
-        for (int i = 0; i < query.getBondCount(); i++) {
-            IBond qBond = query.getBond(i);
-            for (int j = 0; j < target.getBondCount(); j++) {
-                IBond tBond = target.getBond(j);
-                if (matchBond(qBond, tBond)) {
-                    if (matchAtomTypes1(qBond, tBond)) {
-                        Match match1 = new Match(qBond.getAtom(0), tBond.getAtom(0));
-                        Match match2 = new Match(qBond.getAtom(1), tBond.getAtom(1));
-                        candidates.add(match1);
-                        candidates.add(match2);
-                    } else if (matchAtomTypes2(qBond, tBond)) {
-                        Match match1 = new Match(qBond.getAtom(0), tBond.getAtom(1));
-                        Match match2 = new Match(qBond.getAtom(1), tBond.getAtom(0));
-                        candidates.add(match1);
-                        candidates.add(match2);
-                    }
+        for (int i = 0; i < query.getAtomCount(); i++) {
+            IAtom qAtom = query.getAtom(i);
+            for (int j = 0; j < target.getAtomCount(); j++) {
+                IAtom tAtom = target.getAtom(j);
+                Match match = new Match(qAtom, tAtom);
+                if (matchAtoms(match)) {
+                    candidates.add(match);
                 }
             }
         }
-        //System.out.println("Compatibility graph " + candidates.size());
+        System.out.println("Compatibility graph " + candidates.size());
     }
 
 //@TODO Asad Check the Neighbour count
@@ -214,8 +204,8 @@ public class VFState implements IState {
         List<IAtom> queryNeighbors = query.getConnectedAtomsList(lastMatch.getQueryAtom());
         for (IAtom queryAtom : queryNeighbors) {
             for (IAtom targetAtom : targetNeighbors) {
-                if (matchAtoms(queryAtom, targetAtom)) {
-                    Match match = new Match(queryAtom, targetAtom);
+                Match match = new Match(queryAtom, targetAtom);
+                if (matchAtoms(match)) {
                     if (candidateFeasible(match)) {
                         candidates.add(match);
                     }
