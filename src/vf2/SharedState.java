@@ -7,10 +7,10 @@ import java.util.Arrays;
 // in each isomorphism test.
 class SharedState {
 
-    int[] sourceMapping;
-    int[] targetMapping;
-    int[] sourceTerminalSet;
-    int[] targetTerminalSet;
+    private int[] sourceMapping;
+    private int[] targetMapping;
+    private int[] sourceTerminalSet;
+    private int[] targetTerminalSet;
 
     public SharedState(int sourceSize, int targetSize) {
         sourceMapping = new int[sourceSize];
@@ -28,9 +28,36 @@ class SharedState {
 
     @Override
     public String toString() {
-        return "src: " + Arrays.toString(sourceMapping)
-                + " trg: " + Arrays.toString(targetMapping)
-                + " sTS: " + Arrays.toString(sourceTerminalSet)
-                + " tTS: " + Arrays.toString(targetTerminalSet);
+        return "src: " + Arrays.toString(getSourceMapping())
+                + " trg: " + Arrays.toString(getTargetMapping())
+                + " sTS: " + Arrays.toString(getSourceTerminalSet())
+                + " tTS: " + Arrays.toString(getTargetTerminalSet());
+    }
+
+    /**
+     * @return the sourceMapping
+     */
+    public int[] getSourceMapping() {
+        return sourceMapping;
+    }
+    /**
+     * @return the targetMapping
+     */
+    public int[] getTargetMapping() {
+        return targetMapping;
+    }
+
+    /**
+     * @return the sourceTerminalSet
+     */
+    public int[] getSourceTerminalSet() {
+        return sourceTerminalSet;
+    }
+    
+    /**
+     * @return the targetTerminalSet
+     */
+    public int[] getTargetTerminalSet() {
+        return targetTerminalSet;
     }
 }

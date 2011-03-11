@@ -83,8 +83,8 @@ public class VFState implements IState {
      */
     public VFState(IAtomContainer query, IAtomContainer target) {
         this.map = new AtomMapping(target, query);
-        this.queryPath = new ArrayList<IAtom>();
-        this.targetPath = new ArrayList<IAtom>();
+        this.queryPath = new ArrayList<IAtom>(query.getAtomCount());
+        this.targetPath = new ArrayList<IAtom>(target.getAtomCount());
 
         this.query = query;
         this.target = target;
@@ -194,7 +194,7 @@ public class VFState implements IState {
                 }
             }
         }
-        System.out.println("Compatibility graph " + candidates.size());
+//        System.out.println("Compatibility graph " + candidates.size());
     }
 
 //@TODO Asad Check the Neighbour count
@@ -244,11 +244,10 @@ public class VFState implements IState {
 
         for (int i = 0; i < queryPath.size() - 1; i++) {
             IBond queryBond = query.getBond(queryPath.get(i), match.getQueryAtom());
-            IBond targetBond = target.getBond(targetPath.get(i), match.getTargetAtom());
             if (queryBond == null) {
                 continue;
             }
-
+            IBond targetBond = target.getBond(targetPath.get(i), match.getTargetAtom());
             if (targetBond == null) {
                 return false;
             }
@@ -306,21 +305,5 @@ public class VFState implements IState {
 
     boolean matchAtoms(IAtom sourceAtom, IAtom targetAtom) {
         return sourceAtom.getSymbol().equals(targetAtom.getSymbol()) ? true : false;
-    }
-
-    private boolean matchAtomTypes1(IBond qbond, IBond tbond) {
-        if (qbond.getAtom(0).getSymbol().equals(tbond.getAtom(0).getSymbol())
-                && qbond.getAtom(1).getSymbol().equals(tbond.getAtom(1).getSymbol())) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean matchAtomTypes2(IBond qbond, IBond tbond) {
-        if (qbond.getAtom(0).getSymbol().equals(tbond.getAtom(1).getSymbol())
-                && qbond.getAtom(1).getSymbol().equals(tbond.getAtom(0).getSymbol())) {
-            return true;
-        }
-        return false;
     }
 }

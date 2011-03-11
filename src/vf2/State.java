@@ -37,7 +37,7 @@ class State implements IState {
     int targetTerminalSize;
     IAtomContainer source;
     IAtomContainer target;
-    Match<Integer, Integer> lastAddition;
+    Match<Integer, Integer> candidates;
     SharedState sharedState;
     boolean ownSharedState;
 
@@ -47,7 +47,7 @@ class State implements IState {
         this.targetTerminalSize = 0;
         this.source = source;
         this.target = target;
-        this.lastAddition = new Match<Integer, Integer>(-1, -1);
+        this.candidates = new Match<Integer, Integer>(-1, -1);
         this.sharedState = new SharedState(source.getAtomCount(),
                 target.getAtomCount());
         this.ownSharedState = true;
@@ -59,7 +59,7 @@ class State implements IState {
         this.targetTerminalSize = state.targetTerminalSize;
         this.source = state.source;
         this.target = state.target;
-        this.lastAddition = new Match<Integer, Integer>(-1, -1);
+        this.candidates = new Match<Integer, Integer>(-1, -1);
         this.sharedState = state.sharedState;
         this.ownSharedState = false;
     }
@@ -88,7 +88,7 @@ class State implements IState {
 
         for (int i = 0; i < size; i++) {
             mapping.add(source.getAtom(i),
-                    target.getAtom(sharedState.sourceMapping[i]));
+                    target.getAtom(sharedState.getSourceMapping()[i]));
         }
         return mapping;
     }
@@ -117,13 +117,13 @@ class State implements IState {
 
         if (sourceTerminalSize > size && targetTerminalSize > size) {
             while (lastSourceAtom < sourceSize
-                    && (sharedState.sourceMapping[lastSourceAtom] != -1 || sharedState.sourceTerminalSet[lastSourceAtom] == 0)) {
+                    && (sharedState.getSourceMapping()[lastSourceAtom] != -1 || sharedState.getSourceTerminalSet()[lastSourceAtom] == 0)) {
                 lastSourceAtom++;
                 lastTargetAtom = 0;
             }
         } else {
             while (lastSourceAtom < sourceSize
-                    && sharedState.sourceMapping[lastSourceAtom] != -1) {
+                    && sharedState.getSourceMapping()[lastSourceAtom] != -1) {
                 lastSourceAtom++;
                 lastTargetAtom = 0;
             }
@@ -131,12 +131,12 @@ class State implements IState {
 
         if (sourceTerminalSize > size && targetTerminalSize > size) {
             while (lastTargetAtom < targetSize
-                    && (sharedState.targetMapping[lastTargetAtom] != -1 || sharedState.targetTerminalSet[lastTargetAtom] == 0)) {
+                    && (sharedState.getTargetMapping()[lastTargetAtom] != -1 || sharedState.getTargetTerminalSet()[lastTargetAtom] == 0)) {
                 lastTargetAtom++;
             }
         } else {
             while (lastTargetAtom < targetSize
-                    && sharedState.targetMapping[lastTargetAtom] != -1) {
+                    && sharedState.getTargetMapping()[lastTargetAtom] != -1) {
                 lastTargetAtom++;
             }
         }
@@ -153,30 +153,30 @@ class State implements IState {
     @Override
     public void addPair(Match<Integer, Integer> candidate) {
         size++;
-        lastAddition = candidate;
+        candidates = candidate;
 
         int sourceAtom = candidate.getSourceAtom();
         int targetAtom = candidate.getTargetAtom();
 
-        if (sharedState.sourceTerminalSet[sourceAtom] < 1) {
-            sharedState.sourceTerminalSet[sourceAtom] = size;
+        if (sharedState.getSourceTerminalSet()[sourceAtom] < 1) {
+            sharedState.getSourceTerminalSet()[sourceAtom] = size;
 //                sourceTerminalSize++;
         }
 
-        if (sharedState.targetTerminalSet[targetAtom] < 1) {
-            sharedState.targetTerminalSet[targetAtom] = size;
+        if (sharedState.getTargetTerminalSet()[targetAtom] < 1) {
+            sharedState.getTargetTerminalSet()[targetAtom] = size;
 //                targetTerminalSize++;
         }
 
-        sharedState.sourceMapping[sourceAtom] = targetAtom;
-        sharedState.targetMapping[targetAtom] = sourceAtom;
+        sharedState.getSourceMapping()[sourceAtom] = targetAtom;
+        sharedState.getTargetMapping()[targetAtom] = sourceAtom;
 
         List<IAtom> sourceNeighbours =
                 source.getConnectedAtomsList(source.getAtom(sourceAtom));
         for (IAtom neighbor : sourceNeighbours) {
             int neighbourIndex = source.getAtomNumber(neighbor);
-            if (sharedState.sourceTerminalSet[neighbourIndex] < 1) {
-                sharedState.sourceTerminalSet[neighbourIndex] = size;
+            if (sharedState.getSourceTerminalSet()[neighbourIndex] < 1) {
+                sharedState.getSourceTerminalSet()[neighbourIndex] = size;
                 sourceTerminalSize++;
             }
         }
@@ -184,15 +184,15 @@ class State implements IState {
         List<IAtom> targetNeighbours = target.getConnectedAtomsList(target.getAtom(targetAtom));
         for (IAtom neighbor : targetNeighbours) {
             int neighbourIndex = target.getAtomNumber(neighbor);
-            if (sharedState.targetTerminalSet[neighbourIndex] < 1) {
-                sharedState.targetTerminalSet[neighbourIndex] = size;
+            if (sharedState.getTargetTerminalSet()[neighbourIndex] < 1) {
+                sharedState.getTargetTerminalSet()[neighbourIndex] = size;
                 targetTerminalSize++;
             }
         }
     }
 
     private boolean isEmpty() {
-        return lastAddition.getSourceAtom() == -1 ? true : false;
+        return candidates.getSourceAtom() == -1 ? true : false;
     }
 
 // Restores the shared state to how it was before adding the last
@@ -203,40 +203,40 @@ class State implements IState {
         if (isEmpty() || isGoal()) {
             return;
         }
-        int addedSourceAtom = lastAddition.getSourceAtom();
+        int addedSourceAtom = candidates.getSourceAtom();
 
-        if (sharedState.sourceTerminalSet[addedSourceAtom] == size) {
-            sharedState.sourceTerminalSet[addedSourceAtom] = 0;
+        if (sharedState.getSourceTerminalSet()[addedSourceAtom] == size) {
+            sharedState.getSourceTerminalSet()[addedSourceAtom] = 0;
         }
 
         List<IAtom> sourceNeighbours =
                 source.getConnectedAtomsList(source.getAtom(addedSourceAtom));
         for (IAtom neighbor : sourceNeighbours) {
             int neighbourIndex = source.getAtomNumber(neighbor);
-            if (sharedState.sourceTerminalSet[neighbourIndex] == size) {
-                sharedState.sourceTerminalSet[neighbourIndex] = 0;
+            if (sharedState.getSourceTerminalSet()[neighbourIndex] == size) {
+                sharedState.getSourceTerminalSet()[neighbourIndex] = 0;
             }
         }
 
-        int addedTargetAtom = lastAddition.getTargetAtom();
+        int addedTargetAtom = candidates.getTargetAtom();
 
-        if (sharedState.targetTerminalSet[addedTargetAtom] == size) {
-            sharedState.targetTerminalSet[addedTargetAtom] = 0;
+        if (sharedState.getTargetTerminalSet()[addedTargetAtom] == size) {
+            sharedState.getTargetTerminalSet()[addedTargetAtom] = 0;
         }
 
         List<IAtom> targetNeighbours =
                 target.getConnectedAtomsList(target.getAtom(addedTargetAtom));
         for (IAtom neighbor : targetNeighbours) {
             int neighbourIndex = target.getAtomNumber(neighbor);
-            if (sharedState.targetTerminalSet[neighbourIndex] == size) {
-                sharedState.targetTerminalSet[neighbourIndex] = 0;
+            if (sharedState.getTargetTerminalSet()[neighbourIndex] == size) {
+                sharedState.getTargetTerminalSet()[neighbourIndex] = 0;
             }
         }
 
-        sharedState.sourceMapping[addedSourceAtom] = -1;
-        sharedState.targetMapping[addedTargetAtom] = -1;
+        sharedState.getSourceMapping()[addedSourceAtom] = -1;
+        sharedState.getTargetMapping()[addedTargetAtom] = -1;
         size--;
-        lastAddition = new Match<Integer, Integer>(-1, -1);
+        candidates = new Match<Integer, Integer>(-1, -1);
     }
 
     @Override
@@ -270,8 +270,8 @@ class State implements IState {
             IAtom sourceAtomAtom = source.getAtom(sourceAtom);
             IBond sourceBond = source.getBond(sourceAtomAtom, neighbour);
 
-            if (sharedState.sourceMapping[neighbourIndex] != -1) {
-                int targetNeighbor = sharedState.sourceMapping[neighbourIndex];
+            if (sharedState.getSourceMapping()[neighbourIndex] != -1) {
+                int targetNeighbor = sharedState.getSourceMapping()[neighbourIndex];
                 IAtom targetNeighbourAtom = target.getAtom(targetNeighbor);
                 IAtom targetAtomAtom = target.getAtom(targetAtom);
 
@@ -285,7 +285,7 @@ class State implements IState {
                 }
 
             } else {
-                if (sharedState.sourceTerminalSet[neighbourIndex] > 0) {
+                if (sharedState.getSourceTerminalSet()[neighbourIndex] > 0) {
                     sourceTerminalNeighborCount++;
                 } else {
                     sourceNewNeighborCount++;
@@ -297,8 +297,8 @@ class State implements IState {
                 target.getConnectedAtomsList(target.getAtom(targetAtom));
         for (IAtom neighbour : targetNeighbours) {
             int neighbourIndex = target.getAtomNumber(neighbour);
-            if (sharedState.targetMapping[neighbourIndex] != -1) {
-                int sourceNeighbor = sharedState.targetMapping[neighbourIndex];
+            if (sharedState.getTargetMapping()[neighbourIndex] != -1) {
+                int sourceNeighbor = sharedState.getTargetMapping()[neighbourIndex];
                 IAtom sourceNeighbourAtom = source.getAtom(sourceNeighbor);
                 IAtom sourceAtomAtom = source.getAtom(sourceAtom);
 
@@ -306,7 +306,7 @@ class State implements IState {
                     return false;
                 }
             } else {
-                if (sharedState.targetTerminalSet[neighbourIndex] > 0) {
+                if (sharedState.getTargetTerminalSet()[neighbourIndex] > 0) {
                     targetTerminalNeighborCount++;
                 } else {
                     targetNewNeighborCount++;
