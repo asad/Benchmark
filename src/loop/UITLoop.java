@@ -20,7 +20,7 @@ public class UITLoop extends AbstractSubgraphIsomorphismLoop
         try {
             List bondMapping = UniversalIsomorphismTester.getSubgraphMap(target, query);
             List<RMap> sol = UniversalIsomorphismTester.makeAtomsMapOfBondsMap(bondMapping, target, query);
-            if (sol.size() > 0) {
+            if (sol != null && sol.size() > 0) {
                 numberOfResults++;
             }
         } catch (CDKException cdke) {
