@@ -1,5 +1,9 @@
 package vf2;
 
+import vf2.matcher.VFBondMatcher;
+import vf2.matcher.AtomMatcher;
+import vf2.matcher.VFAtomMatcher;
+import vf2.matcher.BondMatcher;
 import java.util.List;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
