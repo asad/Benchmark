@@ -12,6 +12,7 @@ import org.openscience.cdk.CDKConstants;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
+import tools.labelling.AtomContainerPrinter;
 
 /**
  *
@@ -42,6 +43,13 @@ public class VF2 {
             IState state = new State(a, b);
             mapFirst(state, mappings);
         }
+
+//        System.out.println("Comparison between "
+//                + a.getID() + ", "
+//                + b.getID()
+//                + " mappings size: "
+//                + mappings.size());
+
         return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
     }
 
@@ -73,6 +81,9 @@ public class VF2 {
     }
 
     private boolean mapFirst(IState state, List<AtomMapping> mappings) {
+
+//        System.out.println("Mapping " + state.getMapping());
+
         if (state.isDead()) {
             return false;
         }
@@ -89,6 +100,7 @@ public class VF2 {
                 return false;
             }
             lastCandidate = candidate;
+//            System.out.println("state.isMatchFeasible(candidate) " + state.isMatchFeasible(candidate));
             if (state.isMatchFeasible(candidate)) {
                 IState nextState = state;
                 nextState.addPair(candidate);

@@ -191,12 +191,17 @@ class State implements IState {
         }
     }
 
-    // Restores the shared state to how it was before adding the last
-    // candidate pair. Assumes addPair() has been called on the state only once.
+    private boolean isEmpty() {
+        return lastAddition.getSourceAtom() == -1 ? true : false;
+    }
+
+// Restores the shared state to how it was before adding the last
+// candidate pair. Assumes addPair() has been called on the state only once.
     @Override
     public void backTrack() {
-        if (lastAddition.getSourceAtom() == -1) {
-            return;   // XXX hack
+
+        if (isEmpty() || isGoal()) {
+            return;
         }
         int addedSourceAtom = lastAddition.getSourceAtom();
 
@@ -315,7 +320,6 @@ class State implements IState {
     boolean matchBonds(IBond sourceBond, IBond targetBond) {
         BondMatcher bondMatcher = new VFBondMatcher(source, sourceBond, true);
         return bondMatcher.matches(target, targetBond);
-
     }
 
     boolean matchAtoms(IAtom sourceAtom, IAtom targetAtom) {

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import loop.VF2SMSD;
 import loop.UITLoop;
 import loop.VFLibLoop;
 import org.openscience.cdk.exception.CDKException;
@@ -30,13 +31,14 @@ public class SubstructureBenchMark {
      * @throws CDKException  
      */
     public static void main(String[] args) throws FileNotFoundException, Exception {
-        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
-        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
+//        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
+//        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
+        
 //        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
 //        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
 
-//        String queryFilePath = (args.length > 0) ? args[0] : "data/1Query.sdf";
-//        String targetFilePath = (args.length > 1) ? args[1] : "data/4Targets.sdf";
+        String queryFilePath = (args.length > 0) ? args[0] : "data/1Query.sdf";
+        String targetFilePath = (args.length > 1) ? args[1] : "data/4Targets.sdf";
 
 //        String queryFilePath = (args.length > 0) ? args[0] : "data/some.sdf";
 //        String targetFilePath = (args.length > 1) ? args[1] : "data/some.sdf";
@@ -57,10 +59,14 @@ public class SubstructureBenchMark {
 
         List<IMolecule> targets = new ArrayList<IMolecule>();
         IIteratingChemObjectReader tFileReader = read(tFile);
-        while (tFileReader.hasNext()) {
-            targets.add((IMolecule) tFileReader.next());
-        }
+
         int counter = 1;
+        while (tFileReader.hasNext()) {
+            IMolecule mol = (IMolecule) tFileReader.next();
+            mol.setID(String.valueOf(counter++));
+            targets.add(mol);
+        }
+        counter = 1;
         System.out.println(
                 "number of queries " + queries.size()
                 + " number of targets " + targets.size());
@@ -69,13 +75,15 @@ public class SubstructureBenchMark {
             String out = String.format("%d ", counter);
             out += String.format("\t%d ", query.getAtomCount());
 
+            query.setID(String.valueOf(counter++));
+
             UITLoop uitLoop = new UITLoop();
             uitLoop.run(query, targets);
             out += uitLoop;
 
-//            SMSDLoop smsdLoop = new SMSDLoop();
-//            smsdLoop.run(query, targets);
-//            out += smsdLoop;
+            VF2SMSD smsdLoop = new VF2SMSD();
+            smsdLoop.run(query, targets);
+            out += smsdLoop;
 
             VFLibLoop vfLibLoop = new VFLibLoop();
             vfLibLoop.run(query, targets);
