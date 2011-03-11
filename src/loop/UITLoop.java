@@ -8,21 +8,22 @@ import org.openscience.cdk.isomorphism.UniversalIsomorphismTester;
 import org.openscience.cdk.isomorphism.mcss.RMap;
 
 public class UITLoop extends AbstractSubgraphIsomorphismLoop
-                     implements TimedSubgraphIsomorphismLoop {
-    
+        implements TimedSubgraphIsomorphismLoop {
+
+    @Override
     public String getName() {
         return "UIT";
     }
-   
+
+    @Override
     public void run(IMolecule query, IMolecule target) {
         try {
-            List bondMapping = UniversalIsomorphismTester.getSubgraphMaps(target, query);
-            List<List<RMap>> sol = UniversalIsomorphismTester.makeAtomsMapsOfBondsMaps(bondMapping, target, query);
+            List bondMapping = UniversalIsomorphismTester.getSubgraphMap(target, query);
+            List<RMap> sol = UniversalIsomorphismTester.makeAtomsMapOfBondsMap(bondMapping, target, query);
             if (sol.size() > 0) {
                 numberOfResults++;
             }
         } catch (CDKException cdke) {
-            
         }
     }
 
@@ -30,5 +31,4 @@ public class UITLoop extends AbstractSubgraphIsomorphismLoop
     public int getResultCount() {
         return numberOfResults;
     }
-
 }
