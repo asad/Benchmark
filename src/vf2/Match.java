@@ -6,7 +6,7 @@ package vf2;
  * @param <T>
  * @param <S>
  */
-class Match<T, S> {
+public class Match<T, S> {
 
     private T source;
     private S target;
@@ -29,6 +29,7 @@ class Match<T, S> {
     }
 
     /**
+     * @param first 
      * @param source the source to set
      */
     public void setSourceAtom(T first) {
@@ -43,6 +44,7 @@ class Match<T, S> {
     }
 
     /**
+     * @param second 
      * @param target the target to set
      */
     public void setTargetAtom(S second) {

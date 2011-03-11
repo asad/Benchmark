@@ -8,7 +8,7 @@ import org.openscience.cdk.interfaces.IBond;
 
 // The State class represents a single state in the isomorphism detection
 // algorithm. Every state uses and modifies the same SharedState object.
-class State {
+class State implements IState {
 
     int getSize() {
         return size;
@@ -62,21 +62,25 @@ class State {
     }
 
     // Returns true if the state contains an isomorphism.
-    boolean isGoal() {
+    @Override
+    public boolean isGoal() {
         return size == source.getAtomCount();
     }
 
+    @Override
     public boolean isDead() {
         return source.getAtomCount() > target.getAtomCount();
     }
 
+    @Override
     public boolean hasNextCandidate(Match<Integer, Integer> candidate) {
         return candidate.getSourceAtom() == -1 ? false : true;
     }
 
     // Returns the current isomorphism for the state in an AtomMapping
     // object.
-    AtomMapping getMapping() {
+    @Override
+    public AtomMapping getMapping() {
         AtomMapping mapping = new AtomMapping(source, target);
 
         for (int i = 0; i < size; i++) {
@@ -89,7 +93,8 @@ class State {
     // Returns the next candidate pair (sourceAtom, targetAtom) to be added
     // to the state. The candidate should be checked for feasibility and then added
     // using the addPair() method.
-    Match<Integer, Integer> nextCandidate(
+    @Override
+    public Match<Integer, Integer> nextCandidate(
             Match<Integer, Integer> lastCandidate) {
         int lastSourceAtom = lastCandidate.getSourceAtom();
         int lastTargetAtom = lastCandidate.getTargetAtom();
@@ -142,7 +147,8 @@ class State {
 
     // Adds the candidate pair (sourceAtom, targetAtom) to the state. The
     // candidate pair must be feasible to add it to the state.
-    void addPair(Match<Integer, Integer> candidate) {
+    @Override
+    public void addPair(Match<Integer, Integer> candidate) {
         size++;
         lastAddition = candidate;
 
@@ -184,7 +190,8 @@ class State {
 
     // Restores the shared state to how it was before adding the last
     // candidate pair. Assumes addPair() has been called on the state only once.
-    void backTrack() {
+    @Override
+    public void backTrack() {
         if (lastAddition.getSourceAtom() == -1) {
             return;   // XXX hack
         }
@@ -224,7 +231,8 @@ class State {
         lastAddition = new Match<Integer, Integer>(-1, -1);
     }
 
-    boolean isFeasible(Match<Integer, Integer> candidate) {
+    @Override
+    public boolean isMatchFeasible(Match<Integer, Integer> candidate) {
         int sourceAtom = candidate.getSourceAtom();
         int targetAtom = candidate.getTargetAtom();
 

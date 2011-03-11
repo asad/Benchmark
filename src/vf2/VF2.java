@@ -39,7 +39,7 @@ public class VF2 {
 //            System.out.println(printer.toString(a));
             setIDs(b);
 //            System.out.println(printer.toString(b));
-            State state = new State(a, b);
+            IState state = new State(a, b);
             mapFirst(state, mappings);
         }
 //        System.out.println("mapping count " + mappings.size());
@@ -61,7 +61,7 @@ public class VF2 {
 //            System.out.println(printer.toString(a));
             setIDs(b);
 //            System.out.println(printer.toString(b));
-            State state = new State(a, b);
+            IState state = new State(a, b);
             mapAll(state, mappings);
         }
         return mappings;
@@ -73,7 +73,7 @@ public class VF2 {
         }
     }
 
-    private boolean mapFirst(State state, List<AtomMapping> mappings) {
+    private boolean mapFirst(IState state, List<AtomMapping> mappings) {
         if (state.isDead()) {
             return false;
         }
@@ -90,8 +90,8 @@ public class VF2 {
                 return false;
             }
             lastCandidate = candidate;
-            if (state.isFeasible(candidate)) {
-                State nextState = state;
+            if (state.isMatchFeasible(candidate)) {
+                IState nextState = state;
                 nextState.addPair(candidate);
                 found = mapFirst(nextState, mappings);
                 if (found) {
@@ -103,7 +103,7 @@ public class VF2 {
         return found;
     }
 
-    private void mapAll(State state, List<AtomMapping> mappings) {
+    private void mapAll(IState state, List<AtomMapping> mappings) {
         if (state.isDead()) {
             return;
         }
@@ -124,8 +124,8 @@ public class VF2 {
 
         lastCandidate = candidate;
 
-        if (state.isFeasible(candidate)) {
-            State nextState = state;
+        if (state.isMatchFeasible(candidate)) {
+            IState nextState = state;
             nextState.addPair(candidate);
             mapAll(nextState, mappings);
             nextState.backTrack();
