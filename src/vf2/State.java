@@ -1,7 +1,6 @@
 package vf2;
 
 import java.util.List;
-import org.openscience.cdk.CDKConstants;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
@@ -310,19 +309,13 @@ class State implements IState {
     }
 
     boolean matchBonds(IBond sourceBond, IBond targetBond) {
-        if ((sourceBond.getFlag(CDKConstants.ISAROMATIC) == targetBond.getFlag(CDKConstants.ISAROMATIC))
-                && (sourceBond.getOrder() == targetBond.getOrder())) {
-            return true;
-        } else if (sourceBond.getFlag(CDKConstants.ISAROMATIC) && targetBond.getFlag(CDKConstants.ISAROMATIC)) {
-            return true;
-        }
+        VFBondMatcher bondMatcher = new DefaultVFBondMatcher(source, sourceBond, true);
+        return bondMatcher.matches(target, targetBond);
 
-//        System.out.println("Bond order mismatch "
-//                + sourceBond.getOrder() + " " + targetBond.getOrder());
-        return false;
     }
 
     boolean matchAtoms(IAtom sourceAtom, IAtom targetAtom) {
-        return sourceAtom.getSymbol().equals(targetAtom.getSymbol()) ? true : false;
+        VFAtomMatcher atomMatcher = new DefaultVFAtomMatcher(source, sourceAtom, true);
+        return atomMatcher.matches(target, targetAtom);
     }
 }
