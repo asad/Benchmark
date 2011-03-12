@@ -61,4 +61,13 @@ public class AtomMapping {
     public void clear() {
         mapping.clear();
     }
+    
+    /**
+     * 
+     * mapping size
+     * @return 
+     */
+    public int mappingCount() {
+        return mapping.size();
+    }
 }
