@@ -84,31 +84,29 @@ public class VFAtomMatcher implements AtomMatcher {
 //        System.out.println("MAX allowed " + maximumNeighbors);
     }
 
-    /**
-     * Constructor
-     * @param smartQueryAtom query atom
-     * @param container 
-     */
-    public VFAtomMatcher(IQueryAtom smartQueryAtom, IQueryAtomContainer container) {
-        this();
-        this.smartQueryAtom = smartQueryAtom;
-        this.symbol = smartQueryAtom.getSymbol();
-    }
-
-    /**
-     * Constructor
-     * @param queryContainer query atom container
-     * @param template query atom
-     * @param blockedPositions
-     * @param shouldMatchBonds bond matching flag
-     */
-    public VFAtomMatcher(IAtomContainer queryContainer, IAtom template, int blockedPositions, boolean shouldMatchBonds) {
-        this(queryContainer, template, shouldMatchBonds);
-        this.maximumNeighbors = countImplicitHydrogens(template)
-                + queryContainer.getConnectedAtomsCount(template)
-                - blockedPositions;
-    }
-
+//    /**
+//     * Constructor
+//     * @param smartQueryAtom query atom
+//     * @param container 
+//     */
+//    public VFAtomMatcher(IQueryAtom smartQueryAtom, IQueryAtomContainer container) {
+//        this();
+//        this.smartQueryAtom = smartQueryAtom;
+//        this.symbol = smartQueryAtom.getSymbol();
+//    }
+//    /**
+//     * Constructor
+//     * @param queryContainer query atom container
+//     * @param template query atom
+//     * @param blockedPositions
+//     * @param shouldMatchBonds bond matching flag
+//     */
+//    public VFAtomMatcher(IAtomContainer queryContainer, IAtom template, int blockedPositions, boolean shouldMatchBonds) {
+//        this(queryContainer, template, shouldMatchBonds);
+//        this.maximumNeighbors = countImplicitHydrogens(template)
+//                + queryContainer.getConnectedAtomsCount(template)
+//                - blockedPositions;
+//    }
     /**
      *
      * @param maximum numbers of connected atoms allowed
@@ -132,25 +130,24 @@ public class VFAtomMatcher implements AtomMatcher {
      */
     @Override
     public boolean matches(IAtomContainer targetContainer, IAtom targetAtom) {
-        if (smartQueryAtom != null && qAtom == null) {
-            if (!smartQueryAtom.matches(targetAtom)) {
-                return false;
-            }
-        } else if (!matchSymbol(targetAtom)) {
-            return false;
-        }
+//        if (smartQueryAtom != null && qAtom == null) {
+//            if (!smartQueryAtom.matches(targetAtom)) {
+//                return false;
+//            }
+//        } else if (!matchSymbol(targetAtom)) {
+//            return false;
+//        }
 
 //        if (!matchMaximumNeighbors(targetContainer, targetAtom)) {
 //            return false;
 //        }
-        return true;
+//        return true;
+
+        return matchSymbol(targetAtom);
     }
 
-    private boolean matchSymbol(IAtom atom) {
-        if (symbol == null) {
-            return false;
-        }
-        return symbol.equals(atom.getSymbol());
+    private boolean matchSymbol(IAtom targetAtom) {
+        return qAtom.getSymbol().equals(targetAtom.getSymbol()) ? true : false;
     }
 
     private boolean matchMaximumNeighbors(IAtomContainer targetContainer, IAtom targetAtom) {

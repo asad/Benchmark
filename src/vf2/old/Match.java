@@ -54,8 +54,8 @@ import org.openscience.cdk.interfaces.IAtom;
  * @cdk.githash
  * @author Syed Asad Rahman <asad@ebi.ac.uk>
  */
-public class Match {
-
+public class Match extends Object {
+    
     private IAtom query;
     private IAtom target;
 
@@ -83,5 +83,25 @@ public class Match {
      */
     public IAtom getTargetAtom() {
         return target;
+    }
+    
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Match) {
+            Match objectToBeCompared = (Match) object;
+            if (objectToBeCompared.getQueryAtom().equals(this.getQueryAtom())
+                    && objectToBeCompared.getTargetAtom().equals(this.getTargetAtom())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + (this.query != null ? this.query.hashCode() : 0);
+        hash = 47 * hash + (this.target != null ? this.target.hashCode() : 0);
+        return hash;
     }
 }

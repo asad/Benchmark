@@ -69,21 +69,6 @@ import org.openscience.cdk.interfaces.IBond;
  */
 public class VFState implements IState {
 
-    IAtomContainer getQuery() {
-        return query;
-    }
-
-    IAtomContainer getTarget() {
-        return target;
-    }
-
-    private IAtom queryAtom(int index) {
-        return query.getAtom(index);
-    }
-
-    private IAtom targetAtom(int index) {
-        return target.getAtom(index);
-    }
     private List<Match> candidates;
     private IAtomContainer query;
     private IAtomContainer target;
@@ -92,6 +77,8 @@ public class VFState implements IState {
     private AtomMapping map;
     private Map<IAtom, List<IAtom>> neighbourQueryMap;
     private Map<IAtom, List<IAtom>> neighbourTargetMap;
+    private Map<IBond, VFBondMatcher> queryBondMatcher;
+    private Map<IAtom, VFAtomMatcher> queryAtomMatcher;
 
     /**
      * initialize the VFState with query and target
@@ -108,22 +95,12 @@ public class VFState implements IState {
         this.candidates = new ArrayList<Match>();
         this.neighbourQueryMap = new HashMap<IAtom, List<IAtom>>();
         this.neighbourTargetMap = new HashMap<IAtom, List<IAtom>>();
+        this.queryBondMatcher = new HashMap<IBond, VFBondMatcher>();
+        this.queryAtomMatcher = new HashMap<IAtom, VFAtomMatcher>();
 
-        for (int i = 0; i < query.getAtomCount(); i++) {
-            IAtom qAtom = queryAtom(i);
-            neighbourQueryMap.put(qAtom, query.getConnectedAtomsList(qAtom));
-//            System.out.println("neighbourQueryMapSize graph " + query.getConnectedAtomsCount(qAtom));
+        if (testIsSubgraphHeuristics(query, target)) {
+            loadRootCandidates();
         }
-
-        for (int j = 0; j < target.getAtomCount(); j++) {
-            IAtom tAtom = targetAtom(j);
-            neighbourTargetMap.put(tAtom, target.getConnectedAtomsList(tAtom));
-        }
-
-//        System.out.println("neighbourQueryMapSize graph " + neighbourQueryMapSize.size());
-//        System.out.println("neighbourTargetMapSize graph " + neighbourTargetMapSize.size());
-
-        loadRootCandidates();
     }
 
     private VFState(VFState state, Match match) {
@@ -137,6 +114,8 @@ public class VFState implements IState {
 
         this.neighbourQueryMap = state.neighbourQueryMap;
         this.neighbourTargetMap = state.neighbourTargetMap;
+        this.queryBondMatcher = state.queryBondMatcher;
+        this.queryAtomMatcher = state.queryAtomMatcher;
 
         map.add(match.getQueryAtom(), match.getTargetAtom());
         queryPath.add(match.getQueryAtom());
@@ -331,19 +310,105 @@ public class VFState implements IState {
     }
 
     boolean matchBond(IBond sourceBond, IBond targetBond) {
-        if ((sourceBond.getFlag(CDKConstants.ISAROMATIC) == targetBond.getFlag(CDKConstants.ISAROMATIC))
-                && (sourceBond.getOrder() == targetBond.getOrder())) {
-            return true;
-        } else if (sourceBond.getFlag(CDKConstants.ISAROMATIC) && targetBond.getFlag(CDKConstants.ISAROMATIC)) {
-            return true;
-        }
-
-//        System.out.println("Bond order mismatch "
-//                + sourceBond.getOrder() + " " + targetBond.getOrder());
-        return false;
+        return queryBondMatcher.get(sourceBond).matches(targetBond);
     }
 
     boolean matchAtoms(IAtom sourceAtom, IAtom targetAtom) {
-        return sourceAtom.getSymbol().equals(targetAtom.getSymbol()) ? true : false;
+//        return sourceAtom.getSymbol().equals(targetAtom.getSymbol()) ? true : false;
+        return queryAtomMatcher.get(sourceAtom).matches(targetAtom);
+    }
+
+    /**
+     *  Checks some simple heuristics for whether the subgraph query can
+     *  realistically be atom subgraph of the supergraph. If, for example, the
+     *  number of nitrogen atoms in the query is larger than that of the supergraph
+     *  it cannot be part of it.
+     *
+     * @param  ac1  the subgraph to be checked. 
+     * @param  ac2  the super-graph to be tested for. Must not be an IQueryAtomContainer.
+     * @return    true if the subgraph ac1 has atom chance to be atom subgraph of ac2
+     * @throws org.openscience.cdk.exception.CDKException if the first molecule is an instance
+     * of IQueryAtomContainer
+     */
+    private boolean testIsSubgraphHeuristics(IAtomContainer ac1, IAtomContainer ac2) {
+
+        int ac1SingleBondCount = 0;
+        int ac1DoubleBondCount = 0;
+        int ac1TripleBondCount = 0;
+        int ac1AromaticBondCount = 0;
+        int ac2SingleBondCount = 0;
+        int ac2DoubleBondCount = 0;
+        int ac2TripleBondCount = 0;
+        int ac2AromaticBondCount = 0;
+
+        IBond bond = null;
+
+        for (int i = 0; i < ac1.getBondCount(); i++) {
+            bond = ac1.getBond(i);
+            queryBondMatcher.put(bond, new VFBondMatcher(query, bond, true));
+            if (bond.getFlag(CDKConstants.ISAROMATIC)) {
+                ac1AromaticBondCount++;
+            } else if (bond.getOrder() == IBond.Order.SINGLE) {
+                ac1SingleBondCount++;
+            } else if (bond.getOrder() == IBond.Order.DOUBLE) {
+                ac1DoubleBondCount++;
+            } else if (bond.getOrder() == IBond.Order.TRIPLE) {
+                ac1TripleBondCount++;
+            }
+        }
+        for (int i = 0; i < ac2.getBondCount(); i++) {
+            bond = ac2.getBond(i);
+
+            if (bond.getFlag(CDKConstants.ISAROMATIC)) {
+                ac2AromaticBondCount++;
+            } else if (bond.getOrder() == IBond.Order.SINGLE) {
+                ac2SingleBondCount++;
+            } else if (bond.getOrder() == IBond.Order.DOUBLE) {
+                ac2DoubleBondCount++;
+            } else if (bond.getOrder() == IBond.Order.TRIPLE) {
+                ac2TripleBondCount++;
+            }
+        }
+
+        if (ac2SingleBondCount < ac1SingleBondCount) {
+            return false;
+        }
+        if (ac2AromaticBondCount < ac1AromaticBondCount) {
+            return false;
+        }
+        if (ac2DoubleBondCount < ac1DoubleBondCount) {
+            return false;
+        }
+        if (ac2TripleBondCount < ac1TripleBondCount) {
+            return false;
+        }
+
+        IAtom atom = null;
+        Map<String, Integer> symbolMap = new HashMap<String, Integer>();
+        for (int i = 0; i < ac1.getAtomCount(); i++) {
+            atom = ac1.getAtom(i);
+            neighbourQueryMap.put(atom, query.getConnectedAtomsList(atom));
+            queryAtomMatcher.put(atom, new VFAtomMatcher(atom, true));
+            if (symbolMap.containsKey(atom.getSymbol())) {
+                int val = symbolMap.get(atom.getSymbol()) + 1;
+                symbolMap.put(atom.getSymbol(), val);
+            } else {
+                symbolMap.put(atom.getSymbol(), 1);
+            }
+        }
+        for (int i = 0; i < ac2.getAtomCount(); i++) {
+            atom = ac2.getAtom(i);
+            neighbourTargetMap.put(atom, target.getConnectedAtomsList(atom));
+            if (symbolMap.containsKey(atom.getSymbol())) {
+                int val = symbolMap.get(atom.getSymbol()) - 1;
+                if (val > 0) {
+                    symbolMap.put(atom.getSymbol(), val);
+                } else {
+                    symbolMap.remove(atom.getSymbol());
+                }
+            }
+        }
+//        System.out.println("Map " + map);
+        return symbolMap.isEmpty();
     }
 }

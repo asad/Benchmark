@@ -21,10 +21,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package vf2.matcher;
+package vf2.old;
 
 import org.openscience.cdk.CDKConstants;
-import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.isomorphism.matchers.IQueryBond;
@@ -37,9 +36,7 @@ public class VFBondMatcher implements BondMatcher {
 
     static final long serialVersionUID = -7861469841127328812L;
     private IBond queryBond = null;
-    private int unsaturation = 0;
     private boolean shouldMatchBonds;
-    private IQueryBond smartQueryBond = null;
 
     /**
      * Bond type flag
@@ -49,7 +46,6 @@ public class VFBondMatcher implements BondMatcher {
      */
     public VFBondMatcher() {
         this.queryBond = null;
-        this.unsaturation = -1;
         shouldMatchBonds = false;
     }
 
@@ -62,35 +58,18 @@ public class VFBondMatcher implements BondMatcher {
     public VFBondMatcher(IAtomContainer queryMol, IBond queryBond, boolean shouldMatchBonds) {
         super();
         this.queryBond = queryBond;
-//        this.unsaturation = getUnsaturation(queryMol, this.queryBond);
         setBondMatchFlag(shouldMatchBonds);
     }
 
-    /**
-     * Constructor
-     * @param queryBond query Molecule
-     */
-    public VFBondMatcher(IQueryBond queryBond) {
-        super();
-        this.smartQueryBond = queryBond;
-    }
-
     /** {@inheritDoc}
-     *
-     * @param targetConatiner target container
      * @param targetBond target bond
      * @return true if bonds match
      */
     @Override
-    public boolean matches(IAtomContainer targetConatiner, IBond targetBond) {
-        if (this.smartQueryBond != null) {
-            return smartQueryBond.matches(targetBond);
-        } else if (!isBondMatchFlag() || (isBondMatchFlag() && isBondTypeMatch(targetBond))) {
+    public boolean matches(IBond targetBond) {
+        if (!isBondMatchFlag() || (isBondMatchFlag() && isBondTypeMatch(targetBond))) {
             return true;
         }
-//        if (this.unsaturation != -1 && this.unsaturation == getUnsaturation(targetConatiner, targetBond)) {
-//            return true;
-//        }
         return false;
     }
 
@@ -100,7 +79,9 @@ public class VFBondMatcher implements BondMatcher {
      * @return
      */
     private boolean isBondTypeMatch(IBond targetBond) {
-        if ((queryBond.getFlag(CDKConstants.ISAROMATIC) == targetBond.getFlag(CDKConstants.ISAROMATIC))
+        if (queryBond instanceof IQueryBond) {
+            return ((IQueryBond) queryBond).matches(targetBond);
+        } else if ((queryBond.getFlag(CDKConstants.ISAROMATIC) == targetBond.getFlag(CDKConstants.ISAROMATIC))
                 && (queryBond.getOrder() == targetBond.getOrder())) {
             return true;
         } else if (queryBond.getFlag(CDKConstants.ISAROMATIC) && targetBond.getFlag(CDKConstants.ISAROMATIC)) {
@@ -109,29 +90,6 @@ public class VFBondMatcher implements BondMatcher {
         return false;
     }
 
-    private int getUnsaturation(IAtomContainer container, IBond bond) {
-        return getUnsaturation(container, bond.getAtom(0)) + getUnsaturation(container, bond.getAtom(1));
-    }
-
-    private int getUnsaturation(IAtomContainer container, IAtom atom) {
-        return getValency(atom) - container.getConnectedAtomsCount(atom);
-    }
-
-    private int getValency(IAtom atom) {
-        return (atom.getValency() == null) ? 0 : atom.getValency().intValue();
-    }
-
-//    private int getUnsaturation(IAtomContainer container, IAtom atom) {
-//        return getValency(atom) - (countNeighbors(container, atom) + countImplicitHydrogens(atom));
-//    }
-//    private int countNeighbors(IAtomContainer container, IAtom atom) {
-//        return container.getConnectedAtomsCount(atom);
-//    }
-//
-//    private int countImplicitHydrogens(IAtom atom) {
-//        return (atom.getImplicitHydrogenCount() == null)
-//                ? 0 : atom.getImplicitHydrogenCount();
-//    }
     /**
      * @return the shouldMatchBonds
      */
