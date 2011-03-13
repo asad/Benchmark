@@ -241,11 +241,12 @@ public class VFState implements IState {
 //@TODO Asad Check the Neighbour count
     private void loadCandidates(Match lastMatch) {
         List<IAtom> queryNeighbors = neighbourQueryMap.get(lastMatch.getQueryAtom());
+        List<IAtom> targetNeighbors = neighbourTargetMap.get(lastMatch.getTargetAtom());
+
         for (IAtom queryAtom : queryNeighbors) {
-            List<IAtom> targetNeighbors = neighbourTargetMap.get(lastMatch.getTargetAtom());
             for (IAtom targetAtom : targetNeighbors) {
                 Match match = new Match(queryAtom, targetAtom);
-                if (matchAtoms(match) && candidateFeasible(match)) {
+                if (candidateFeasible(match) && matchAtoms(match)) {
 //                    System.out.println("map " + map.size());
                     candidates.add(match);
                 }
