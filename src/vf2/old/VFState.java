@@ -69,12 +69,29 @@ import org.openscience.cdk.interfaces.IBond;
  */
 public class VFState implements IState {
 
+    IAtomContainer getQuery() {
+        return query;
+    }
+
+    IAtomContainer getTarget() {
+        return target;
+    }
+
+    private IAtom queryAtom(int index) {
+        return query.getAtom(index);
+    }
+
+    private IAtom targetAtom(int index) {
+        return target.getAtom(index);
+    }
     private List<Match> candidates;
     private IAtomContainer query;
     private IAtomContainer target;
     private List<IAtom> queryPath;
     private List<IAtom> targetPath;
     private AtomMapping map;
+    private Map<IAtom, List<IAtom>> neighbourQueryMap;
+    private Map<IAtom, List<IAtom>> neighbourTargetMap;
 
     /**
      * initialize the VFState with query and target
@@ -89,6 +106,23 @@ public class VFState implements IState {
         this.query = query;
         this.target = target;
         this.candidates = new ArrayList<Match>();
+        this.neighbourQueryMap = new HashMap<IAtom, List<IAtom>>();
+        this.neighbourTargetMap = new HashMap<IAtom, List<IAtom>>();
+
+        for (int i = 0; i < query.getAtomCount(); i++) {
+            IAtom qAtom = queryAtom(i);
+            neighbourQueryMap.put(qAtom, query.getConnectedAtomsList(qAtom));
+//            System.out.println("neighbourQueryMapSize graph " + query.getConnectedAtomsCount(qAtom));
+        }
+
+        for (int j = 0; j < target.getAtomCount(); j++) {
+            IAtom tAtom = targetAtom(j);
+            neighbourTargetMap.put(tAtom, target.getConnectedAtomsList(tAtom));
+        }
+
+//        System.out.println("neighbourQueryMapSize graph " + neighbourQueryMapSize.size());
+//        System.out.println("neighbourTargetMapSize graph " + neighbourTargetMapSize.size());
+
         loadRootCandidates();
     }
 
@@ -100,6 +134,9 @@ public class VFState implements IState {
         this.map = state.map;
         this.query = state.query;
         this.target = state.target;
+
+        this.neighbourQueryMap = state.neighbourQueryMap;
+        this.neighbourTargetMap = state.neighbourTargetMap;
 
         map.add(match.getQueryAtom(), match.getTargetAtom());
         queryPath.add(match.getQueryAtom());
@@ -185,9 +222,9 @@ public class VFState implements IState {
 
     private void loadRootCandidates() {
         for (int i = 0; i < query.getAtomCount(); i++) {
-            IAtom qAtom = query.getAtom(i);
+            IAtom qAtom = queryAtom(i);
             for (int j = 0; j < target.getAtomCount(); j++) {
-                IAtom tAtom = target.getAtom(j);
+                IAtom tAtom = targetAtom(j);
                 Match match = new Match(qAtom, tAtom);
                 if (matchAtoms(match)) {
                     candidates.add(match);
@@ -199,19 +236,18 @@ public class VFState implements IState {
 
 //@TODO Asad Check the Neighbour count
     private void loadCandidates(Match lastMatch) {
-        IAtom atom = lastMatch.getTargetAtom();
-        List<IAtom> targetNeighbors = target.getConnectedAtomsList(atom);
-        List<IAtom> queryNeighbors = query.getConnectedAtomsList(lastMatch.getQueryAtom());
+        List<IAtom> queryNeighbors = neighbourQueryMap.get(lastMatch.getQueryAtom());
         for (IAtom queryAtom : queryNeighbors) {
+            List<IAtom> targetNeighbors = neighbourTargetMap.get(lastMatch.getTargetAtom());
             for (IAtom targetAtom : targetNeighbors) {
                 Match match = new Match(queryAtom, targetAtom);
-                if (matchAtoms(match)) {
-                    if (candidateFeasible(match)) {
-                        candidates.add(match);
-                    }
+                if (matchAtoms(match) && candidateFeasible(match)) {
+//                    System.out.println("map " + map.size());
+                    candidates.add(match);
                 }
             }
         }
+//        System.out.println("candidates " + candidates.size());
     }
 
     private boolean candidateFeasible(Match candidate) {
@@ -226,11 +262,10 @@ public class VFState implements IState {
     //This function is updated by Asad to include more matches
 
     private boolean matchAtoms(Match match) {
-        IAtom targetAtom = match.getTargetAtom();
-        if (query.getConnectedAtomsCount(match.getQueryAtom()) > target.getConnectedAtomsCount(targetAtom)) {
+        if (neighbourQueryMap.get(match.getQueryAtom()).size() > neighbourTargetMap.get(match.getTargetAtom()).size()) {
             return false;
         }
-        return matchAtoms(match.getQueryAtom(), targetAtom);
+        return matchAtoms(match.getQueryAtom(), match.getTargetAtom());
     }
 
     private boolean matchBonds(Match match) {

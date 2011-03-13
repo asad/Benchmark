@@ -65,6 +65,11 @@ import org.openscience.cdk.interfaces.IAtomContainer;
  */
 public class VFMapper implements IMapper {
 
+//    private void setIDs(IAtomContainer atomContainer) {
+//        for (int i = 0; i < atomContainer.getAtomCount(); i++) {
+//            atomContainer.getAtom(i).setID(String.valueOf(i));
+//        }
+//    }
     private IAtomContainer query;
     private List<Map<IAtom, IAtom>> maps;
 
@@ -73,6 +78,7 @@ public class VFMapper implements IMapper {
      * @param query
      */
     public VFMapper(IAtomContainer query) {
+//        setIDs(query);
         this.query = query;
         this.maps = new ArrayList<Map<IAtom, IAtom>>();
     }
@@ -83,6 +89,7 @@ public class VFMapper implements IMapper {
      * @param bondMatcher
      */
     public VFMapper(IAtomContainer queryMolecule, boolean bondMatcher) {
+//        setIDs(queryMolecule);
         this.query = queryMolecule;
         this.maps = new ArrayList<Map<IAtom, IAtom>>();
     }
@@ -92,6 +99,7 @@ public class VFMapper implements IMapper {
      */
     @Override
     public boolean hasMap(IAtomContainer targetMolecule) {
+//        setIDs(targetMolecule);
         IState state = new VFState(query, targetMolecule);
         maps.clear();
         boolean flag = mapFirst(state);
@@ -102,6 +110,7 @@ public class VFMapper implements IMapper {
      */
     @Override
     public List<Map<IAtom, IAtom>> getMaps(IAtomContainer target) {
+//        setIDs(target);
         IState state = new VFState(query, target);
         maps.clear();
         mapAll(state);
@@ -115,6 +124,7 @@ public class VFMapper implements IMapper {
      */
     @Override
     public Map<IAtom, IAtom> getFirstMap(IAtomContainer target) {
+//        setIDs(target);
         IState state = new VFState(query, target);
         mapFirst(state);
         return maps.isEmpty() ? new HashMap<IAtom, IAtom>() : maps.get(0);
@@ -124,6 +134,7 @@ public class VFMapper implements IMapper {
      */
     @Override
     public int countMaps(IAtomContainer target) {
+//        setIDs(target);
         IState state = new VFState(query, target);
         maps.clear();
         mapAll(state);
