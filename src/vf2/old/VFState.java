@@ -221,14 +221,18 @@ public class VFState implements IState {
     }
 
     private void loadRootCandidates() {
-        for (int i = 0; i < query.getAtomCount(); i++) {
-            IAtom qAtom = queryAtom(i);
-            for (int j = 0; j < target.getAtomCount(); j++) {
-                IAtom tAtom = targetAtom(j);
+        for (IAtom qAtom : neighbourQueryMap.keySet()) {
+            boolean flag = false;
+            for (IAtom tAtom : neighbourTargetMap.keySet()) {
                 Match match = new Match(qAtom, tAtom);
                 if (matchAtoms(match)) {
                     candidates.add(match);
+                    flag = true;
                 }
+            }
+            if (!flag) {
+                candidates.clear();
+                return;
             }
         }
 //        System.out.println("Compatibility graph " + candidates.size());
