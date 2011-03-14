@@ -1,7 +1,7 @@
 Substructure search results from SMSD VS UIT
 -----------------------------------------------------------------
 Optimised Substructure VF2 code for the SMSD 
-Note: SMSD and UIT are optimised for Isomorphism, where as ChemKit implementation is optimised of Automorphism 
+Note: SMSD and UIT are optimised for Isomorphism, where as ChemKit implementation is optimised for Automorphism 
 (it can report few substructure but not all types of substructures)
 -----------------------------------------------------------------
 number of queries 30 number of targets 15030
