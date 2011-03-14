@@ -180,17 +180,11 @@ public class VFAtomMapper implements IAtomMapper {
         }
 
         boolean found = false;
-        while (!found) {
-            if (!state.hasNextCandidate()) {
-                return false;
-            }
+        while (!found && state.hasNextCandidate()) {
             VFAtomMatcher candidate = state.nextCandidate();
             if (state.isMatchFeasible(candidate)) {
                 IAtomState nextState = state.nextState(candidate);
                 found = mapFirst(nextState);
-                if (found) {
-                    return true;
-                }
                 nextState.backTrack();
             }
         }
