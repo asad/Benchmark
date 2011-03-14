@@ -6,9 +6,11 @@ package test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.Test;
 import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.exception.InvalidSmilesException;
+import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.smiles.SmilesParser;
 import vf2.AtomMapping;
@@ -59,8 +61,9 @@ public class TestVF2Coverage {
         IAtomContainer target = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
         if (query.getAtomCount() <= target.getAtomCount()) {
             VFMapper matcher = new VFMapper(query);
-            if (matcher.hasMap(target)) {
-                System.out.println("mapping " + matcher.getFirstMap(target).size());
+            Map<IAtom, IAtom> mapping = matcher.getFirstMap(target);
+            if (!mapping.isEmpty()) {
+                System.out.println("mapping " + mapping.size());
             }
         }
     }

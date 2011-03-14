@@ -9,7 +9,7 @@ import org.openscience.cdk.interfaces.IAtomContainer;
  * 
  * @author Asad
  */
-public class AtomMapping {
+public class AtomMapping implements Cloneable {
 
     private IAtomContainer a;
     private IAtomContainer b;
