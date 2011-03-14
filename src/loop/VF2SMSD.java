@@ -15,7 +15,7 @@ public class VF2SMSD extends AbstractSubgraphIsomorphismLoop
     public void run(IMolecule query, IMolecule target) {
         if (query.getAtomCount() <= target.getAtomCount()) {
             VFMapper matcher = new VFMapper(query);
-            if (matcher.hasMap(target)) {
+            if (matcher.getFirstMap(target).isEmpty()) {
                 numberOfResults++;
             }
         }
