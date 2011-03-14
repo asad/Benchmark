@@ -191,9 +191,9 @@ public class VFAtomState implements IAtomState {
                 || map.containsTargetAtom(match.getTargetAtom())) {
             return false;
         }
-//        if (!atomMatcher(match)) {
-//            return false;
-//        }
+        if (!isNeighbourFeasible(match)) {
+            return false;
+        }
         if (!checkAtomMatrix(match.getQueryAtom(), match.getTargetAtom())) {
             return false;
         }
@@ -272,10 +272,17 @@ public class VFAtomState implements IAtomState {
     //This function is updated by Asad to include more matches
 
     private boolean atomMatcher(VFAtomMatcher match) {
+        if (isNeighbourFeasible(match)) {
+            return matchAtoms(match.getQueryAtom(), match.getTargetAtom());
+        }
+        return false;
+    }
+
+    private boolean isNeighbourFeasible(VFAtomMatcher match) {
         if (neighbourQueryMap.get(match.getQueryAtom()).size() > neighbourTargetMap.get(match.getTargetAtom()).size()) {
             return false;
         }
-        return matchAtoms(match.getQueryAtom(), match.getTargetAtom());
+        return true;
     }
 
     private boolean bondMatcher(VFAtomMatcher match) {

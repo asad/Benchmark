@@ -188,6 +188,10 @@ public class VFBondState implements IBondState {
             return false;
         }
 
+        if (!isNeighbourFeasible(match)) {
+            return false;
+        }
+
         if (!checkBondMatrix(match.getQueryBond(), match.getTargetBond())) {
             return false;
         }
@@ -265,10 +269,17 @@ public class VFBondState implements IBondState {
     //This function is updated by Asad to include more matches
 
     private boolean bondMatchers(VFBondMatcher match) {
+        if (isNeighbourFeasible(match)) {
+            return matchBond(match.getQueryBond(), match.getTargetBond());
+        }
+        return false;
+    }
+
+    private boolean isNeighbourFeasible(VFBondMatcher match) {
         if (neighbourQueryMap.get(match.getQueryBond()).size() > neighbourTargetMap.get(match.getTargetBond()).size()) {
             return false;
         }
-        return matchBond(match.getQueryBond(), match.getTargetBond());
+        return true;
     }
 
     private boolean bondMatcher(VFBondMatcher match) {
