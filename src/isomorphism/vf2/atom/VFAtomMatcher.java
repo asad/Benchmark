@@ -1,4 +1,4 @@
-/* Copyright (C) 2006-2010  Syed Asad Rahman <asad@ebi.ac.uk>
+/* Copyright (C) 2009-2010  Syed Asad Rahman <asad@ebi.ac.uk>
  *
  * Contact: cdk-devel@lists.sourceforge.net
  *
@@ -44,48 +44,64 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package smsd.vf2.bond;
+package isomorphism.vf2.atom;
 
-import java.util.List;
-import java.util.Map;
-import org.openscience.cdk.annotations.TestClass;
-import org.openscience.cdk.interfaces.IBond;
-import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.interfaces.IAtom;
 
 /**
- * Interface for the mappings (mapped objects).
+ * Holds matching query and target nodes.
  * @cdk.module smsd
  * @cdk.githash
  * @author Syed Asad Rahman <asad@ebi.ac.uk>
  */
-@TestClass("org.openscience.cdk.smsd.algorithm.vflib.VFLibTest")
-public interface IBondMapper {
+public class VFAtomMatcher extends Object {
+    
+    private IAtom query;
+    private IAtom target;
 
     /**
-     * checks if a map exits for a molecule.
-     * @param molecule molecule
-     * @return true/false.
+     * Constructor
+     * @param query
+     * @param target
      */
-    public boolean hasMap(IAtomContainer molecule);
+    public VFAtomMatcher(IAtom query, IAtom target) {
+        this.query = query;
+        this.target = target;
+    }
 
     /**
-     * Returns solution map count.
-     * @param target target molecule.
-     * @return map count.
+     * Return query node
+     * @return query node
      */
-    public int countMaps(IAtomContainer target);
+    public IAtom getQueryAtom() {
+        return query;
+    }
 
     /**
-     * Returns all solution map.
-     * @param target molecule.
-     * @return get maps.
+     * Return Target Atom
+     * @return target Atom
      */
-    public List<Map<IBond, IBond>> getMaps(IAtomContainer target);
-
-    /**
-     * Returns first solution map.
-     * @param target molecule.
-     * @return get first map.
-     */
-    public Map<IBond, IBond> getFirstMap(IAtomContainer target);
+    public IAtom getTargetAtom() {
+        return target;
+    }
+    
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof VFAtomMatcher) {
+            VFAtomMatcher objectToBeCompared = (VFAtomMatcher) object;
+            if (objectToBeCompared.getQueryAtom().equals(this.getQueryAtom())
+                    && objectToBeCompared.getTargetAtom().equals(this.getTargetAtom())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + (this.query != null ? this.query.hashCode() : 0);
+        hash = 47 * hash + (this.target != null ? this.target.hashCode() : 0);
+        return hash;
+    }
 }

@@ -1,7 +1,7 @@
 package loop;
 
 import org.openscience.cdk.interfaces.IMolecule;
-import smsd.vf2.atom.VFAtomMapper;
+import isomorphism.vf2.atom.VFAtomMapper;
 
 public class SMSDVF2 extends AbstractSubgraphIsomorphismLoop
         implements TimedSubgraphIsomorphismLoop {

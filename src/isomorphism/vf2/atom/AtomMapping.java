@@ -1,4 +1,4 @@
-package smsd.vf2.atom;
+package isomorphism.vf2.atom;
 
 import java.util.HashMap;
 import java.util.Map;

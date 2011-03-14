@@ -45,9 +45,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package smsd.vf2.bond;
+package isomorphism.vf2.bond;
 
-import smsd.vf2.bond.VFBondMatcher;
+import isomorphism.vf2.bond.VFBondMatcher;
 import java.util.Map;
 import org.openscience.cdk.annotations.TestClass;
 import org.openscience.cdk.interfaces.IBond;

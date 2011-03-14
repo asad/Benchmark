@@ -46,13 +46,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-package smsd.vf2.atom;
+package isomorphism.vf2.bond;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.openscience.cdk.interfaces.IAtom;
+import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IAtomContainer;
 
 /**
@@ -63,7 +63,7 @@ import org.openscience.cdk.interfaces.IAtomContainer;
  * @cdk.githash
  * @author Syed Asad Rahman <asad@ebi.ac.uk>
  */
-public class VFAtomMapper implements IAtomMapper {
+public class VFBondMapper implements IBondMapper {
 
 //    private void setIDs(IAtomContainer atomContainer) {
 //        for (int i = 0; i < atomContainer.getAtomCount(); i++) {
@@ -71,16 +71,16 @@ public class VFAtomMapper implements IAtomMapper {
 //        }
 //    }
     private IAtomContainer query;
-    private List<Map<IAtom, IAtom>> maps;
+    private List<Map<IBond, IBond>> maps;
 
     /**
      *
      * @param query
      */
-    public VFAtomMapper(IAtomContainer query) {
+    public VFBondMapper(IAtomContainer query) {
 //        setIDs(query);
         this.query = query;
-        this.maps = new ArrayList<Map<IAtom, IAtom>>();
+        this.maps = new ArrayList<Map<IBond, IBond>>();
     }
 
     /**
@@ -88,10 +88,10 @@ public class VFAtomMapper implements IAtomMapper {
      * @param queryMolecule
      * @param bondMatcher
      */
-    public VFAtomMapper(IAtomContainer queryMolecule, boolean bondMatcher) {
+    public VFBondMapper(IAtomContainer queryMolecule, boolean bondMatcher) {
 //        setIDs(queryMolecule);
         this.query = queryMolecule;
-        this.maps = new ArrayList<Map<IAtom, IAtom>>();
+        this.maps = new ArrayList<Map<IBond, IBond>>();
     }
 
     /** {@inheritDoc}
@@ -100,7 +100,7 @@ public class VFAtomMapper implements IAtomMapper {
     @Override
     public boolean hasMap(IAtomContainer targetMolecule) {
 //        setIDs(targetMolecule);
-        IAtomState state = new VFAtomState(query, targetMolecule);
+        IBondState state = new VFBondState(query, targetMolecule);
         maps.clear();
         boolean flag = mapFirst(state);
         return flag;
@@ -109,12 +109,12 @@ public class VFAtomMapper implements IAtomMapper {
     /** {@inheritDoc}
      */
     @Override
-    public List<Map<IAtom, IAtom>> getMaps(IAtomContainer target) {
+    public List<Map<IBond, IBond>> getMaps(IAtomContainer target) {
 //        setIDs(target);
-        IAtomState state = new VFAtomState(query, target);
+        IBondState state = new VFBondState(query, target);
         maps.clear();
         mapAll(state);
-        return new ArrayList<Map<IAtom, IAtom>>(maps);
+        return new ArrayList<Map<IBond, IBond>>(maps);
     }
 
     /** {@inheritDoc}
@@ -123,11 +123,11 @@ public class VFAtomMapper implements IAtomMapper {
      *
      */
     @Override
-    public Map<IAtom, IAtom> getFirstMap(IAtomContainer target) {
+    public Map<IBond, IBond> getFirstMap(IAtomContainer target) {
 //        setIDs(target);
-        IAtomState state = new VFAtomState(query, target);
+        IBondState state = new VFBondState(query, target);
         mapFirst(state);
-        return maps.isEmpty() ? new HashMap<IAtom, IAtom>() : maps.get(0);
+        return maps.isEmpty() ? new HashMap<IBond, IBond>() : maps.get(0);
     }
 
     /** {@inheritDoc}
@@ -135,13 +135,13 @@ public class VFAtomMapper implements IAtomMapper {
     @Override
     public int countMaps(IAtomContainer target) {
 //        setIDs(target);
-        IAtomState state = new VFAtomState(query, target);
+        IBondState state = new VFBondState(query, target);
         maps.clear();
         mapAll(state);
         return maps.size();
     }
 
-    private void mapAll(IAtomState state) {
+    private void mapAll(IBondState state) {
         if (state.isDead()) {
             return;
         }
@@ -151,7 +151,7 @@ public class VFAtomMapper implements IAtomMapper {
         }
 
         if (state.isGoal()) {
-            Map<IAtom, IAtom> map = state.getMap();
+            Map<IBond, IBond> map = state.getMap();
             if (!hasMap(map)) {
                 maps.add(state.getMap());
             } else {
@@ -160,16 +160,16 @@ public class VFAtomMapper implements IAtomMapper {
         }
 
         while (state.hasNextCandidate()) {
-            VFAtomMatcher candidate = state.nextCandidate();
+            VFBondMatcher candidate = state.nextCandidate();
             if (state.isMatchFeasible(candidate)) {
-                IAtomState nextState = state.nextState(candidate);
+                IBondState nextState = state.nextState(candidate);
                 mapAll(nextState);
                 nextState.backTrack();
             }
         }
     }
 
-    private boolean mapFirst(IAtomState state) {
+    private boolean mapFirst(IBondState state) {
         if (state.isDead()) {
             return false;
         }
@@ -184,9 +184,9 @@ public class VFAtomMapper implements IAtomMapper {
             if (!state.hasNextCandidate()) {
                 return false;
             }
-            VFAtomMatcher candidate = state.nextCandidate();
+            VFBondMatcher candidate = state.nextCandidate();
             if (state.isMatchFeasible(candidate)) {
-                IAtomState nextState = state.nextState(candidate);
+                IBondState nextState = state.nextState(candidate);
                 found = mapFirst(nextState);
                 if (found) {
                     return true;
@@ -197,8 +197,8 @@ public class VFAtomMapper implements IAtomMapper {
         return found;
     }
 
-    private boolean hasMap(Map<IAtom, IAtom> map) {
-        for (Map<IAtom, IAtom> storedMap : maps) {
+    private boolean hasMap(Map<IBond, IBond> map) {
+        for (Map<IBond, IBond> storedMap : maps) {
             if (storedMap.equals(map)) {
                 return true;
             }

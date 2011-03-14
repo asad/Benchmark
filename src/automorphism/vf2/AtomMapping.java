@@ -1,4 +1,4 @@
-package chemkit.vf2;
+package automorphism.vf2;
 
 import java.util.HashMap;
 import java.util.Map;

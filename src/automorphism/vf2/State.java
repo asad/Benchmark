@@ -1,9 +1,9 @@
-package chemkit.vf2;
+package automorphism.vf2;
 
-import chemkit.vf2.matcher.VFBondMatcher;
-import chemkit.vf2.matcher.AtomMatcher;
-import chemkit.vf2.matcher.VFAtomMatcher;
-import chemkit.vf2.matcher.BondMatcher;
+import automorphism.vf2.matcher.VFBondMatcher;
+import automorphism.vf2.matcher.AtomMatcher;
+import automorphism.vf2.matcher.VFAtomMatcher;
+import automorphism.vf2.matcher.BondMatcher;
 import java.util.List;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;

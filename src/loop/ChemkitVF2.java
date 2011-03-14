@@ -1,8 +1,8 @@
 package loop;
 
 import org.openscience.cdk.interfaces.IMolecule;
-import chemkit.vf2.AtomMapping;
-import chemkit.vf2.VF2Automorphism;
+import automorphism.vf2.AtomMapping;
+import automorphism.vf2.VF2Automorphism;
 
 public class ChemkitVF2 extends AbstractSubgraphIsomorphismLoop
         implements TimedSubgraphIsomorphismLoop {
