@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import loop.VF2SMSD;
 import loop.UITLoop;
-import loop.VFLibLoop;
+import loop.ChemkitVF2;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecule;
@@ -84,7 +84,7 @@ public class SubstructureBenchMark {
             smsdLoop.run(query, targets);
             out += smsdLoop;
 
-            VFLibLoop vfLibLoop = new VFLibLoop();
+            ChemkitVF2 vfLibLoop = new ChemkitVF2();
             vfLibLoop.run(query, targets);
             out += vfLibLoop;
 

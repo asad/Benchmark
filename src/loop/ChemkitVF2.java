@@ -4,12 +4,12 @@ import org.openscience.cdk.interfaces.IMolecule;
 import chemkit.vf2.AtomMapping;
 import chemkit.vf2.VF2;
 
-public class VFLibLoop extends AbstractSubgraphIsomorphismLoop
+public class ChemkitVF2 extends AbstractSubgraphIsomorphismLoop
         implements TimedSubgraphIsomorphismLoop {
 
     @Override
     public String getName() {
-        return "VFLib";
+        return "ChemKitVF2";
     }
 
     @Override
