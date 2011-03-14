@@ -74,7 +74,7 @@ public class SubstructureBenchMark {
             String out = String.format("%d ", counter);
             out += String.format("\t%d ", query.getAtomCount());
 
-            query.setID(String.valueOf(counter++));
+            query.setID(String.valueOf(counter));
 
             UITLoop uitLoop = new UITLoop();
             uitLoop.run(query, targets);
