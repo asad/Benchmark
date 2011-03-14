@@ -48,7 +48,7 @@
  * THE SOFTWARE.
  *
  */
-package smsd.vf2;
+package smsd.vf2.atom;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,9 +69,9 @@ import org.openscience.cdk.isomorphism.matchers.IQueryBond;
  * @cdk.githash
  * @author Syed Asad Rahman <asad@ebi.ac.uk>
  */
-public class VFState implements IState {
+public class VFAtomState implements IAtomState {
 
-    private List<Match> candidates;
+    private List<VFAtomMatcher> candidates;
     private IAtomContainer query;
     private IAtomContainer target;
     private List<IAtom> queryPath;
@@ -79,19 +79,20 @@ public class VFState implements IState {
     private AtomMapping map;
     private Map<IAtom, List<IAtom>> neighbourQueryMap;
     private Map<IAtom, List<IAtom>> neighbourTargetMap;
+    /*Needs AdjacencyMatrix as CDK doesnot store the matches*/
     private boolean[][] atomAdjacencyMatrix;
     private boolean[][] bondAdjacencyMatrix;
 
     /**
-     * initialize the VFState with query and target
+     * initialize the VFAtomState with query and target
      * @param query
      * @param target
      */
-    public VFState(IAtomContainer query, IAtomContainer target) {
+    public VFAtomState(IAtomContainer query, IAtomContainer target) {
         this.query = query;
         this.target = target;
         this.map = new AtomMapping(target, query);
-        this.candidates = new ArrayList<Match>();
+        this.candidates = new ArrayList<VFAtomMatcher>();
 
 
         this.neighbourQueryMap = new HashMap<IAtom, List<IAtom>>();
@@ -117,8 +118,8 @@ public class VFState implements IState {
         }
     }
 
-    private VFState(VFState state, Match match) {
-        this.candidates = new ArrayList<Match>();
+    private VFAtomState(VFAtomState state, VFAtomMatcher match) {
+        this.candidates = new ArrayList<VFAtomMatcher>();
         this.queryPath = new ArrayList<IAtom>(state.queryPath);
         this.targetPath = new ArrayList<IAtom>(state.targetPath);
 
@@ -185,7 +186,7 @@ public class VFState implements IState {
     /** {@inheritDoc}
      */
     @Override
-    public boolean isMatchFeasible(Match match) {
+    public boolean isMatchFeasible(VFAtomMatcher match) {
         if (map.containsQueryAtom(match.getQueryAtom())
                 || map.containsTargetAtom(match.getTargetAtom())) {
             return false;
@@ -207,22 +208,22 @@ public class VFState implements IState {
     /** {@inheritDoc}
      */
     @Override
-    public Match nextCandidate() {
+    public VFAtomMatcher nextCandidate() {
         return candidates.remove(candidates.size() - 1);
     }
 
     /** {@inheritDoc}
      */
     @Override
-    public IState nextState(Match match) {
-        return new VFState(this, match);
+    public IAtomState nextState(VFAtomMatcher match) {
+        return new VFAtomState(this, match);
     }
 
     private boolean loadRootCandidates() {
         for (IAtom qAtom : neighbourQueryMap.keySet()) {
             boolean flag = false;
             for (IAtom tAtom : neighbourTargetMap.keySet()) {
-                Match match = new Match(qAtom, tAtom);
+                VFAtomMatcher match = new VFAtomMatcher(qAtom, tAtom);
                 if (atomMatcher(match)) {
                     candidates.add(match);
                     atomAdjacencyMatrix[Integer.parseInt(qAtom.getID())][Integer.parseInt(tAtom.getID())] = true;
@@ -241,14 +242,14 @@ public class VFState implements IState {
     }
 
 //@TODO Asad Check the Neighbour count
-    private void loadCandidates(Match lastMatch) {
+    private void loadCandidates(VFAtomMatcher lastMatch) {
         List<IAtom> queryNeighbors = neighbourQueryMap.get(lastMatch.getQueryAtom());
         List<IAtom> targetNeighbors = neighbourTargetMap.get(lastMatch.getTargetAtom());
 
         for (IAtom queryAtom : queryNeighbors) {
             for (IAtom targetAtom : targetNeighbors) {
                 if (checkAtomMatrix(queryAtom, targetAtom)) {
-                    Match match = new Match(queryAtom, targetAtom);
+                    VFAtomMatcher match = new VFAtomMatcher(queryAtom, targetAtom);
                     if (candidateFeasible(match)) {
 //                    System.out.println("map " + map.size());
                         candidates.add(match);
@@ -259,7 +260,7 @@ public class VFState implements IState {
 //        System.out.println("candidates " + candidates.size());
     }
 
-    private boolean candidateFeasible(Match candidate) {
+    private boolean candidateFeasible(VFAtomMatcher candidate) {
         for (IAtom queryAtom : map.queryAtoms()) {
             if (queryAtom.equals(candidate.getQueryAtom())
                     || map.getMappedTargetAtom(queryAtom).equals(candidate.getTargetAtom())) {
@@ -270,14 +271,14 @@ public class VFState implements IState {
     }
     //This function is updated by Asad to include more matches
 
-    private boolean atomMatcher(Match match) {
+    private boolean atomMatcher(VFAtomMatcher match) {
         if (neighbourQueryMap.get(match.getQueryAtom()).size() > neighbourTargetMap.get(match.getTargetAtom()).size()) {
             return false;
         }
         return matchAtoms(match.getQueryAtom(), match.getTargetAtom());
     }
 
-    private boolean bondMatcher(Match match) {
+    private boolean bondMatcher(VFAtomMatcher match) {
         if (queryPath.isEmpty()) {
             return true;
         }
@@ -307,7 +308,7 @@ public class VFState implements IState {
 
     private boolean isHeadMapped() {
         IAtom head = queryPath.get(queryPath.size() - 1);
-        List<IAtom> queryHeadNeighbors = query.getConnectedAtomsList(head);
+        List<IAtom> queryHeadNeighbors = neighbourQueryMap.get(head);
         for (IAtom neighbor : queryHeadNeighbors) {
             if (!map.containsQueryAtom(neighbor)) {
                 return false;
@@ -316,7 +317,7 @@ public class VFState implements IState {
         return true;
     }
 
-    private boolean matchBondsToHead(Match match) {
+    private boolean matchBondsToHead(VFAtomMatcher match) {
         IAtom queryHead = getQueryPathHead();
         IAtom targetHead = getTargetPathHead();
 

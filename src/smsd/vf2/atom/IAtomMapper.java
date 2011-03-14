@@ -44,7 +44,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package smsd.vf2;
+package smsd.vf2.atom;
 
 import java.util.List;
 import java.util.Map;
@@ -59,7 +59,7 @@ import org.openscience.cdk.interfaces.IAtomContainer;
  * @author Syed Asad Rahman <asad@ebi.ac.uk>
  */
 @TestClass("org.openscience.cdk.smsd.algorithm.vflib.VFLibTest")
-public interface IMapper {
+public interface IAtomMapper {
 
     /**
      * checks if a map exits for a molecule.
@@ -88,6 +88,4 @@ public interface IMapper {
      * @return get first map.
      */
     public Map<IAtom, IAtom> getFirstMap(IAtomContainer target);
-
-   
 }

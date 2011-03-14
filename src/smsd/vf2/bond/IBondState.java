@@ -45,11 +45,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package smsd.vf2;
+package smsd.vf2.bond;
 
+import smsd.vf2.bond.VFBondMatcher;
 import java.util.Map;
 import org.openscience.cdk.annotations.TestClass;
-import org.openscience.cdk.interfaces.IAtom;
+import org.openscience.cdk.interfaces.IBond;
 
 /**
  * Interface for the storing the states of the mapping in the VF algorithm.
@@ -58,7 +59,7 @@ import org.openscience.cdk.interfaces.IAtom;
  * @author Syed Asad Rahman <asad@ebi.ac.uk>
  */
 @TestClass("org.openscience.cdk.smsd.algorithm.vflib.VFLibTest")
-public interface IState {
+public interface IBondState {
 
     /**
      * Returns the current mapping of query atoms onto target atoms.
@@ -66,7 +67,7 @@ public interface IState {
      *
      * @return the current mapping of query atoms onto target atoms
      */
-    public Map<IAtom, IAtom> getMap();
+    public Map<IBond, IBond> getMap();
 
     /**
      * Returns true if another candidate match can be found or
@@ -82,7 +83,7 @@ public interface IState {
      *
      * @return the next candidate match.
      */
-    public Match nextCandidate();
+    public VFBondMatcher nextCandidate();
 
     /**
      * Returns true if the given match will work with the current
@@ -92,7 +93,7 @@ public interface IState {
      * @return true if the given match will work with the current
      * map, or false otherwise.
      */
-    public boolean isMatchFeasible(Match match);
+    public boolean isMatchFeasible(VFBondMatcher match);
 
     /**
      * Returns true if all atoms in the query molecule have been
@@ -104,9 +105,9 @@ public interface IState {
     public boolean isGoal();
 
     /**
-     * Returns true if no match will come from this IState.
+     * Returns true if no match will come from this IAtomState.
      *
-     * @return true if no match will come from this IState
+     * @return true if no match will come from this IAtomState
      */
     public boolean isDead();
 
@@ -118,10 +119,10 @@ public interface IState {
      * @return  a state in which the atoms in match have been
      * added to the current mapping.
      */
-    public IState nextState(Match match);
+    public IBondState nextState(VFBondMatcher match);
 
     /**
-     * Returns this IState's atom map to its original condition.
+     * Returns this IAtomState's atom map to its original condition.
      */
     public void backTrack();
 }

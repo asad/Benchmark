@@ -1,29 +1,29 @@
-package smsd.vf2;
+package smsd.vf2.bond;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.interfaces.IBond;
 
 /**
  * 
  * @author Asad
  */
-public class AtomMapping implements Cloneable {
+public class BondMapping implements Cloneable {
 
     private IAtomContainer a;
     private IAtomContainer b;
-    private Map<IAtom, IAtom> mapping;
+    private Map<IBond, IBond> mapping;
 
     /**
      * 
      * @param a source mol
      * @param b target mol
      */
-    public AtomMapping(IAtomContainer a, IAtomContainer b) {
+    public BondMapping(IAtomContainer a, IAtomContainer b) {
         this.a = a;
         this.b = b;
-        this.mapping = new HashMap<IAtom, IAtom>();
+        this.mapping = new HashMap<IBond, IBond>();
     }
 
     /**
@@ -31,16 +31,16 @@ public class AtomMapping implements Cloneable {
      * @param atom1
      * @param atom2
      */
-    public void add(IAtom atom1, IAtom atom2) {
+    public void add(IBond atom1, IBond atom2) {
         mapping.put(atom1, atom2);
     }
 
     @Override
     public String toString() {
         String s = "[";
-        for (IAtom key : mapping.keySet()) {
-            int keyIndex = a.getAtomNumber(key);
-            int valueIndex = b.getAtomNumber(mapping.get(key));
+        for (IBond key : mapping.keySet()) {
+            int keyIndex = a.getBondNumber(key);
+            int valueIndex = b.getBondNumber(mapping.get(key));
             s += keyIndex + ":" + valueIndex + "|";
         }
         return s + "]";
@@ -70,23 +70,23 @@ public class AtomMapping implements Cloneable {
         return mapping.size();
     }
 
-    boolean containsQueryAtom(IAtom atom) {
+    boolean containsQueryBond(IBond atom) {
         return mapping.containsKey(atom);
     }
 
-    Iterable<IAtom> queryAtoms() {
+    Iterable<IBond> queryBonds() {
         return mapping.keySet();
     }
 
-    IAtom getMappedTargetAtom(IAtom atom) {
+    IBond getMappedTargetBond(IBond atom) {
         return mapping.get(atom);
     }
 
-    boolean containsTargetAtom(IAtom atom) {
+    boolean containsTargetBond(IBond atom) {
         return mapping.containsValue(atom);
     }
 
-    Map<IAtom, IAtom> getMapping() {
+    Map<IBond, IBond> getMapping() {
         return mapping;
     }
 }
