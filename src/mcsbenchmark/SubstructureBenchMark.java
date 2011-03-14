@@ -54,7 +54,7 @@ public class SubstructureBenchMark {
         while (qFileReader.hasNext()) {
             queries.add((IMolecule) qFileReader.next());
         }
-        Collections.shuffle(queries);
+//        Collections.shuffle(queries);
 
         List<IMolecule> targets = new ArrayList<IMolecule>();
         IIteratingChemObjectReader tFileReader = read(tFile);
