@@ -155,6 +155,9 @@ class State implements IState {
         size++;
         candidates = candidate;
 
+//        printPath(sharedState.getSourceTerminalSet());
+//        printPath(sharedState.getTargetTerminalSet());
+
         int sourceAtom = candidate.getSourceAtom();
         int targetAtom = candidate.getTargetAtom();
 
@@ -325,5 +328,14 @@ class State implements IState {
     boolean matchAtoms(IAtom sourceAtom, IAtom targetAtom) {
         AtomMatcher atomMatcher = new VFAtomMatcher(source, sourceAtom, true);
         return atomMatcher.matches(target, targetAtom);
+    }
+
+    private void printPath(int[] terminalSet) {
+        System.out.print("\nPath CHEMKIT: ");
+        for (int i : terminalSet) {
+//            System.out.print(" " + atom.getSymbol() + ", " + atom.getID() + ",");
+            System.out.print(" " + i + ",");
+        }
+        System.out.println();
     }
 }

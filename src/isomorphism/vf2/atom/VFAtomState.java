@@ -250,7 +250,7 @@ public class VFAtomState implements IAtomState {
             for (IAtom targetAtom : targetNeighbors) {
                 if (checkAtomMatrix(queryAtom, targetAtom)) {
                     VFAtomMatcher match = new VFAtomMatcher(queryAtom, targetAtom);
-                    if (candidateFeasible(match)) {
+                    if (candidateFeasible(match) && isNeighbourFeasible(match) && bondMatcher(match)) {
 //                    System.out.println("map " + map.size());
                         candidates.add(match);
                     }
@@ -303,9 +303,6 @@ public class VFAtomState implements IAtomState {
             if (targetBond == null) {
                 return false;
             }
-//            if (!matchBond(queryBond, targetBond)) {
-//                return false;
-//            }
             if (!checkBondMatrix(queryBond, targetBond)) {
                 return false;
             }
@@ -460,43 +457,6 @@ public class VFAtomState implements IAtomState {
 //        System.out.println("Map " + map);
         return symbolMap.isEmpty();
     }
-//    /**
-//     *  Checks some simple heuristics for whether the subgraph query can
-//     *  realistically be atom subgraph of the supergraph. If, for example, the
-//     *  number of nitrogen atoms in the query is larger than that of the supergraph
-//     *  it cannot be part of it.
-//     *
-//     * @param  ac1  the subgraph to be checked. 
-//     * @param  ac2  the super-graph to be tested for. Must not be an IQueryAtomContainer.
-//     * @return    true if the subgraph ac1 has atom chance to be atom subgraph of ac2
-//     * @throws org.openscience.cdk.exception.CDKException if the first molecule is an instance
-//     * of IQueryAtomContainer
-//     */
-//    private void initialize(IAtomContainer ac1, IAtomContainer ac2) {
-//
-//        IBond bond = null;
-//
-//        for (int i = 0; i < ac1.getBondCount(); i++) {
-//            bond = ac1.getBond(i);
-//            bond.setID(Integer.toString(i));
-//        }
-//        for (int i = 0; i < ac2.getBondCount(); i++) {
-//            bond = ac2.getBond(i);
-//            bond.setID(Integer.toString(i));
-//        }
-//
-//        IAtom atom = null;
-//        for (int i = 0; i < ac1.getAtomCount(); i++) {
-//            atom = ac1.getAtom(i);
-//            atom.setID(Integer.toString(i));
-//            neighbourQueryMap.put(atom, query.getConnectedAtomsList(atom));
-//        }
-//        for (int i = 0; i < ac2.getAtomCount(); i++) {
-//            atom = ac2.getAtom(i);
-//            atom.setID(Integer.toString(i));
-//            neighbourTargetMap.put(atom, target.getConnectedAtomsList(atom));
-//        }
-//    }
 
     private boolean checkAtomMatrix(IAtom queryAtom, IAtom targetAtom) {
         return atomAdjacencyMatrix[Integer.parseInt(queryAtom.getID())][Integer.parseInt(targetAtom.getID())];
