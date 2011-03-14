@@ -17,10 +17,10 @@ import org.openscience.cdk.interfaces.IBond;
  *
  * @author Asad
  */
-public class VF2 {
+public class VF2Automorphism {
 
     // The isomorphism method returns an isomorphism between two molecular
-    // graphs using the VF2 algorithm. This can be used for finding both
+    // graphs using the VF2Automorphism algorithm. This can be used for finding both
     // graph-graph isomorphisms and graph-subgraph isomorphisms. In the latter
     // case graph 'a' is the subgraph, implying a.size() < b.size(). In the case that
     // no isomorphism is found an empty mapping is returned.

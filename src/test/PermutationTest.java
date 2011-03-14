@@ -14,7 +14,7 @@ import tools.labelling.AtomContainerAtomPermutor;
 import tools.labelling.AtomContainerPrinter;
 
 import chemkit.vf2.AtomMapping;
-import chemkit.vf2.VF2;
+import chemkit.vf2.VF2Automorphism;
 
 public class PermutationTest {
 
@@ -30,7 +30,7 @@ public class PermutationTest {
     }
 
     private void testWithVF2(IAtomContainer molA, IAtomContainer molB) {
-        VF2 vf2 = new VF2();
+        VF2Automorphism vf2 = new VF2Automorphism();
         AtomMapping mapping = vf2.isomorphism(molA, molB);
         System.out.println(mapping);
     }

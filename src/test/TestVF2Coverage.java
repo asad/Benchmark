@@ -14,7 +14,7 @@ import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.smiles.SmilesParser;
 import chemkit.vf2.AtomMapping;
-import chemkit.vf2.VF2;
+import chemkit.vf2.VF2Automorphism;
 import smsd.vf2.atom.VFAtomMapper;
 
 /**
@@ -43,7 +43,7 @@ public class TestVF2Coverage {
         IAtomContainer query = sp.parseSmiles("CCOC(=O)c1[nH]c2ccc(C)cc2(c1(N))");
         IAtomContainer target = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
         if (query.getAtomCount() <= target.getAtomCount()) {
-            VF2 matcher = new VF2();
+            VF2Automorphism matcher = new VF2Automorphism();
             AtomMapping mapping = matcher.isomorphism(query, target);
             System.out.println("mapping " + mapping);
 
