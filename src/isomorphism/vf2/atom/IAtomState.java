@@ -47,6 +47,7 @@
  */
 package isomorphism.vf2.atom;
 
+import java.util.List;
 import java.util.Map;
 import org.openscience.cdk.annotations.TestClass;
 import org.openscience.cdk.interfaces.IAtom;

@@ -95,7 +95,7 @@ class State implements IState {
 
     // Returns the next candidate pair (sourceAtom, targetAtom) to be added
     // to the state. The candidate should be checked for feasibility and then added
-    // using the addPair() method.
+    // using the nextState() method.
     @Override
     public Match<Integer, Integer> nextCandidate(
             Match<Integer, Integer> lastCandidate) {
@@ -151,12 +151,9 @@ class State implements IState {
     // Adds the candidate pair (sourceAtom, targetAtom) to the state. The
     // candidate pair must be feasible to add it to the state.
     @Override
-    public void addPair(Match<Integer, Integer> candidate) {
+    public void nextState(Match<Integer, Integer> candidate) {
         size++;
         candidates = candidate;
-
-//        printPath(sharedState.getSourceTerminalSet());
-//        printPath(sharedState.getTargetTerminalSet());
 
         int sourceAtom = candidate.getSourceAtom();
         int targetAtom = candidate.getTargetAtom();
@@ -199,7 +196,7 @@ class State implements IState {
     }
 
 // Restores the shared state to how it was before adding the last
-// candidate pair. Assumes addPair() has been called on the state only once.
+// candidate pair. Assumes nextState() has been called on the state only once.
     @Override
     public void backTrack() {
 
@@ -328,14 +325,5 @@ class State implements IState {
     boolean matchAtoms(IAtom sourceAtom, IAtom targetAtom) {
         AtomMatcher atomMatcher = new VFAtomMatcher(source, sourceAtom, true);
         return atomMatcher.matches(target, targetAtom);
-    }
-
-    private void printPath(int[] terminalSet) {
-        System.out.print("\nPath CHEMKIT: ");
-        for (int i : terminalSet) {
-//            System.out.print(" " + atom.getSymbol() + ", " + atom.getID() + ",");
-            System.out.print(" " + i + ",");
-        }
-        System.out.println();
     }
 }

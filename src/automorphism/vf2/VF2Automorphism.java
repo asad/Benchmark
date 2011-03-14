@@ -19,12 +19,12 @@ import org.openscience.cdk.interfaces.IBond;
  */
 public class VF2Automorphism {
 
-    // The isomorphism method returns an isomorphism between two molecular
-    // graphs using the VF2Automorphism algorithm. This can be used for finding both
-    // graph-graph isomorphisms and graph-subgraph isomorphisms. In the latter
-    // case graph 'a' is the subgraph, implying a.size() < b.size(). In the case that
-    // no isomorphism is found an empty mapping is returned.
-    /**
+    /**    The isomorphism method returns an isomorphism between two molecular
+    graphs using the VF2Automorphism algorithm. This can be used for finding both
+    graph-graph isomorphisms and graph-subgraph isomorphisms. In the latter
+    case graph 'a' is the subgraph, implying a.size() < b.size(). In the case that
+    no isomorphism is found an empty mapping is returned.
+    
      * 
      * @param a query molecule
      * @param b target molecule
@@ -43,11 +43,12 @@ public class VF2Automorphism {
             mapFirst(state, mappings);
         }
 
-//        System.out.println("Comparison between "
-//                + a.getID() + ", "
-//                + b.getID()
-//                + " mappings size: "
-//                + mappings.size());
+        /*System.out.println("Comparison between "
+        + a.getID() + ", "
+        + b.getID()
+        + " mappings size: "
+        + mappings.size());
+         **/
 
         return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
     }
@@ -102,7 +103,7 @@ public class VF2Automorphism {
 //            System.out.println("state.isMatchFeasible(candidate) " + state.isMatchFeasible(candidate));
             if (state.isMatchFeasible(candidate)) {
                 IState nextState = state;
-                nextState.addPair(candidate);
+                nextState.nextState(candidate);
                 found = mapFirst(nextState, mappings);
                 if (found) {
                     return true;
@@ -136,7 +137,7 @@ public class VF2Automorphism {
 
         if (state.isMatchFeasible(candidate)) {
             IState nextState = state;
-            nextState.addPair(candidate);
+            nextState.nextState(candidate);
             mapAll(nextState, mappings);
             nextState.backTrack();
         }

@@ -21,8 +21,7 @@ public interface IState {
 
     /**
      * Returns true if another candidate match can be found or
-     * false otherwise.
-     *
+     * false otherwise. 
      * @param candidate 
      * @return true if another candidate mapping can be found or
      * false otherwise.
@@ -69,7 +68,7 @@ public interface IState {
      *
      * @param candidate 
      */
-    public void addPair(Match<Integer, Integer> candidate);
+    public void nextState(Match<Integer, Integer> candidate);
 
     /**
      * Returns this IState's atom map to its original condition.
