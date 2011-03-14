@@ -3,7 +3,7 @@ package loop;
 import org.openscience.cdk.interfaces.IMolecule;
 import smsd.vf2.VFMapper;
 
-public class VF2SMSD extends AbstractSubgraphIsomorphismLoop
+public class SMSDVF2 extends AbstractSubgraphIsomorphismLoop
         implements TimedSubgraphIsomorphismLoop {
 
     @Override

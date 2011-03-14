@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import loop.VF2SMSD;
+import loop.SMSDVF2;
 import loop.UITLoop;
 import loop.ChemkitVF2;
 import org.openscience.cdk.exception.CDKException;
@@ -80,7 +80,7 @@ public class SubstructureBenchMark {
             uitLoop.run(query, targets);
             out += uitLoop;
 
-            VF2SMSD smsdLoop = new VF2SMSD();
+            SMSDVF2 smsdLoop = new SMSDVF2();
             smsdLoop.run(query, targets);
             out += smsdLoop;
 
