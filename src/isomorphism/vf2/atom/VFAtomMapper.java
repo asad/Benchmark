@@ -65,11 +65,6 @@ import org.openscience.cdk.interfaces.IAtomContainer;
  */
 public class VFAtomMapper implements IAtomMapper {
 
-//    private void setIDs(IAtomContainer atomContainer) {
-//        for (int i = 0; i < atomContainer.getAtomCount(); i++) {
-//            atomContainer.getAtom(i).setID(String.valueOf(i));
-//        }
-//    }
     private IAtomContainer query;
     private List<Map<IAtom, IAtom>> maps;
 
@@ -89,7 +84,6 @@ public class VFAtomMapper implements IAtomMapper {
      * @param bondMatcher
      */
     public VFAtomMapper(IAtomContainer queryMolecule, boolean bondMatcher) {
-//        setIDs(queryMolecule);
         this.query = queryMolecule;
         this.maps = new ArrayList<Map<IAtom, IAtom>>();
     }
@@ -99,7 +93,6 @@ public class VFAtomMapper implements IAtomMapper {
      */
     @Override
     public boolean hasMap(IAtomContainer targetMolecule) {
-//        setIDs(targetMolecule);
         IAtomState state = new VFAtomState(query, targetMolecule);
         maps.clear();
         boolean flag = mapFirst(state);
@@ -110,7 +103,6 @@ public class VFAtomMapper implements IAtomMapper {
      */
     @Override
     public List<Map<IAtom, IAtom>> getMaps(IAtomContainer target) {
-//        setIDs(target);
         IAtomState state = new VFAtomState(query, target);
         maps.clear();
         mapAll(state);
@@ -124,7 +116,6 @@ public class VFAtomMapper implements IAtomMapper {
      */
     @Override
     public Map<IAtom, IAtom> getFirstMap(IAtomContainer target) {
-//        setIDs(target);
         IAtomState state = new VFAtomState(query, target);
         mapFirst(state);
         return maps.isEmpty() ? new HashMap<IAtom, IAtom>() : maps.get(0);
@@ -134,7 +125,6 @@ public class VFAtomMapper implements IAtomMapper {
      */
     @Override
     public int countMaps(IAtomContainer target) {
-//        setIDs(target);
         IAtomState state = new VFAtomState(query, target);
         maps.clear();
         mapAll(state);
