@@ -30,17 +30,17 @@ public class SubstructureBenchMark {
      * @throws Exception  
      */
     public static void main(String[] args) throws FileNotFoundException, Exception {
-//        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
-//        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
-//////        
+        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
+        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
+////        
 //        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
 //        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
 
 //        String queryFilePath = (args.length > 0) ? args[0] : "data/1Query.sdf";
 //        String targetFilePath = (args.length > 1) ? args[1] : "data/4Targets.sdf";
 //
-        String queryFilePath = (args.length > 0) ? args[0] : "data/some.sdf";
-        String targetFilePath = (args.length > 1) ? args[1] : "data/some.sdf";
+//        String queryFilePath = (args.length > 0) ? args[0] : "data/some.sdf";
+//        String targetFilePath = (args.length > 1) ? args[1] : "data/some.sdf";
 
         File qFile = new File(queryFilePath);
         File tFile = new File(targetFilePath);
