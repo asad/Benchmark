@@ -13,9 +13,9 @@ import org.openscience.cdk.exception.InvalidSmilesException;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.smiles.SmilesParser;
-import vf2.AtomMapping;
-import vf2.VF2;
-import vf2.old.VFMapper;
+import chemkit.vf2.AtomMapping;
+import chemkit.vf2.VF2;
+import smsd.vf2.VFMapper;
 
 /**
  *

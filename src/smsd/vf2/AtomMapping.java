@@ -1,4 +1,4 @@
-package vf2;
+package smsd.vf2;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.openscience.cdk.interfaces.IAtomContainer;
  * 
  * @author Asad
  */
-public class AtomMapping {
+public class AtomMapping implements Cloneable {
 
     private IAtomContainer a;
     private IAtomContainer b;
@@ -61,13 +61,32 @@ public class AtomMapping {
     public void clear() {
         mapping.clear();
     }
-    
+
     /**
-     * 
-     * mapping size
-     * @return 
+     *size of the mapping
+     * @return size of the mapping
      */
-    public int mappingCount() {
+    public int size() {
         return mapping.size();
+    }
+
+    boolean containsQueryAtom(IAtom atom) {
+        return mapping.containsKey(atom);
+    }
+
+    Iterable<IAtom> queryAtoms() {
+        return mapping.keySet();
+    }
+
+    IAtom getMappedTargetAtom(IAtom atom) {
+        return mapping.get(atom);
+    }
+
+    boolean containsTargetAtom(IAtom atom) {
+        return mapping.containsValue(atom);
+    }
+
+    Map<IAtom, IAtom> getMapping() {
+        return mapping;
     }
 }

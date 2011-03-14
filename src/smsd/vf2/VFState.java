@@ -48,7 +48,7 @@
  * THE SOFTWARE.
  *
  */
-package vf2.old;
+package smsd.vf2;
 
 import java.util.ArrayList;
 import java.util.HashMap;

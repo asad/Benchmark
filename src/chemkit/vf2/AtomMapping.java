@@ -1,4 +1,4 @@
-package vf2.old;
+package chemkit.vf2;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.openscience.cdk.interfaces.IAtomContainer;
  * 
  * @author Asad
  */
-public class AtomMapping implements Cloneable {
+public class AtomMapping {
 
     private IAtomContainer a;
     private IAtomContainer b;
@@ -61,32 +61,13 @@ public class AtomMapping implements Cloneable {
     public void clear() {
         mapping.clear();
     }
-
+    
     /**
-     *size of the mapping
-     * @return size of the mapping
+     * 
+     * mapping size
+     * @return 
      */
-    public int size() {
+    public int mappingCount() {
         return mapping.size();
-    }
-
-    boolean containsQueryAtom(IAtom atom) {
-        return mapping.containsKey(atom);
-    }
-
-    Iterable<IAtom> queryAtoms() {
-        return mapping.keySet();
-    }
-
-    IAtom getMappedTargetAtom(IAtom atom) {
-        return mapping.get(atom);
-    }
-
-    boolean containsTargetAtom(IAtom atom) {
-        return mapping.containsValue(atom);
-    }
-
-    Map<IAtom, IAtom> getMapping() {
-        return mapping;
     }
 }

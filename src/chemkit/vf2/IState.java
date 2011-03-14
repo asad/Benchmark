@@ -1,4 +1,4 @@
-package vf2;
+package chemkit.vf2;
 
 import org.openscience.cdk.annotations.TestClass;
 

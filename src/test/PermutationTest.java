@@ -13,8 +13,8 @@ import org.openscience.cdk.smiles.SmilesParser;
 import tools.labelling.AtomContainerAtomPermutor;
 import tools.labelling.AtomContainerPrinter;
 
-import vf2.AtomMapping;
-import vf2.VF2;
+import chemkit.vf2.AtomMapping;
+import chemkit.vf2.VF2;
 
 public class PermutationTest {
 

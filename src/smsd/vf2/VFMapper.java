@@ -46,7 +46,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-package vf2.old;
+package smsd.vf2;
 
 import java.util.ArrayList;
 import java.util.HashMap;

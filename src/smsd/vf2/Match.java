@@ -44,7 +44,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package vf2.old;
+package smsd.vf2;
 
 import org.openscience.cdk.interfaces.IAtom;
 
