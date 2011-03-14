@@ -191,10 +191,6 @@ public class VFAtomState implements IAtomState {
                 || map.containsTargetAtom(match.getTargetAtom())) {
             return false;
         }
-
-        if (!isNeighbourFeasible(match)) {
-            return false;
-        }
         
         if (!checkAtomMatrix(match.getQueryAtom(), match.getTargetAtom())) {
             return false;
