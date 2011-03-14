@@ -15,7 +15,7 @@ public class SMSDVF2 extends AbstractSubgraphIsomorphismLoop
     public void run(IMolecule query, IMolecule target) {
         if (query.getAtomCount() <= target.getAtomCount()) {
             VFMapper matcher = new VFMapper(query);
-            if (matcher.getFirstMap(target).isEmpty()) {
+            if (!matcher.getFirstMap(target).isEmpty()) {
                 numberOfResults++;
             }
         }

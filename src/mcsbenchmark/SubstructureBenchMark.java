@@ -35,7 +35,7 @@ public class SubstructureBenchMark {
 ////        
 //        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
 //        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
-//
+
 //        String queryFilePath = (args.length > 0) ? args[0] : "data/1Query.sdf";
 //        String targetFilePath = (args.length > 1) ? args[1] : "data/4Targets.sdf";
 //
