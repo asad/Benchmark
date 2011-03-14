@@ -1,10 +1,12 @@
 package test;
 
+import java.util.Map;
 import org.junit.Test;
 import org.openscience.cdk.Atom;
 import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.Molecule;
 import org.openscience.cdk.exception.CDKException;
+import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IMolecule;
@@ -15,6 +17,7 @@ import tools.labelling.AtomContainerPrinter;
 
 import automorphism.vf2.AtomMapping;
 import automorphism.vf2.VF2Automorphism;
+import isomorphism.vf2.atom.VFAtomMapper;
 
 public class PermutationTest {
 
@@ -29,10 +32,16 @@ public class PermutationTest {
         System.out.println("UIT thinks " + uitThinks);
     }
 
-    private void testWithVF2(IAtomContainer molA, IAtomContainer molB) {
+    private void testWithChemKitVF2(IAtomContainer molA, IAtomContainer molB) {
         VF2Automorphism vf2 = new VF2Automorphism();
         AtomMapping mapping = vf2.isomorphism(molA, molB);
         System.out.println(mapping);
+    }
+
+    private void testWithSMSDVF2(IAtomContainer molA, IAtomContainer molB) {
+        VFAtomMapper vf2 = new VFAtomMapper(molA);
+        Map<IAtom, IAtom> mapping = vf2.getFirstMap(molB);
+        System.out.println(mapping.size());
     }
 
     @Test
@@ -51,7 +60,7 @@ public class PermutationTest {
         cycB.addBond(1, 2, IBond.Order.SINGLE);
         cycB.addBond(1, 3, IBond.Order.SINGLE);
 
-        testWithVF2(cycA, cycB);
+        testWithChemKitVF2(cycA, cycB);
         testWithUIT(cycA, cycB);
     }
 
@@ -73,7 +82,7 @@ public class PermutationTest {
         cycB.addBond(1, 3, IBond.Order.SINGLE);
         cycB.addBond(2, 4, IBond.Order.SINGLE);
 
-        testWithVF2(cycA, cycB);
+        testWithChemKitVF2(cycA, cycB);
         testWithUIT(cycA, cycB);
     }
 
@@ -109,7 +118,7 @@ public class PermutationTest {
         permuteAndFindSubgraph(q, t);
 
     }
-    
+
     @Test
     public void permuteSubgraph4() throws CDKException {
         System.out.println("\n Permute Subgraph 4");
@@ -131,7 +140,8 @@ public class PermutationTest {
         System.out.println("Input Q: " + printer.toString(q));
         System.out.println("Input T: " + printer.toString(t));
 
-        testWithVF2(q, t);
+        testWithChemKitVF2(q, t);
+        testWithSMSDVF2(q, t);
         testWithUIT(t, q);
 
         AtomContainerAtomPermutor acpQuery = new AtomContainerAtomPermutor(q);
@@ -146,7 +156,8 @@ public class PermutationTest {
 //        System.out.println("Input Q: " + printer.toString(query));
 //        System.out.println("Input T: " + printer.toString(target));
 
-        testWithVF2(query, target);
+        testWithChemKitVF2(query, target);
+        testWithSMSDVF2(query, target);
         testWithUIT(target, query);
 
         System.out.println("\n Step 3");
@@ -158,7 +169,8 @@ public class PermutationTest {
 //        System.out.println("Input Q: " + printer.toString(query));
 //        System.out.println("Input T: " + printer.toString(target));
 
-        testWithVF2(query, target);
+        testWithChemKitVF2(query, target);
+        testWithSMSDVF2(query, target);
         testWithUIT(target, query);
 
         System.out.println("\n Step 4");
@@ -169,7 +181,8 @@ public class PermutationTest {
 //        System.out.println("Input Q: " + printer.toString(query));
 //        System.out.println("Input T: " + printer.toString(target));
 
-        testWithVF2(query, target);
+        testWithChemKitVF2(query, target);
+        testWithSMSDVF2(query, target);
         testWithUIT(target, query);
 
         System.out.println("\n Step 5");
@@ -180,8 +193,8 @@ public class PermutationTest {
 
 //        System.out.println("Input Q: " + printer.toString(query));
 //        System.out.println("Input T: " + printer.toString(target));
-
-        testWithVF2(query, target);
+        testWithChemKitVF2(query, target);
+        testWithSMSDVF2(query, target);
         testWithUIT(target, query);
 
         System.out.println("\n Step 6");
@@ -192,7 +205,8 @@ public class PermutationTest {
 //        System.out.println("Input Q: " + printer.toString(query));
 //        System.out.println("Input T: " + printer.toString(target));
 
-        testWithVF2(query, target);
+        testWithChemKitVF2(query, target);
+        testWithSMSDVF2(query, target);
         testWithUIT(target, query);
 
         System.out.println("\n Step 7");
@@ -203,7 +217,8 @@ public class PermutationTest {
 //        System.out.println("Input Q: " + printer.toString(query));
 //        System.out.println("Input T: " + printer.toString(target));
 
-        testWithVF2(query, target);
+        testWithChemKitVF2(query, target);
+        testWithSMSDVF2(query, target);
         testWithUIT(target, query);
 
     }
