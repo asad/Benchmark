@@ -247,7 +247,7 @@ public class VFBondState implements IBondState {
             for (IBond targetBond : targetNeighbors) {
                 if (checkBondMatrix(queryBond, targetBond)) {
                     VFBondMatcher match = new VFBondMatcher(queryBond, targetBond);
-                    if (candidateFeasible(match)) {
+                    if (isNeighbourFeasible(match) && candidateFeasible(match)) {
 //                    System.out.println("map " + map.size());
                         candidates.add(match);
                     }
