@@ -1540,12 +1540,10 @@ public class AtomContainer extends ChemObject
 
         @Override
         public int compare(IAtom o1, IAtom o2) {
-            String i1 = o1.getSymbol();
-            String i2 = o1.getSymbol();
-            if (i1.equals("H") || i2.equals("H")) {
+            if (o1.getSymbol().equals("H") || o2.getSymbol().equals("H")) {
                 return 1;
             }
-            return i1.compareTo(i2);
+            return (o1.getSymbol()).compareTo(o2.getSymbol());
         }
     }
 
