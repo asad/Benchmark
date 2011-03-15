@@ -1,11 +1,11 @@
 package mcsbenchmark;
 
+import helper.Molecule;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import loop.SMSDVF2;
 import loop.UITLoop;
@@ -30,17 +30,19 @@ public class SubstructureBenchMark {
      * @throws Exception  
      */
     public static void main(String[] args) throws FileNotFoundException, Exception {
-//        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
-//        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
+        String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
+        String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
 ////        
 //        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
 //        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
 
-        String queryFilePath = (args.length > 0) ? args[0] : "data/1Query.sdf";
-        String targetFilePath = (args.length > 1) ? args[1] : "data/4Targets.sdf";
+//        String queryFilePath = (args.length > 0) ? args[0] : "data/1Query.sdf";
+//        String targetFilePath = (args.length > 1) ? args[1] : "data/4Targets.sdf";
 //
 //        String queryFilePath = (args.length > 0) ? args[0] : "data/some.sdf";
 //        String targetFilePath = (args.length > 1) ? args[1] : "data/some.sdf";
+
+
 
         File qFile = new File(queryFilePath);
         File tFile = new File(targetFilePath);
@@ -52,7 +54,8 @@ public class SubstructureBenchMark {
         }
         List<IMolecule> queries = new ArrayList<IMolecule>();
         while (qFileReader.hasNext()) {
-            queries.add((IMolecule) qFileReader.next());
+            IMolecule mol = new Molecule((IMolecule) qFileReader.next());
+            queries.add(mol);
         }
 //        Collections.shuffle(queries);
 
@@ -61,7 +64,7 @@ public class SubstructureBenchMark {
 
         int counter = 1;
         while (tFileReader.hasNext()) {
-            IMolecule mol = (IMolecule) tFileReader.next();
+            IMolecule mol = new Molecule((IMolecule) tFileReader.next());
             mol.setID(String.valueOf(counter++));
             targets.add(mol);
         }
