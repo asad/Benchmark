@@ -63,7 +63,7 @@ import org.openscience.cdk.interfaces.IBond.Order;
  * @cdk.module data
  * @cdk.githash
  *
- * @author steinbeck
+ * @author steinbeck, Syed Asad Rahman<asad@ebi.ac.uk>
  * @cdk.created 2000-10-02
  */
 public class AtomContainer extends ChemObject
@@ -78,11 +78,6 @@ public class AtomContainer extends ChemObject
      * /serialization/spec/version.doc.html>details</a>.
      */
     private static final long serialVersionUID = 5678100348445919254L;
-    /**
-     *  Amount by which the bond and atom arrays grow when elements are added and
-     *  the arrays are not large enough for that.
-     */
-    protected int growArraySize = 10;
     /**
      *  Internal array of atoms.
      */
