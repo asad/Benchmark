@@ -142,8 +142,9 @@ public class AtomContainer extends ChemObject
             singleElectrons.add(f, container.getSingleElectron(f));
             container.getSingleElectron(f).addListener(this);
         }
-
+        /*sort atoms by atom symbol*/
         Collections.sort(atoms, new Mycompare());
+        /*generate adjacency map*/
         generateAdjacencyMap();
     }
 
