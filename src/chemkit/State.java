@@ -47,8 +47,8 @@ class State {
     int size;
     int sourceTerminalSize;
     int targetTerminalSize;
-    IAtomContainer source;
-    IAtomContainer target;
+    final IAtomContainer source;
+    final IAtomContainer target;
     Pair<Integer, Integer> lastAddition;
     SharedState sharedState;
     boolean ownSharedState;
@@ -124,7 +124,8 @@ class State {
 
         if (sourceTerminalSize > size && targetTerminalSize > size) {
             while (lastSourceAtom < sourceSize
-                    && (sharedState.sourceMapping[lastSourceAtom] != -1 || sharedState.sourceTerminalSet[lastSourceAtom] == 0)) {
+                    && (sharedState.sourceMapping[lastSourceAtom] != -1
+                    || sharedState.sourceTerminalSet[lastSourceAtom] == 0)) {
                 lastSourceAtom++;
                 lastTargetAtom = 0;
             }
@@ -138,7 +139,8 @@ class State {
 
         if (sourceTerminalSize > size && targetTerminalSize > size) {
             while (lastTargetAtom < targetSize
-                    && (sharedState.targetMapping[lastTargetAtom] != -1 || sharedState.targetTerminalSet[lastTargetAtom] == 0)) {
+                    && (sharedState.targetMapping[lastTargetAtom] != -1
+                    || sharedState.targetTerminalSet[lastTargetAtom] == 0)) {
                 lastTargetAtom++;
             }
         } else {
@@ -200,9 +202,9 @@ class State {
     // Restores the shared state to how it was before adding the last
     // candidate pair. Assumes addPair() has been called on the state only once.
     void backTrack() {
-//            if (lastAddition.getSourceAtom() == -1) {
-//                return;   // XXX hack
-//            }
+        if (isGoal()) {
+            return;
+        }
         int addedSourceAtom = lastAddition.getSourceAtom();
 
         if (sharedState.sourceTerminalSet[addedSourceAtom] == size) {

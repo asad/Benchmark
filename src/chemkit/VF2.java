@@ -87,6 +87,9 @@ public class VF2 {
                 State nextState = new State(state);
                 nextState.nextState(candidate);
                 found = mapFirst(nextState, mappings);
+                if (found) {
+                    return true;
+                }
                 nextState.backTrack();
             }
         }
