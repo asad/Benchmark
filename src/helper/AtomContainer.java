@@ -194,9 +194,10 @@ public class AtomContainer extends ChemObject
      */
     @Override
     public void setAtoms(IAtom[] atoms) {
+        int counter = this.atoms.size();
         for (int i = 0; i < atoms.length; i++) {
             IAtom atom = atoms[i];
-            this.atoms.add(i, atom);
+            this.atoms.add(counter++, atom);
             atom.addListener(this);
             atomAdjacencyMap.put(atom, new ArrayList<IAtom>());
             bondAdjacencyMap.put(atom, new ArrayList<IBond>());
@@ -214,7 +215,7 @@ public class AtomContainer extends ChemObject
      */
     @Override
     public void setBonds(IBond[] bonds) {
-        int count = 0;
+        int count = this.bonds.size();
         for (IBond bond : bonds) {
             this.bonds.add(count++, bond);
             bond.addListener(this);
