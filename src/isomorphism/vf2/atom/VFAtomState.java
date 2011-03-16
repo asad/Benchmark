@@ -115,9 +115,9 @@ public class VFAtomState implements IAtomState {
                         IBond bondT = target.getBond(j);
                         bondT.setID(Integer.toString(j));
                         if (matchBond(bondQ, bondT)) {
-                            bondCompatibilityMatrix[Integer.parseInt(bondQ.getID())][Integer.parseInt(bondT.getID())] = true;
+                            bondCompatibilityMatrix[Integer.parseInt((String) bondQ.getProperty("Index"))][Integer.parseInt((String) bondT.getProperty("Index"))] = true;
                         } else {
-                            bondCompatibilityMatrix[Integer.parseInt(bondQ.getID())][Integer.parseInt(bondT.getID())] = false;
+                            bondCompatibilityMatrix[Integer.parseInt((String) bondQ.getProperty("Index"))][Integer.parseInt((String) bondT.getProperty("Index"))] = false;
                         }
                     }
                 }
@@ -241,10 +241,10 @@ public class VFAtomState implements IAtomState {
                 VFAtomMatcher match = new VFAtomMatcher(qAtom, tAtom);
                 if (atomMatcher(match)) {
                     candidates.add(match);
-                    atomCompatibilityMatrix[Integer.parseInt(qAtom.getID())][Integer.parseInt(tAtom.getID())] = true;
+                    atomCompatibilityMatrix[Integer.parseInt((String) qAtom.getProperty("Index"))][Integer.parseInt((String) tAtom.getProperty("Index"))] = true;
                     flag = true;
                 } else {
-                    atomCompatibilityMatrix[Integer.parseInt(qAtom.getID())][Integer.parseInt(tAtom.getID())] = false;
+                    atomCompatibilityMatrix[Integer.parseInt((String) qAtom.getProperty("Index"))][Integer.parseInt((String) tAtom.getProperty("Index"))] = false;
                 }
             }
             if (!flag) {
@@ -405,7 +405,7 @@ public class VFAtomState implements IAtomState {
 
         for (int i = 0; i < ac1.getBondCount(); i++) {
             bond = ac1.getBond(i);
-            bond.setID(Integer.toString(i));
+            bond.setProperty("Index", Integer.toString(i));
             if (bond.getFlag(CDKConstants.ISAROMATIC)) {
                 ac1AromaticBondCount++;
             } else if (bond.getOrder() == IBond.Order.SINGLE) {
@@ -418,7 +418,7 @@ public class VFAtomState implements IAtomState {
         }
         for (int i = 0; i < ac2.getBondCount(); i++) {
             bond = ac2.getBond(i);
-            bond.setID(Integer.toString(i));
+            bond.setProperty("Index", Integer.toString(i));
             if (bond.getFlag(CDKConstants.ISAROMATIC)) {
                 ac2AromaticBondCount++;
             } else if (bond.getOrder() == IBond.Order.SINGLE) {
@@ -447,7 +447,7 @@ public class VFAtomState implements IAtomState {
         Map<String, Integer> symbolMap = new HashMap<String, Integer>();
         for (int i = 0; i < ac1.getAtomCount(); i++) {
             atom = ac1.getAtom(i);
-            atom.setID(Integer.toString(i));
+            atom.setProperty("Index", Integer.toString(i));
             if (symbolMap.containsKey(atom.getSymbol())) {
                 int val = symbolMap.get(atom.getSymbol()) + 1;
                 symbolMap.put(atom.getSymbol(), val);
@@ -457,7 +457,7 @@ public class VFAtomState implements IAtomState {
         }
         for (int i = 0; i < ac2.getAtomCount(); i++) {
             atom = ac2.getAtom(i);
-            atom.setID(Integer.toString(i));
+            atom.setProperty("Index", Integer.toString(i));
             if (symbolMap.containsKey(atom.getSymbol())) {
                 int val = symbolMap.get(atom.getSymbol()) - 1;
                 if (val > 0) {
@@ -472,19 +472,19 @@ public class VFAtomState implements IAtomState {
     }
 
     private boolean checkAtomMatrix(IAtom queryAtom, IAtom targetAtom) {
-        return atomCompatibilityMatrix[Integer.parseInt(queryAtom.getID())][Integer.parseInt(targetAtom.getID())];
+        return atomCompatibilityMatrix[Integer.parseInt((String) queryAtom.getProperty("Index"))][Integer.parseInt((String) targetAtom.getProperty("Index"))];
     }
 
     private boolean checkBondMatrix(IBond queryBond, IBond targetBond) {
-        return bondCompatibilityMatrix[Integer.parseInt(queryBond.getID())][Integer.parseInt(targetBond.getID())];
+        return bondCompatibilityMatrix[Integer.parseInt((String) queryBond.getProperty("Index"))][Integer.parseInt((String) targetBond.getProperty("Index"))];
     }
 
     class Mycompare implements Comparator<IAtom> {
 
         @Override
         public int compare(IAtom o1, IAtom o2) {
-            String i1 = o1.getID();
-            String i2 = o1.getID();
+            String i1 = (String) o1.getProperty("Index");
+            String i2 = (String) o1.getProperty("Index");
             return i1.compareTo(i2);
         }
     }
