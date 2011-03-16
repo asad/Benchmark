@@ -1043,6 +1043,7 @@ public class AtomContainer extends ChemObject
     public void removeAtom(int position) {
         atoms.get(position).removeListener(this);
         atoms.remove(position);
+        generateAdjacencyMap();
         notifyChanged();
     }
 
@@ -1072,6 +1073,7 @@ public class AtomContainer extends ChemObject
         IBond bond = bonds.get(position);
         bond.removeListener(this);
         bonds.remove(bond);
+        generateAdjacencyMap();
         notifyChanged();
         return bond;
     }
@@ -1271,6 +1273,7 @@ public class AtomContainer extends ChemObject
             getBond(f).removeListener(this);
         }
         bonds.clear();
+        generateAdjacencyMap();
         notifyChanged();
     }
 
@@ -1575,6 +1578,11 @@ public class AtomContainer extends ChemObject
                 }
             }
         }
+    }
+
+    private void clearAdjacencyMap() {
+        this.atomAdjacencyMap.clear();
+        this.bondAdjacencyMap.clear();
     }
 
     private void updateAdjacencyMap(IBond bond) {
