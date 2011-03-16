@@ -1,8 +1,8 @@
 package loop;
 
+import chemkit.AtomMapping;
+import chemkit.VF2;
 import org.openscience.cdk.interfaces.IMolecule;
-import automorphism.vf2.AtomMapping;
-import automorphism.vf2.VF2Automorphism;
 
 public class ChemkitVF2 extends AbstractSubgraphIsomorphismLoop
         implements TimedSubgraphIsomorphismLoop {
@@ -14,14 +14,10 @@ public class ChemkitVF2 extends AbstractSubgraphIsomorphismLoop
 
     @Override
     public void run(IMolecule query, IMolecule target) {
-        VF2Automorphism matcher = new VF2Automorphism();
+        VF2 matcher = new VF2();
         AtomMapping mapping = matcher.isomorphism(query, target);
         if (!mapping.isEmpty()) {
             numberOfResults++;
         }
-//        VFMapper matcher = new VFMapper(query);
-//        if (matcher.hasMap(target)) {
-//            numberOfResults++;
-//        }
     }
 }

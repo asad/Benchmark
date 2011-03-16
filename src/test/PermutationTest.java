@@ -15,8 +15,8 @@ import org.openscience.cdk.smiles.SmilesParser;
 import tools.labelling.AtomContainerAtomPermutor;
 import tools.labelling.AtomContainerPrinter;
 
-import automorphism.vf2.AtomMapping;
-import automorphism.vf2.VF2Automorphism;
+import chemkit.AtomMapping;
+import chemkit.VF2;
 import isomorphism.vf2.atom.VFAtomMapper;
 
 public class PermutationTest {
@@ -33,7 +33,7 @@ public class PermutationTest {
     }
 
     private void testWithChemKitVF2(IAtomContainer molA, IAtomContainer molB) {
-        VF2Automorphism vf2 = new VF2Automorphism();
+        VF2 vf2 = new VF2();
         AtomMapping mapping = vf2.isomorphism(molA, molB);
         System.out.println(mapping);
     }
