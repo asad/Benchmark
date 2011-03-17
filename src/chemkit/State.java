@@ -76,11 +76,6 @@ class State {
         this.ownSharedState = false;
     }
 
-    // Returns true if the state contains an isomorphism.
-    boolean succeeded() {
-        return size == source.getAtomCount();
-    }
-
     public void dispose() {
         if (this.ownSharedState) {
             if (this.sharedState != null) {
@@ -309,9 +304,9 @@ class State {
                 && (sourceNewNeighborCount <= targetNewNeighborCount);
     }
 
-    boolean match(State state, List<AtomMapping> mappings) {
+    boolean matchFirst(State state, List<AtomMapping> mappings) {
 //            System.out.println("Matched " + state.size + " out of " + state.source.getAtomCount());
-        if (state.succeeded()) {
+        if (state.isGoal()) {
             mappings.add(state.getMapping());
             return true;
         }
@@ -322,7 +317,7 @@ class State {
         while (!found) {
             Pair<Integer, Integer> candidate = state.nextCandidate(lastCandidate);
 
-            if (candidate.getSourceAtom() == -1) {
+            if (!state.hasNextCandidate(candidate)) {
                 return false;
             }
 
@@ -331,7 +326,43 @@ class State {
             if (state.isMatchFeasible(candidate)) {
                 State nextState = new State(state);
                 nextState.nextState(candidate);
-                found = match(nextState, mappings);
+                found = matchFirst(nextState, mappings);
+                if (found) {
+                    return true;
+                }
+                nextState.backTrack();
+            }
+        }
+
+        return found;
+    }
+
+    /* TO DO: Fix the match all results*/
+    boolean matchAll(State state, List<AtomMapping> mappings) {
+//            System.out.println("Matched " + state.size + " out of " + state.source.getAtomCount());
+        if (state.isGoal()) {
+            AtomMapping map = state.getMapping();
+            if (!hasMap(map, mappings)) {
+                mappings.add(state.getMapping());
+            }
+        }
+
+        Pair<Integer, Integer> lastCandidate = new Pair<Integer, Integer>(-1, -1);
+
+        boolean found = false;
+        while (!found) {
+            Pair<Integer, Integer> candidate = state.nextCandidate(lastCandidate);
+
+            if (!state.hasNextCandidate(candidate)) {
+                return false;
+            }
+
+            lastCandidate = candidate;
+
+            if (state.isMatchFeasible(candidate)) {
+                State nextState = new State(state);
+                nextState.nextState(candidate);
+                found = matchFirst(nextState, mappings);
                 if (found) {
                     return true;
                 }
@@ -360,5 +391,14 @@ class State {
         } else {
             return sourceAtom.getSymbol().equals(targetAtom.getSymbol()) ? true : false;
         }
+    }
+
+    private boolean hasMap(AtomMapping map, List<AtomMapping> mappings) {
+        for (AtomMapping test : mappings) {
+            if (test.equals(map)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

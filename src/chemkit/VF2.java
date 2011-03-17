@@ -33,12 +33,12 @@ public class VF2 {
     public AtomMapping isomorphism(IAtomContainer a, IAtomContainer b) {
 
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
-        if (a.getAtomCount() <= b.getAtomCount() && testIsSubgraphHeuristics(a, b)) {
+        if (!isDead(a, b) && testIsSubgraphHeuristics(a, b)) {
 //            AtomContainerPrinter printer = new AtomContainerPrinter();
 //            System.out.println(printer.toString(a));
 //            System.out.println(printer.toString(b));
             State state = new State(a, b);
-            mapFirst(state, mappings);
+            state.matchFirst(state, mappings);
         }
         return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
     }
@@ -52,85 +52,19 @@ public class VF2 {
     public List<AtomMapping> isomorphisms(IAtomContainer a, IAtomContainer b) {
 
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
-        if (a.getAtomCount() <= b.getAtomCount() && testIsSubgraphHeuristics(a, b)) {
+        if (!isDead(a, b) && testIsSubgraphHeuristics(a, b)) {
 ////            AtomContainerPrinter printer = new AtomContainerPrinter();
 ////            System.out.println(printer.toString(a));
 //            System.out.println(printer.toString(b));
             State state = new State(a, b);
-            mapAll(state, mappings);
+            state.matchAll(state, mappings);
         }
         return mappings;
     }
 
-    private boolean mapFirst(State state, List<AtomMapping> mappings) {
-
-        if (state.isDead()) {
-            return false;
-        }
-
-        if (state.isGoal()) {
-            mappings.add(state.getMapping());
-            return true;
-        }
-
-        Pair<Integer, Integer> lastCandidate = new Pair<Integer, Integer>(-1, -1);
-        boolean found = false;
-        while (!found) {
-            Pair<Integer, Integer> candidate = state.nextCandidate(lastCandidate);
-            if (!state.hasNextCandidate(candidate)) {
-                return false;
-            }
-            lastCandidate = candidate;
-//            System.out.println("state.isMatchFeasible(candidate) " + state.isMatchFeasible(candidate));
-            if (state.isMatchFeasible(candidate)) {
-                State nextState = new State(state);
-                nextState.nextState(candidate);
-                found = mapFirst(nextState, mappings);
-                if (found) {
-                    return true;
-                }
-                nextState.backTrack();
-            }
-        }
-        return found;
-    }
-
-    private void mapAll(State state, List<AtomMapping> mappings) {
-        if (state.isDead()) {
-            return;
-        }
-
-        if (state.isGoal()) {
-            AtomMapping map = state.getMapping();
-            if (!hasMap(map, mappings)) {
-                mappings.add(state.getMapping());
-            }
-        }
-
-        Pair<Integer, Integer> lastCandidate = new Pair<Integer, Integer>(-1, -1);
-        Pair<Integer, Integer> candidate = state.nextCandidate(lastCandidate);
-
-        if (!state.hasNextCandidate(candidate)) {
-            return;
-        }
-
-        lastCandidate = candidate;
-
-        if (state.isMatchFeasible(candidate)) {
-            State nextState = new State(state);
-            nextState.nextState(candidate);
-            mapAll(nextState, mappings);
-            nextState.backTrack();
-        }
-    }
-
-    private boolean hasMap(AtomMapping map, List<AtomMapping> mappings) {
-        for (AtomMapping test : mappings) {
-            if (test.equals(map)) {
-                return true;
-            }
-        }
-        return false;
+    // Returns true substructure is bigger than teh target
+    public boolean isDead(IAtomContainer a, IAtomContainer b) {
+        return a.getAtomCount() > b.getAtomCount();
     }
 
     /**
