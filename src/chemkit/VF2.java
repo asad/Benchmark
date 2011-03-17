@@ -33,7 +33,7 @@ public class VF2 {
     public AtomMapping isomorphism(IAtomContainer a, IAtomContainer b) {
 
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
-        if (testIsSubgraphHeuristics(a, b)) {
+        if (a.getAtomCount() <= b.getAtomCount() && testIsSubgraphHeuristics(a, b)) {
 //            AtomContainerPrinter printer = new AtomContainerPrinter();
 //            System.out.println(printer.toString(a));
 //            System.out.println(printer.toString(b));
@@ -52,7 +52,7 @@ public class VF2 {
     public List<AtomMapping> isomorphisms(IAtomContainer a, IAtomContainer b) {
 
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
-        if (testIsSubgraphHeuristics(a, b)) {
+        if (a.getAtomCount() <= b.getAtomCount() && testIsSubgraphHeuristics(a, b)) {
 ////            AtomContainerPrinter printer = new AtomContainerPrinter();
 ////            System.out.println(printer.toString(a));
 //            System.out.println(printer.toString(b));
@@ -64,11 +64,10 @@ public class VF2 {
 
     private boolean mapFirst(State state, List<AtomMapping> mappings) {
 
-//        System.out.println("Mapping " + state.getMapping());
-
         if (state.isDead()) {
             return false;
         }
+
         if (state.isGoal()) {
             mappings.add(state.getMapping());
             return true;
