@@ -18,7 +18,7 @@ class State {
     }
 
     public boolean isDead() {
-        return source.getAtomCount() > target.getAtomCount();
+        return (!isMatchPossible || source.getAtomCount() > target.getAtomCount());
     }
 
     public boolean hasNextCandidate(Pair<Integer, Integer> candidate) {
@@ -44,14 +44,16 @@ class State {
     IAtom targetAtom(int index) {
         return target.getAtom(index);
     }
-    int size;
-    int sourceTerminalSize;
-    int targetTerminalSize;
-    final IAtomContainer source;
-    final IAtomContainer target;
-    Pair<Integer, Integer> lastAddition;
-    SharedState sharedState;
-    boolean ownSharedState;
+    private int size;
+    private int sourceTerminalSize;
+    private int targetTerminalSize;
+    private final IAtomContainer source;
+    private final IAtomContainer target;
+    private Pair<Integer, Integer> lastAddition;
+    private SharedState sharedState;
+    private boolean ownSharedState;
+    private boolean[][] matches;
+    private boolean isMatchPossible = false;
 
     State(IAtomContainer source, IAtomContainer target) {
         this.size = 0;
@@ -59,10 +61,13 @@ class State {
         this.targetTerminalSize = 0;
         this.source = source;
         this.target = target;
+        this.ownSharedState = true;
+        this.matches = new boolean[this.source.getAtomCount()][this.target.getAtomCount()];
+        this.isMatchPossible = isFeasible();
+
         this.lastAddition = new Pair<Integer, Integer>(-1, -1);
         this.sharedState = new SharedState(source.getAtomCount(),
                 target.getAtomCount());
-        this.ownSharedState = true;
     }
 
     State(State state) {
@@ -71,9 +76,30 @@ class State {
         this.targetTerminalSize = state.targetTerminalSize;
         this.source = state.source;
         this.target = state.target;
+        this.ownSharedState = false;
+        this.matches = state.matches;
         this.lastAddition = new Pair<Integer, Integer>(-1, -1);
         this.sharedState = state.sharedState;
-        this.ownSharedState = false;
+    }
+
+    private boolean isFeasible() {
+        for (int i = 0; i < source.getAtomCount(); i++) {
+            boolean flag = false;
+            for (int j = 0; j < target.getAtomCount(); j++) {
+                if (matcher(i, j)) {
+                    this.matches[i][j] = true;
+                    flag = true;
+                } else {
+                    this.matches[i][j] = false;
+                }
+            }
+            if (!flag) {
+                this.matches = null;
+                return false;
+            }
+        }
+        return true;
+//        System.out.println("Compatibility graph " + candidates.size());
     }
 
     public void dispose() {
@@ -245,8 +271,14 @@ class State {
         List<IAtom> targetNeighbours =
                 target.getConnectedAtomsList(target.getAtom(targetAtom));
 
-        if (sourceNeighbours.size() > targetNeighbours.size()
-                && !matchAtoms(source.getAtom(sourceAtom), target.getAtom(targetAtom))) {
+//        if (sourceNeighbours.size() > targetNeighbours.size()) {
+//            return false;
+//        }
+//        if (!matchAtoms(source.getAtom(sourceAtom), target.getAtom(targetAtom))) {
+//            return false;
+//        }
+
+        if (!this.matches[sourceAtom][targetAtom]) {
             return false;
         }
 
@@ -375,6 +407,20 @@ class State {
         }
 
         return found;
+    }
+
+    private boolean matcher(int queryAtom, int targetAtom) {
+        List<IAtom> sourceNeighbours =
+                source.getConnectedAtomsList(source.getAtom(queryAtom));
+        List<IAtom> targetNeighbours =
+                target.getConnectedAtomsList(target.getAtom(targetAtom));
+        if (!matchAtoms(source.getAtom(queryAtom), target.getAtom(targetAtom))) {
+            return false;
+        }
+        if (sourceNeighbours.size() > targetNeighbours.size()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean matchBonds(IBond queryBond, IBond targetBond) {

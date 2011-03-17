@@ -38,7 +38,9 @@ public class VF2 {
 //            System.out.println(printer.toString(a));
 //            System.out.println(printer.toString(b));
             State state = new State(a, b);
-            state.matchFirst(state, mappings);
+            if (!state.isDead()) {
+                state.matchFirst(state, mappings);
+            }
         }
         return mappings.isEmpty() ? new AtomMapping(a, b) : mappings.get(0);
     }
@@ -57,7 +59,9 @@ public class VF2 {
 ////            System.out.println(printer.toString(a));
 //            System.out.println(printer.toString(b));
             State state = new State(a, b);
-            state.matchAll(state, mappings);
+            if (!state.isDead()) {
+                state.matchAll(state, mappings);
+            }
         }
         return mappings;
     }
