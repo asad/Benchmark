@@ -240,7 +240,13 @@ class State {
         int sourceAtom = candidate.getSourceAtom();
         int targetAtom = candidate.getTargetAtom();
 
-        if (!matchAtoms(source.getAtom(sourceAtom), target.getAtom(targetAtom))) {
+        List<IAtom> sourceNeighbours =
+                source.getConnectedAtomsList(source.getAtom(sourceAtom));
+        List<IAtom> targetNeighbours =
+                target.getConnectedAtomsList(target.getAtom(targetAtom));
+
+        if (sourceNeighbours.size() > targetNeighbours.size()
+                && !matchAtoms(source.getAtom(sourceAtom), target.getAtom(targetAtom))) {
             return false;
         }
 
@@ -249,8 +255,6 @@ class State {
         int sourceNewNeighborCount = 0;
         int targetNewNeighborCount = 0;
 
-        List<IAtom> sourceNeighbours =
-                source.getConnectedAtomsList(source.getAtom(sourceAtom));
         for (IAtom neighbour : sourceNeighbours) {
             int neighbourIndex = source.getAtomNumber(neighbour);
 
@@ -280,8 +284,7 @@ class State {
             }
         }
 
-        List<IAtom> targetNeighbours =
-                target.getConnectedAtomsList(target.getAtom(targetAtom));
+
         for (IAtom neighbour : targetNeighbours) {
             int neighbourIndex = target.getAtomNumber(neighbour);
             if (sharedState.targetMapping[neighbourIndex] != -1) {
@@ -339,7 +342,8 @@ class State {
 
     /* TO DO: Fix the match all results*/
     boolean matchAll(State state, List<AtomMapping> mappings) {
-//            System.out.println("Matched " + state.size + " out of " + state.source.getAtomCount());
+//        System.out.println("Matched " + state.size + " out of " + state.source.getAtomCount());
+
         if (state.isGoal()) {
             AtomMapping map = state.getMapping();
             if (!hasMap(map, mappings)) {
