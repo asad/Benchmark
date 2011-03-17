@@ -1,3 +1,44 @@
+Substructure search results from VF2 VS UIT
+-----------------------------------------------------------------
+Optimised VF2  Substructure code for the SMSD and Chemkit
+Note: SMSD and UIT are optimised for Isomorphism, 
+Note: Now ChemKit implementation is optimised for Isomorphism 
+(it can report few substructure but not all types of substructures)
+-----------------------------------------------------------------
+
+1	11	UITt	4338	UITs	0	SMSDt	1698	SMSDs	0	ChemKitVF2t	367	ChemKitVF2s	0
+11	16	UITt	6684	UITs	2	SMSDt	3781	SMSDs	2	ChemKitVF2t	1061	ChemKitVF2s	2
+6	16	UITt	9999	UITs	2	SMSDt	16018	SMSDs	2	ChemKitVF2t	6874	ChemKitVF2s	2
+9	18	UITt	10045	UITs	3	SMSDt	16203	SMSDs	3	ChemKitVF2t	2883	ChemKitVF2s	3
+12	19	UITt	12381	UITs	1	SMSDt	10790	SMSDs	1	ChemKitVF2t	903	ChemKitVF2s	1
+8	19	UITt	16306	UITs	1	SMSDt	22710	SMSDs	1	ChemKitVF2t	1810	ChemKitVF2s	1
+30	20	UITt	8821	UITs	1	SMSDt	432	SMSDs	1	ChemKitVF2t	69	ChemKitVF2s	1
+23	20	UITt	9952	UITs	1	SMSDt	395	SMSDs	1	ChemKitVF2t	77	ChemKitVF2s	1
+13	20	UITt	10748	UITs	1	SMSDt	381	SMSDs	1	ChemKitVF2t	39	ChemKitVF2s	1
+3	21	UITt	8110	UITs	1	SMSDt	1929	SMSDs	1	ChemKitVF2t	693	ChemKitVF2s	1
+25	21	UITt	8183	UITs	1	SMSDt	1346	SMSDs	1	ChemKitVF2t	368	ChemKitVF2s	1
+24	21	UITt	10282	UITs	1	SMSDt	3154	SMSDs	1	ChemKitVF2t	440	ChemKitVF2s	1
+7	21	UITt	13400	UITs	1	SMSDt	5824	SMSDs	1	ChemKitVF2t	915	ChemKitVF2s	1
+15	21	UITt	17257	UITs	1	SMSDt	13758	SMSDs	1	ChemKitVF2t	4313	ChemKitVF2s	1
+17	22	UITt	10716	UITs	1	SMSDt	3457	SMSDs	1	ChemKitVF2t	289	ChemKitVF2s	1
+5	22	UITt	11259	UITs	1	SMSDt	997	SMSDs	1	ChemKitVF2t	132	ChemKitVF2s	1
+4	22	UITt	13371	UITs	1	SMSDt	4604	SMSDs	1	ChemKitVF2t	1004	ChemKitVF2s	1
+16	22	UITt	16614	UITs	1	SMSDt	8946	SMSDs	1	ChemKitVF2t	961	ChemKitVF2s	1
+18	22	UITt	17122	UITs	1	SMSDt	471	SMSDs	1	ChemKitVF2t	384	ChemKitVF2s	1
+10	23	UITt	10650	UITs	1	SMSDt	478	SMSDs	1	ChemKitVF2t	187	ChemKitVF2s	1
+27	23	UITt	13845	UITs	1	SMSDt	8257	SMSDs	1	ChemKitVF2t	1309	ChemKitVF2s	1
+22	23	UITt	18424	UITs	1	SMSDt	7605	SMSDs	1	ChemKitVF2t	946	ChemKitVF2s	1
+31	24	UITt	14983	UITs	1	SMSDt	238	SMSDs	1	ChemKitVF2t	40	ChemKitVF2s	1
+28	24	UITt	18126	UITs	1	SMSDt	3854	SMSDs	1	ChemKitVF2t	579	ChemKitVF2s	1
+2	25	UITt	18064	UITs	1	SMSDt	529	SMSDs	1	ChemKitVF2t	144	ChemKitVF2s	1
+19	26	UITt	12623	UITs	1	SMSDt	307	SMSDs	1	ChemKitVF2t	109	ChemKitVF2s	1
+26	26	UITt	16999	UITs	1	SMSDt	168	SMSDs	1	ChemKitVF2t	31	ChemKitVF2s	1
+14	26	UITt	17026	UITs	1	SMSDt	164	SMSDs	1	ChemKitVF2t	24	ChemKitVF2s	1
+21	27	UITt	16686	UITs	1	SMSDt	1444	SMSDs	1	ChemKitVF2t	335	ChemKitVF2s	1
+20	28	UITt	36998	UITs	1	SMSDt	234	SMSDs	1	ChemKitVF2t	38	ChemKitVF2s	1
+29	32	UITt	28787	UITs	1	SMSDt	927	SMSDs	1	ChemKitVF2t	112	ChemKitVF2s	1
+
+
 Substructure search results from SMSD VS UIT
 -----------------------------------------------------------------
 Optimised Substructure VF2 code for the SMSD 
