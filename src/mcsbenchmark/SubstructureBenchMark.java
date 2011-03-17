@@ -32,7 +32,7 @@ public class SubstructureBenchMark {
     public static void main(String[] args) throws FileNotFoundException, Exception {
         String queryFilePath = (args.length > 0) ? args[0] : "data/actives.sdf";
         String targetFilePath = (args.length > 1) ? args[1] : "data/all.sdf";
-        
+
 //        String queryFilePath = (args.length > 0) ? args[0] : "data/q.sdf";
 //        String targetFilePath = (args.length > 1) ? args[1] : "data/t.sdf";
 
