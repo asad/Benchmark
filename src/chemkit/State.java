@@ -266,11 +266,6 @@ class State {
         int sourceAtom = candidate.getSourceAtom();
         int targetAtom = candidate.getTargetAtom();
 
-        List<IAtom> sourceNeighbours =
-                source.getConnectedAtomsList(source.getAtom(sourceAtom));
-        List<IAtom> targetNeighbours =
-                target.getConnectedAtomsList(target.getAtom(targetAtom));
-
 //        if (sourceNeighbours.size() > targetNeighbours.size()) {
 //            return false;
 //        }
@@ -286,6 +281,9 @@ class State {
         int targetTerminalNeighborCount = 0;
         int sourceNewNeighborCount = 0;
         int targetNewNeighborCount = 0;
+
+        List<IAtom> sourceNeighbours =
+                source.getConnectedAtomsList(source.getAtom(sourceAtom));
 
         for (IAtom neighbour : sourceNeighbours) {
             int neighbourIndex = source.getAtomNumber(neighbour);
@@ -317,6 +315,8 @@ class State {
         }
 
 
+        List<IAtom> targetNeighbours =
+                target.getConnectedAtomsList(target.getAtom(targetAtom));
         for (IAtom neighbour : targetNeighbours) {
             int neighbourIndex = target.getAtomNumber(neighbour);
             if (sharedState.targetMapping[neighbourIndex] != -1) {
