@@ -1,3 +1,49 @@
+/*
+ *
+ *
+ * Copyright (C) 2009-2011  Syed Asad Rahman <asad@ebi.ac.uk>
+ *                          Gilleain Torrance <gilleain.torrance@gmail.com>
+ *
+ * Contact: cdk-devel@lists.sourceforge.net
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ * All we ask is that proper credit is given for our work, which includes
+ * - but is not limited to - adding the above copyright notice to the beginning
+ * of your source code files, and to any copyright notice that you may distribute
+ * with programs based on this work.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ * 
+ * 
+ ** Copyright (C) 2009-2011 Kyle Lutz <kyle.r.lutz@gmail.com>
+ **
+ ** This file is part of chemkit. For more information see
+ ** <http://www.chemkit.org>.
+ **
+ ** chemkit is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU Lesser General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** chemkit is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU Lesser General Public License for more details.
+ **
+ ** You should have received a copy of the GNU Lesser General Public License
+ ** along with chemkit. If not, see <http://www.gnu.org/licenses/>.
+ **
+ ******************************************************************************/
 package chemkit;
 
 import java.util.List;
@@ -8,6 +54,14 @@ import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.isomorphism.matchers.IQueryAtom;
 import org.openscience.cdk.isomorphism.matchers.IQueryBond;
 
+/**
+ * This class finds mapping states between query and target
+ * molecules.
+ * 
+ * @cdk.module smsd
+ * @cdk.githash
+ * @author Syed Asad Rahman <asad@ebi.ac.uk>
+ */
 // The State class represents a single state in the isomorphism detection
 // algorithm. Every state uses and modifies the same SharedState object.
 class State {
