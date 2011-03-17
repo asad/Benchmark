@@ -15,7 +15,7 @@ public class ChemkitVF2 extends AbstractSubgraphIsomorphismLoop
     @Override
     public void run(IMolecule query, IMolecule target) {
         VF2 matcher = new VF2();
-        AtomMapping mapping = matcher.isomorphism(query, target);
+        AtomMapping mapping = matcher.isomorphism(query, target, true);
         if (!mapping.isEmpty()) {
             numberOfResults++;
         }

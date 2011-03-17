@@ -12,6 +12,8 @@ import org.openscience.cdk.isomorphism.matchers.IQueryBond;
 // algorithm. Every state uses and modifies the same SharedState object.
 class State {
 
+    private boolean shouldMatchBonds = true;
+
     // Returns true if the state contains an isomorphism.
     public boolean isGoal() {
         return size == source.getAtomCount();
@@ -55,7 +57,7 @@ class State {
     private boolean[][] matches;
     private boolean isMatchPossible = false;
 
-    State(IAtomContainer source, IAtomContainer target) {
+    State(IAtomContainer source, IAtomContainer target, boolean shouldMatchBonds) {
         this.size = 0;
         this.sourceTerminalSize = 0;
         this.targetTerminalSize = 0;
@@ -68,6 +70,7 @@ class State {
         this.lastAddition = new Pair<Integer, Integer>(-1, -1);
         this.sharedState = new SharedState(source.getAtomCount(),
                 target.getAtomCount());
+        this.shouldMatchBonds = shouldMatchBonds;
     }
 
     State(State state) {
@@ -80,6 +83,7 @@ class State {
         this.matches = state.matches;
         this.lastAddition = new Pair<Integer, Integer>(-1, -1);
         this.sharedState = state.sharedState;
+        this.shouldMatchBonds = state.shouldMatchBonds;
     }
 
     private boolean isFeasible() {
@@ -424,6 +428,9 @@ class State {
     }
 
     private boolean matchBonds(IBond queryBond, IBond targetBond) {
+        if (!shouldMatchBonds) {
+            return true;
+        }
         if (queryBond instanceof IQueryBond) {
             return ((IQueryBond) queryBond).matches(targetBond);
         } else if ((queryBond.getFlag(CDKConstants.ISAROMATIC) == targetBond.getFlag(CDKConstants.ISAROMATIC))

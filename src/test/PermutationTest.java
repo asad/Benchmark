@@ -34,7 +34,7 @@ public class PermutationTest {
 
     private void testWithChemKitVF2(IAtomContainer molA, IAtomContainer molB) {
         VF2 vf2 = new VF2();
-        AtomMapping mapping = vf2.isomorphism(molA, molB);
+        AtomMapping mapping = vf2.isomorphism(molA, molB, true);
         System.out.println(mapping);
     }
 

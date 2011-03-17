@@ -28,16 +28,17 @@ public class VF2 {
      * 
      * @param a query molecule
      * @param b target molecule
+     * @param shouldMatchBonds 
      * @return
      */
-    public AtomMapping isomorphism(IAtomContainer a, IAtomContainer b) {
+    public AtomMapping isomorphism(IAtomContainer a, IAtomContainer b, boolean shouldMatchBonds) {
 
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
-        if (!isDead(a, b) && testIsSubgraphHeuristics(a, b)) {
+        if (!isDead(a, b) && testIsSubgraphHeuristics(a, b, shouldMatchBonds)) {
 //            AtomContainerPrinter printer = new AtomContainerPrinter();
 //            System.out.println(printer.toString(a));
 //            System.out.println(printer.toString(b));
-            State state = new State(a, b);
+            State state = new State(a, b, shouldMatchBonds);
             if (!state.isDead()) {
                 state.matchFirst(state, mappings);
             }
@@ -49,16 +50,17 @@ public class VF2 {
      * 
      * @param a query molecule
      * @param b target molecule
+     * @param shouldMatchBonds 
      * @return
      */
-    public List<AtomMapping> isomorphisms(IAtomContainer a, IAtomContainer b) {
+    public List<AtomMapping> isomorphisms(IAtomContainer a, IAtomContainer b, boolean shouldMatchBonds) {
 
         List<AtomMapping> mappings = new ArrayList<AtomMapping>();
-        if (!isDead(a, b) && testIsSubgraphHeuristics(a, b)) {
+        if (!isDead(a, b) && testIsSubgraphHeuristics(a, b, shouldMatchBonds)) {
 ////            AtomContainerPrinter printer = new AtomContainerPrinter();
 ////            System.out.println(printer.toString(a));
 //            System.out.println(printer.toString(b));
-            State state = new State(a, b);
+            State state = new State(a, b, shouldMatchBonds);
             if (!state.isDead()) {
                 state.matchAll(state, mappings);
             }
@@ -83,7 +85,7 @@ public class VF2 {
      * @throws org.openscience.cdk.exception.CDKException if the first molecule is an instance
      * of IQueryAtomContainer
      */
-    private static boolean testIsSubgraphHeuristics(IAtomContainer ac1, IAtomContainer ac2) {
+    private static boolean testIsSubgraphHeuristics(IAtomContainer ac1, IAtomContainer ac2, boolean shouldMatchBonds) {
 
         int ac1SingleBondCount = 0;
         int ac1DoubleBondCount = 0;
@@ -96,43 +98,45 @@ public class VF2 {
 
         IBond bond = null;
 
-        for (int i = 0; i < ac1.getBondCount(); i++) {
-            bond = ac1.getBond(i);
-            if (bond.getFlag(CDKConstants.ISAROMATIC)) {
-                ac1AromaticBondCount++;
-            } else if (bond.getOrder() == IBond.Order.SINGLE) {
-                ac1SingleBondCount++;
-            } else if (bond.getOrder() == IBond.Order.DOUBLE) {
-                ac1DoubleBondCount++;
-            } else if (bond.getOrder() == IBond.Order.TRIPLE) {
-                ac1TripleBondCount++;
+        if (shouldMatchBonds) {
+            for (int i = 0; i < ac1.getBondCount(); i++) {
+                bond = ac1.getBond(i);
+                if (bond.getFlag(CDKConstants.ISAROMATIC)) {
+                    ac1AromaticBondCount++;
+                } else if (bond.getOrder() == IBond.Order.SINGLE) {
+                    ac1SingleBondCount++;
+                } else if (bond.getOrder() == IBond.Order.DOUBLE) {
+                    ac1DoubleBondCount++;
+                } else if (bond.getOrder() == IBond.Order.TRIPLE) {
+                    ac1TripleBondCount++;
+                }
             }
-        }
-        for (int i = 0; i < ac2.getBondCount(); i++) {
-            bond = ac2.getBond(i);
+            for (int i = 0; i < ac2.getBondCount(); i++) {
+                bond = ac2.getBond(i);
 
-            if (bond.getFlag(CDKConstants.ISAROMATIC)) {
-                ac2AromaticBondCount++;
-            } else if (bond.getOrder() == IBond.Order.SINGLE) {
-                ac2SingleBondCount++;
-            } else if (bond.getOrder() == IBond.Order.DOUBLE) {
-                ac2DoubleBondCount++;
-            } else if (bond.getOrder() == IBond.Order.TRIPLE) {
-                ac2TripleBondCount++;
+                if (bond.getFlag(CDKConstants.ISAROMATIC)) {
+                    ac2AromaticBondCount++;
+                } else if (bond.getOrder() == IBond.Order.SINGLE) {
+                    ac2SingleBondCount++;
+                } else if (bond.getOrder() == IBond.Order.DOUBLE) {
+                    ac2DoubleBondCount++;
+                } else if (bond.getOrder() == IBond.Order.TRIPLE) {
+                    ac2TripleBondCount++;
+                }
             }
-        }
 
-        if (ac2SingleBondCount < ac1SingleBondCount) {
-            return false;
-        }
-        if (ac2AromaticBondCount < ac1AromaticBondCount) {
-            return false;
-        }
-        if (ac2DoubleBondCount < ac1DoubleBondCount) {
-            return false;
-        }
-        if (ac2TripleBondCount < ac1TripleBondCount) {
-            return false;
+            if (ac2SingleBondCount < ac1SingleBondCount) {
+                return false;
+            }
+            if (ac2AromaticBondCount < ac1AromaticBondCount) {
+                return false;
+            }
+            if (ac2DoubleBondCount < ac1DoubleBondCount) {
+                return false;
+            }
+            if (ac2TripleBondCount < ac1TripleBondCount) {
+                return false;
+            }
         }
 
         IAtom atom = null;

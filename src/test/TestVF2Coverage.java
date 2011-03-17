@@ -44,7 +44,7 @@ public class TestVF2Coverage {
         IAtomContainer target = sp.parseSmiles("CCOC(=O)c2[nH]c1ccc(C)cc1c2(N=CN(CC)CC)");
         if (query.getAtomCount() <= target.getAtomCount()) {
             VF2 matcher = new VF2();
-            AtomMapping mapping = matcher.isomorphism(query, target);
+            AtomMapping mapping = matcher.isomorphism(query, target, true);
             System.out.println("mapping " + mapping);
 
 //            List<AtomMapping> mapping = matcher.isomorphisms(query, target);
