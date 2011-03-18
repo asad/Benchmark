@@ -110,4 +110,21 @@ public class AtomMapping {
     public void clear() {
         mapping.clear();
     }
+    
+    
+    /*
+     * get mapping size
+     * @return
+     */
+    public int getSize() {
+        return mapping.isEmpty() ? 0 : mapping.size();
+    }
+
+    /**
+     * get atom-atom mappings
+     * @return
+     */
+    public Map<IAtom, IAtom> getAtomMapping() {
+        return mapping;
+    }
 }
