@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.vecmath.Vector2d;
 
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -22,6 +23,8 @@ import org.openscience.cdk.interfaces.IMolecule;
 import org.openscience.cdk.interfaces.IMoleculeSet;
 import org.openscience.cdk.nonotify.NoNotificationChemObjectBuilder;
 import org.openscience.reactionblast.graphics.direct.DirectMoleculeDrawer;
+import org.openscience.reactionblast.graphics.direct.Params;
+import org.openscience.reactionblast.graphics.direct.layout.SingleMoleculeLayout;
 import org.openscience.reactionblast.graphics.direct.layout.ZoomToFitGridLayout;
 
 public class ImageGenerator {
@@ -48,9 +51,12 @@ public class ImageGenerator {
     public final static int SUB_IMAGE_WIDTH = 300;
     public final static int SUB_IMAGE_HEIGHT = 300;
     private List<QueryTargetPair> queryTargetPairs;
+    private Params params;
+    
 
     public ImageGenerator() {
         queryTargetPairs = new ArrayList<QueryTargetPair>();
+        params = new Params();
     }
 
     public void addImages(
@@ -58,6 +64,10 @@ public class ImageGenerator {
             IAtomContainer target,
             String label,
             Map<Integer, Integer> maxac) throws IOException, Exception {
+        
+        SingleMoleculeLayout msl=new SingleMoleculeLayout(params);
+        msl.layout(query, new Vector2d(0.0, 0.0));
+        msl.layout(target, new Vector2d(0.0, 0.0));
 
         IMolecule cloneOfQuery = (IMolecule) (new org.openscience.cdk.Molecule(query).clone());
         IMolecule cloneOfTarget = (IMolecule) (new org.openscience.cdk.Molecule(target).clone());
