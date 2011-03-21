@@ -37,7 +37,7 @@ import java.io.Serializable;
  *
  * @cdk.keyword molecule
  */
-public class Molecule extends AtomContainer implements Serializable, IMolecule, Cloneable {
+public class GraphMolecule extends GraphAtomContainer implements Serializable, IMolecule, Cloneable {
 
     /**
      * Determines if a de-serialized object is compatible with this class.
@@ -50,19 +50,19 @@ public class Molecule extends AtomContainer implements Serializable, IMolecule, 
     private static final long serialVersionUID = 6451193093484831136L;
 
     /**
-     *  Creates an Molecule without Atoms and Bonds.
+     *  Creates an GraphMolecule without Atoms and Bonds.
      */
-    public Molecule() {
+    public GraphMolecule() {
         super();
     }
 
     /**
-     * Constructs a Molecule with
-     * a shallow copy of the atoms and bonds of an AtomContainer.
+     * Constructs a GraphMolecule with
+     * a shallow copy of the atoms and bonds of an GraphAtomContainer.
      *
-     * @param   container  An Molecule to copy the atoms and bonds from
+     * @param   container  An GraphMolecule to copy the atoms and bonds from
      */
-    public Molecule(IAtomContainer container) {
+    public GraphMolecule(IAtomContainer container) {
         super(container);
     }
 

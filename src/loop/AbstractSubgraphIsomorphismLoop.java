@@ -1,6 +1,6 @@
 package loop;
 
-import gui.ImageGenerator;
+import helper.ImageGenerator;
 
 import java.io.File;
 import java.text.NumberFormat;

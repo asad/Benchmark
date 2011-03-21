@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.openscience.cdk.Atom;
+import org.openscience.cdk.Bond;
 import org.openscience.cdk.ChemObject;
 import org.openscience.cdk.SingleElectron;
 
@@ -52,7 +53,7 @@ import org.openscience.cdk.interfaces.IBond.Order;
  *  Base class for all chemical objects that maintain a list of Atoms and
  *  ElectronContainers. <p>
  *
- *  Looping over all Bonds in the AtomContainer is typically done like: <pre>
+ *  Looping over all Bonds in the GraphAtomContainer is typically done like: <pre>
  * Iterator iter = atomContainer.bonds();
  * while (iter.hasNext()) {
  *   IBond aBond = (IBond) iter.next();
@@ -66,7 +67,7 @@ import org.openscience.cdk.interfaces.IBond.Order;
  * @author steinbeck, Syed Asad Rahman<asad@ebi.ac.uk>
  * @cdk.created 2000-10-02
  */
-public class AtomContainer extends ChemObject
+public class GraphAtomContainer extends ChemObject
         implements IAtomContainer, IChemObjectListener, Serializable, Cloneable {
 
     /**
@@ -108,13 +109,13 @@ public class AtomContainer extends ChemObject
     private Map<IAtom, List<IBond>> bondAdjacencyMap;
 
     /**
-     * Constructs an AtomContainer with a copy of the atoms and electronContainers
-     * of another AtomContainer (A shallow copy, i.e., with the same objects as in
-     * the original AtomContainer).
+     * Constructs an GraphAtomContainer with a copy of the atoms and electronContainers
+     * of another GraphAtomContainer (A shallow copy, i.e., with the same objects as in
+     * the original GraphAtomContainer).
      *
-     * @param  container  An AtomContainer to copy the atoms and electronContainers from
+     * @param  container  An GraphAtomContainer to copy the atoms and electronContainers from
      */
-    public AtomContainer(IAtomContainer container) {
+    public GraphAtomContainer(IAtomContainer container) {
         this.atoms = new ArrayList<IAtom>();
         this.bonds = new ArrayList<IBond>();
         this.lonePairs = new ArrayList<ILonePair>();
@@ -149,12 +150,12 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Constructs an empty AtomContainer that will contain a certain number of
+     *  Constructs an empty GraphAtomContainer that will contain a certain number of
      *  atoms and electronContainers. It will set the starting array lengths to the
      *  defined values, but will not create any Atom or ElectronContainer's.
      *
      */
-    public AtomContainer() {
+    public GraphAtomContainer() {
         this.atoms = new ArrayList<IAtom>();
         this.bonds = new ArrayList<IBond>();
         this.lonePairs = new ArrayList<ILonePair>();
@@ -183,9 +184,9 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Sets the array of atoms of this AtomContainer.
+     *  Sets the array of atoms of this GraphAtomContainer.
      *
-     *@param  atoms  The array of atoms to be assigned to this AtomContainer
+     *@param  atoms  The array of atoms to be assigned to this GraphAtomContainer
      *@see           #getAtom
      */
     @Override
@@ -203,10 +204,10 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     * Sets the array of bonds of this AtomContainer.
+     * Sets the array of bonds of this GraphAtomContainer.
      *
      * @param  bonds  The array of bonds to be assigned to
-     *                             this AtomContainer
+     *                             this GraphAtomContainer
      * @see  #getBond
      */
     @Override
@@ -525,7 +526,7 @@ public class AtomContainer extends ChemObject
      */
     @Override
     public int getAtomNumber(IAtom atom) {
-        for (int f = 0; f < getAtomCount(); f++) {
+        for (int f = 0; f < atoms.size(); f++) {
             if (atoms.get(f).equals(atom)) {
                 return f;
             }
@@ -668,7 +669,7 @@ public class AtomContainer extends ChemObject
     /**
      *  Returns the number of the single electrons in this container,
      *
-     *@return       The number of SingleElectron objects of this AtomContainer
+     *@return       The number of SingleElectron objects of this GraphAtomContainer
      */
     @Override
     public int getSingleElectronCount() {
@@ -711,7 +712,7 @@ public class AtomContainer extends ChemObject
      * Returns the array of lone pairs connected to an atom.
      *
      * @param atom The atom for which to get lone pairs
-     * @return The array of LonePairs of this AtomContainer
+     * @return The array of LonePairs of this GraphAtomContainer
      * @see #getElectronContainer
      * @see #electronContainers()
      * @see #getBond
@@ -731,7 +732,7 @@ public class AtomContainer extends ChemObject
      *  Returns an array of all SingleElectron connected to the given atom.
      *
      *@param  atom  The atom on which the single electron is located
-     *@return       The array of SingleElectron of this AtomContainer
+     *@return       The array of SingleElectron of this GraphAtomContainer
      */
     @Override
     public List<ISingleElectron> getConnectedSingleElectronsList(IAtom atom) {
@@ -825,7 +826,7 @@ public class AtomContainer extends ChemObject
      *  Returns the sum of the SingleElectron for a given Atom.
      *
      *@param  atom  The atom on which the single electron is located
-     *@return       The array of SingleElectron of this AtomContainer
+     *@return       The array of SingleElectron of this GraphAtomContainer
      */
     @Override
     public int getConnectedSingleElectronsCount(IAtom atom) {
@@ -867,7 +868,7 @@ public class AtomContainer extends ChemObject
 
     /**
      * Returns the maximum bond order that this atom currently has in the context
-     * of this AtomContainer.
+     * of this GraphAtomContainer.
      *
      * @param  atom  The atom
      * @return       The maximum bond order that this atom currently has
@@ -886,7 +887,7 @@ public class AtomContainer extends ChemObject
 
     /**
      *  Returns the minimum bond order that this atom currently has in the context
-     *  of this AtomContainer.
+     *  of this GraphAtomContainer.
      *
      *@param  atom  The atom
      *@return       The minimum bond order that this atom currently has
@@ -953,7 +954,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Adds a Bond to this AtomContainer.
+     *  Adds a Bond to this GraphAtomContainer.
      *
      *@param  bond  The bond to added to this container
      */
@@ -969,7 +970,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Adds a lone pair to this AtomContainer.
+     *  Adds a lone pair to this GraphAtomContainer.
      *
      *@param  lonePair  The LonePair to added to this container
      */
@@ -981,7 +982,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Adds a single electron to this AtomContainer.
+     *  Adds a single electron to this GraphAtomContainer.
      *
      *@param  singleElectron  The SingleElectron to added to this container
      */
@@ -993,7 +994,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Adds a ElectronContainer to this AtomContainer.
+     *  Adds a ElectronContainer to this GraphAtomContainer.
      *
      *@param  electronContainer  The ElectronContainer to added to this container
      */
@@ -1033,7 +1034,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Removes the atom at the given position from the AtomContainer. Note that
+     *  Removes the atom at the given position from the GraphAtomContainer. Note that
      *  the electronContainers are unaffected: you also have to take care of
      *  removing all electronContainers to this atom from the container manually.
      *
@@ -1048,7 +1049,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Removes the given atom from the AtomContainer. Note that the
+     *  Removes the given atom from the GraphAtomContainer. Note that the
      *  electronContainers are unaffected: you also have to take care of removing
      *  all electronContainers to this atom from the container.
      *
@@ -1063,7 +1064,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Removes the bond at the given position from the AtomContainer.
+     *  Removes the bond at the given position from the GraphAtomContainer.
      *
      *@param  position  The position of the bond to be removed.
      * @return removed bond 
@@ -1110,7 +1111,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Removes the lone pair at the given position from the AtomContainer.
+     *  Removes the lone pair at the given position from the GraphAtomContainer.
      *
      *@param  position  The position of the LonePair to be removed.
      */
@@ -1124,7 +1125,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Removes the lone pair from the AtomContainer.
+     *  Removes the lone pair from the GraphAtomContainer.
      *
      *@param  lonePair  The LonePair to be removed.
      */
@@ -1137,7 +1138,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Removes the single electron at the given position from the AtomContainer.
+     *  Removes the single electron at the given position from the GraphAtomContainer.
      *
      *@param  position  The position of the SingleElectron to be removed.
      */
@@ -1151,7 +1152,7 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  Removes the single electron from the AtomContainer.
+     *  Removes the single electron from the GraphAtomContainer.
      *
      *@param  singleElectron  The SingleElectron to be removed.
      */
@@ -1203,7 +1204,7 @@ public class AtomContainer extends ChemObject
 
     /**
      *  Removes the given atom and all connected electronContainers from the
-     *  AtomContainer.
+     *  GraphAtomContainer.
      *
      *@param  atom  The atom to be removed
      */
@@ -1244,6 +1245,10 @@ public class AtomContainer extends ChemObject
             getAtom(f).removeListener(this);
         }
         atoms.clear();
+        atoms = new ArrayList<IAtom>();
+        clearAdjacencyMap();
+        this.atomAdjacencyMap = new HashMap<IAtom, List<IAtom>>();
+        this.bondAdjacencyMap = new HashMap<IAtom, List<IBond>>();
         notifyChanged();
     }
 
@@ -1261,6 +1266,8 @@ public class AtomContainer extends ChemObject
         }
         lonePairs.clear();
         singleElectrons.clear();
+        lonePairs = new ArrayList<ILonePair>();
+        singleElectrons = new ArrayList<ISingleElectron>();
         notifyChanged();
     }
 
@@ -1273,6 +1280,11 @@ public class AtomContainer extends ChemObject
             getBond(f).removeListener(this);
         }
         bonds.clear();
+        bonds = new ArrayList<IBond>();
+
+        this.atomAdjacencyMap = new HashMap<IAtom, List<IAtom>>();
+        this.bondAdjacencyMap = new HashMap<IAtom, List<IBond>>();
+
         generateAdjacencyMap();
         notifyChanged();
     }
@@ -1341,10 +1353,10 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  True, if the AtomContainer contains the given atom object.
+     *  True, if the GraphAtomContainer contains the given atom object.
      *
-     *@param  atom  the atom this AtomContainer is searched for
-     *@return       true if the AtomContainer contains the given atom object
+     *@param  atom  the atom this GraphAtomContainer is searched for
+     *@return       true if the GraphAtomContainer contains the given atom object
      */
     @Override
     public boolean contains(IAtom atom) {
@@ -1357,10 +1369,10 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  True, if the AtomContainer contains the given bond object.
+     *  True, if the GraphAtomContainer contains the given bond object.
      *
-     *@param  bond  the bond this AtomContainer is searched for
-     *@return       true if the AtomContainer contains the given bond object
+     *@param  bond  the bond this GraphAtomContainer is searched for
+     *@return       true if the GraphAtomContainer contains the given bond object
      */
     @Override
     public boolean contains(IBond bond) {
@@ -1373,10 +1385,10 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  True, if the AtomContainer contains the given LonePair object.
+     *  True, if the GraphAtomContainer contains the given LonePair object.
      *
-     *@param  lonePair  the LonePair this AtomContainer is searched for
-     *@return           true if the AtomContainer contains the given LonePair object
+     *@param  lonePair  the LonePair this GraphAtomContainer is searched for
+     *@return           true if the GraphAtomContainer contains the given LonePair object
      */
     @Override
     public boolean contains(ILonePair lonePair) {
@@ -1389,10 +1401,10 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  True, if the AtomContainer contains the given SingleElectron object.
+     *  True, if the GraphAtomContainer contains the given SingleElectron object.
      *
-     *@param  singleElectron  the LonePair this AtomContainer is searched for
-     *@return           true if the AtomContainer contains the given LonePair object
+     *@param  singleElectron  the LonePair this GraphAtomContainer is searched for
+     *@return           true if the GraphAtomContainer contains the given LonePair object
      */
     @Override
     public boolean contains(ISingleElectron singleElectron) {
@@ -1405,10 +1417,10 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     *  True, if the AtomContainer contains the given ElectronContainer object.
+     *  True, if the GraphAtomContainer contains the given ElectronContainer object.
      *
      *@param  electronContainer ElectronContainer that is searched for
-     *@return                   true if the AtomContainer contains the given bond object
+     *@return                   true if the GraphAtomContainer contains the given bond object
      */
     @Override
     public boolean contains(IElectronContainer electronContainer) {
@@ -1471,55 +1483,77 @@ public class AtomContainer extends ChemObject
     }
 
     /**
-     * Clones this AtomContainer object and its content.
+     * Clones this GraphAtomContainer object and its content.
      *
      * @return    The cloned object
      * @see       #shallowCopy
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-        IAtom[] newAtoms;
-        IAtomContainer clone = (IAtomContainer) super.clone();
-        // start from scratch
-        clone.removeAllElements();
-        // clone all atoms
-        for (int f = 0; f < getAtomCount(); f++) {
-            clone.addAtom((Atom) getAtom(f).clone());
+//
+        /**
+         * Stores Adjacency Map with List of neighbors
+         */
+        Map<IAtom, List<IAtom>> cloneAtomAdjacencyMap = new HashMap<IAtom, List<IAtom>>();
+        /**
+         * Stores Adjacency Map with List of neighbors
+         */
+        Map<IAtom, List<IBond>> cloneBondAdjacencyMap = new HashMap<IAtom, List<IBond>>();
+
+        List<IBond> clonedBondsT = new ArrayList<IBond>();
+
+        IAtomContainer clone = new GraphAtomContainer();
+        
+//        System.out.println("super Atom count " + this.getAtomCount());
+        Map<IAtom, IAtom> mapAtomCloneMap = new HashMap<IAtom, IAtom>();
+
+        for (int f = 0; f < this.atoms.size(); f++) {
+            IAtom cloneAtm = (Atom) this.atoms.get(f).clone();
+            clone.addAtom(cloneAtm);
+            cloneAtomAdjacencyMap.put(cloneAtm, new ArrayList<IAtom>());
+            cloneBondAdjacencyMap.put(cloneAtm, new ArrayList<IBond>());
+            mapAtomCloneMap.put(this.atoms.get(f), cloneAtm);
         }
-        // clone bonds
-        IBond bond;
-        IBond newBond;
-        for (int i = 0; i < getBondCount(); ++i) {
-            bond = getBond(i);
-            newBond = (IBond) bond.clone();
-            newAtoms = new IAtom[bond.getAtomCount()];
+
+        for (int f = 0; f < this.bonds.size(); f++) {
+            IBond bond = this.bonds.get(f);
+            IBond cloneBond = (Bond) bond.clone();
+            IAtom[] newAtoms = new IAtom[bond.getAtomCount()];
             for (int j = 0; j < bond.getAtomCount(); ++j) {
-                newAtoms[j] = clone.getAtom(getAtomNumber(bond.getAtom(j)));
+                newAtoms[j] = mapAtomCloneMap.get(bond.getAtom(j));
             }
-            newBond.setAtoms(newAtoms);
-            clone.addBond(newBond);
+            cloneBond.setAtoms(newAtoms);
+            clone.addBond(cloneBond);
+            clonedBondsT.add(cloneBond);
         }
+
         ILonePair lp;
         ILonePair newLp;
-        for (int i = 0; i < getLonePairCount(); ++i) {
-            lp = getLonePair(i);
+        for (int i = 0; i < this.lonePairs.size(); ++i) {
+            lp = this.lonePairs.get(i);
             newLp = (ILonePair) lp.clone();
             if (lp.getAtom() != null) {
-                newLp.setAtom(clone.getAtom(getAtomNumber(lp.getAtom())));
+                IAtom atom = lp.getAtom();
+                newLp.setAtom(mapAtomCloneMap.get(atom));
             }
             clone.addLonePair(newLp);
         }
         ISingleElectron se;
         ISingleElectron newSe;
-        for (int i = 0; i < getSingleElectronCount(); ++i) {
-            se = getSingleElectron(i);
+        for (int i = 0; i < this.singleElectrons.size(); ++i) {
+            se = this.singleElectrons.get(i);
             newSe = (ISingleElectron) se.clone();
             if (se.getAtom() != null) {
-                newSe.setAtom(clone.getAtom(getAtomNumber(se.getAtom())));
+                IAtom atom = se.getAtom();
+                newSe.setAtom(mapAtomCloneMap.get(atom));
             }
             clone.addSingleElectron(newSe);
         }
+
+        generateAdjacencyMap(cloneAtomAdjacencyMap, cloneBondAdjacencyMap, clonedBondsT);
+        clonedBondsT.clear();
         return clone;
+
     }
 
     /**
@@ -1547,37 +1581,41 @@ public class AtomContainer extends ChemObject
         }
     }
 
-    private void generateAdjacencyMap() {
-        for (IBond bond : bonds) {
+    private void generateAdjacencyMap(Map<IAtom, List<IAtom>> newAtomAdjacencyMap, Map<IAtom, List<IBond>> newBondAdjacencyMap, List<IBond> newBonds) {
+        for (IBond bond : newBonds) {
             IAtom atom0 = bond.getAtom(0);
             IAtom atom1 = bond.getAtom(1);
 
-            if (this.atomAdjacencyMap.containsKey(atom0)) {
-                List<IAtom> l = this.atomAdjacencyMap.get(atom0);
+            if (newAtomAdjacencyMap.containsKey(atom0)) {
+                List<IAtom> l = newAtomAdjacencyMap.get(atom0);
                 if (!l.contains(atom1)) {
                     l.add(atom1);
-                    this.atomAdjacencyMap.put(atom0, l);
+                    newAtomAdjacencyMap.put(atom0, l);
                 }
-                List<IBond> l1 = this.bondAdjacencyMap.get(atom0);
+                List<IBond> l1 = newBondAdjacencyMap.get(atom0);
                 if (!l1.contains(bond)) {
                     l1.add(bond);
-                    this.bondAdjacencyMap.put(atom0, l1);
+                    newBondAdjacencyMap.put(atom0, l1);
                 }
             }
 
-            if (this.atomAdjacencyMap.containsKey(atom1)) {
-                List<IAtom> l = this.atomAdjacencyMap.get(atom1);
+            if (newAtomAdjacencyMap.containsKey(atom1)) {
+                List<IAtom> l = newAtomAdjacencyMap.get(atom1);
                 if (!l.contains(atom0)) {
                     l.add(atom0);
-                    this.atomAdjacencyMap.put(atom1, l);
+                    newAtomAdjacencyMap.put(atom1, l);
                 }
-                List<IBond> l1 = this.bondAdjacencyMap.get(atom1);
+                List<IBond> l1 = newBondAdjacencyMap.get(atom1);
                 if (!l1.contains(bond)) {
                     l1.add(bond);
-                    this.bondAdjacencyMap.put(atom1, l1);
+                    newBondAdjacencyMap.put(atom1, l1);
                 }
             }
         }
+    }
+
+    private void generateAdjacencyMap() {
+        generateAdjacencyMap(this.atomAdjacencyMap, this.bondAdjacencyMap, this.bonds);
     }
 
     private void clearAdjacencyMap() {

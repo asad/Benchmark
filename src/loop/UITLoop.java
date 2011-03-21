@@ -16,10 +16,10 @@ public class UITLoop extends AbstractSubgraphIsomorphismLoop
     }
 
     @Override
-    public void run(IMolecule query, IMolecule target) {
+    public void run(IMolecule query, IMolecule targets) {
         try {
-            List bondMapping = UniversalIsomorphismTester.getSubgraphMap(target, query);
-            List<RMap> sol = UniversalIsomorphismTester.makeAtomsMapOfBondsMap(bondMapping, target, query);
+            List bondMapping = UniversalIsomorphismTester.getSubgraphMap(targets, query);
+            List<RMap> sol = UniversalIsomorphismTester.makeAtomsMapOfBondsMap(bondMapping, targets, query);
             if (sol != null && sol.size() > 0) {
                 numberOfResults++;
             }

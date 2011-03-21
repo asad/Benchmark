@@ -8,9 +8,8 @@ import org.openscience.cdk.interfaces.IPseudoAtom;
 import org.openscience.cdk.smiles.SmilesGenerator;
 import org.openscience.cdk.tools.ILoggingTool;
 import org.openscience.cdk.tools.LoggingToolFactory;
-import org.openscience.smsd.labelling.CanonicalLabellingAdaptor;
-import org.openscience.smsd.labelling.ICanonicalMoleculeLabeller;
-import org.openscience.smsd.tools.ExtAtomContainerManipulator;
+import tools.labelling.CanonicalLabellingAdaptor;
+import tools.labelling.ICanonicalMoleculeLabeller;
 
 /**
  *
@@ -29,9 +28,10 @@ public class CDKSMILES {
      * 
      * @param mol
      * @return
+     * @throws CloneNotSupportedException  
      */
-    public String getCanonicalSMILES(IAtomContainer mol) {
-        this.molecule = ExtAtomContainerManipulator.makeDeepCopy(mol);
+    public String getCanonicalSMILES(IAtomContainer mol) throws CloneNotSupportedException {
+        this.molecule = (GraphAtomContainer) mol.clone();
         if (!isPseudoAtoms()) {
             ICanonicalMoleculeLabeller canonLabeler = new CanonicalLabellingAdaptor();
             molecule = canonLabeler.getCanonicalMolecule(molecule);

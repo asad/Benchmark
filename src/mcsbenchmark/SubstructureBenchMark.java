@@ -1,6 +1,6 @@
 package mcsbenchmark;
 
-import helper.Molecule;
+import helper.GraphMolecule;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -54,7 +54,7 @@ public class SubstructureBenchMark {
         }
         List<IMolecule> queries = new ArrayList<IMolecule>();
         while (qFileReader.hasNext()) {
-            IMolecule mol = new Molecule((IMolecule) qFileReader.next());
+            IMolecule mol = new GraphMolecule((IMolecule) qFileReader.next());
             queries.add(mol);
         }
 //        Collections.shuffle(queries);
@@ -64,7 +64,7 @@ public class SubstructureBenchMark {
 
         int counter = 1;
         while (tFileReader.hasNext()) {
-            IMolecule mol = new Molecule((IMolecule) tFileReader.next());
+            IMolecule mol = new GraphMolecule((IMolecule) tFileReader.next());
             mol.setID(String.valueOf(counter++));
             targets.add(mol);
         }

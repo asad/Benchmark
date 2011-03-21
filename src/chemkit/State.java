@@ -54,6 +54,7 @@ import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.isomorphism.matchers.IQueryAtom;
 import org.openscience.cdk.isomorphism.matchers.IQueryBond;
 
+
 /**
  * This class finds mapping states between query and target
  * molecules.
