@@ -8,8 +8,7 @@
  */
 package test;
 
-import chemkit.AtomMapping;
-import chemkit.VF2;
+import chemkit.substructure.VF2;
 import helper.ImageGenerator;
 import helper.GraphMolecule;
 import java.io.File;
@@ -31,7 +30,8 @@ import org.openscience.cdk.io.IChemObjectReader;
 import org.openscience.cdk.io.MDLReader;
 import org.openscience.cdk.layout.StructureDiagramGenerator;
 import org.openscience.cdk.smiles.SmilesParser;
-import org.openscience.smsd.tools.ExtAtomContainerManipulator;
+import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
+import smsd.AtomAtomMapping;
 
 /**
  *
@@ -52,7 +52,7 @@ public class TestVF2 {
             MDLReader reader = new MDLReader(new FileReader(molFile), IChemObjectReader.Mode.RELAXED);
             IMolecule molObject = (IMolecule) reader.read(new GraphMolecule());
             reader.close();
-            ExtAtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(molObject);
+            AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(molObject);
             CDKHueckelAromaticityDetector.detectAromaticity(molObject);
             sdg.setMolecule(new GraphMolecule(molObject));
             sdg.generateCoordinates();
@@ -205,29 +205,33 @@ public class TestVF2 {
         printMolecules(mol1);
         printMolecules(mol2);
 
-        VF2 comparison = new VF2();
-        List<AtomMapping> maps = comparison.isomorphisms(mol1, mol2, true);
+        VF2 comparison = new VF2(true, true);
+        comparison.set(mol1, mol2);
 
-        System.out.println("Mol1 Size. " + mol1.getAtomCount());
-        System.out.println("Mol2 Size. " + mol2.getAtomCount());
-        System.out.println("Map Size. " + maps.size());
+        if (comparison.isSubgraph()) {
+            List<AtomAtomMapping> maps = comparison.getAllAtomMapping();
 
-        printMapping(maps, mol1, mol2);
-        generateImage("Subgraph", mol1, mol2, maps);
+            System.out.println("Mol1 Size. " + mol1.getAtomCount());
+            System.out.println("Mol2 Size. " + mol2.getAtomCount());
+            System.out.println("Map Size. " + maps.size());
+
+            printMapping(maps, mol1, mol2);
+            generateImage("Subgraph", mol1, mol2, maps);
+        }
     }
 
-    private static void printMapping(List<AtomMapping> comparison, IAtomContainer query, IAtomContainer target) {
+    private static void printMapping(List<AtomAtomMapping> comparison, IAtomContainer query, IAtomContainer target) {
 
         int count_final_sol = 0;
         System.out.println("Output of the final Mappings: ");
         try {
             if (!comparison.isEmpty()) {
 
-                for (AtomMapping final_solution : comparison) {
-                    int final_solution_size = final_solution.getSize();
+                for (AtomAtomMapping final_solution : comparison) {
+                    int final_solution_size = final_solution.getCount();
                     System.out.println("Final mapping Nr. " + ++count_final_sol + " Size:" + final_solution_size);
 
-                    for (Map.Entry<IAtom, IAtom> mapping : final_solution.getAtomMapping().entrySet()) {
+                    for (Map.Entry<IAtom, IAtom> mapping : final_solution.getMappings().entrySet()) {
                         System.out.println(query.getAtomNumber(mapping.getKey()) + " " + target.getAtomNumber(mapping.getValue()));
 
                         IAtom eAtom = mapping.getKey();
@@ -246,7 +250,7 @@ public class TestVF2 {
         }
     }
 
-    private static void generateImage(String outPutFileName, IAtomContainer query, IAtomContainer target, List<AtomMapping> smsd) throws Exception {
+    private static void generateImage(String outPutFileName, IAtomContainer query, IAtomContainer target, List<AtomAtomMapping> smsd) throws Exception {
 
         imageGenerator = new ImageGenerator();
 
@@ -256,12 +260,12 @@ public class TestVF2 {
         nf.setMinimumFractionDigits(2);
         System.out.println("Output of the final Mappings: ");
         int counter = 1;
-        for (AtomMapping mapping : smsd) {
+        for (AtomAtomMapping mapping : smsd) {
             String tanimoto = "0";
             String stereo = "NA";
             String label = "Scores [" + "Tanimoto: " + tanimoto + ", Stereo: " + stereo + "]";
-            Map<Integer, Integer> map = new HashMap<Integer, Integer>(mapping.getSize());
-            for (Map.Entry<IAtom, IAtom> mapAtom : mapping.getAtomMapping().entrySet()) {
+            Map<Integer, Integer> map = new HashMap<Integer, Integer>(mapping.getCount());
+            for (Map.Entry<IAtom, IAtom> mapAtom : mapping.getMappings().entrySet()) {
 //                System.out.println(query.getAtomNumber(mapAtom.getKey()) + " " + target.getAtomNumber(mapAtom.getValue()));
                 map.put(query.getAtomNumber(mapAtom.getKey()), target.getAtomNumber(mapAtom.getValue()));
             }

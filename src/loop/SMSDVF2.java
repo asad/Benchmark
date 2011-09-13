@@ -1,7 +1,7 @@
 package loop;
 
-import isomorphism.vf2.atom.VFAtomMapper;
 import org.openscience.cdk.interfaces.IMolecule;
+import smsd.algorithm.vflib.VF2Sub;
 
 public class SMSDVF2 extends AbstractSubgraphIsomorphismLoop
         implements TimedSubgraphIsomorphismLoop {
@@ -11,17 +11,19 @@ public class SMSDVF2 extends AbstractSubgraphIsomorphismLoop
         return "SMSD";
     }
 
+    /**
+     * 
+     * @param query
+     * @param target
+     */
     @Override
     public void run(IMolecule query, IMolecule target) {
         if (query.getAtomCount() <= target.getAtomCount()) {
-            VFAtomMapper matcher = new VFAtomMapper(query);
-            if (!matcher.getFirstMap(target).isEmpty()) {
+            VF2Sub matcher = new VF2Sub(true, true);
+            matcher.set(query, target);
+            if (!matcher.isSubgraph()) {
                 numberOfResults++;
             }
-//            VFBondMapper matcher = new VFBondMapper(query);
-//            if (!matcher.getFirstMap(target).isEmpty()) {
-//                numberOfResults++;
-//            }
         }
     }
 }

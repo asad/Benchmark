@@ -1,12 +1,10 @@
 package test;
 
-import java.util.Map;
 import org.junit.Test;
 import org.openscience.cdk.Atom;
 import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.Molecule;
 import org.openscience.cdk.exception.CDKException;
-import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IMolecule;
@@ -15,9 +13,8 @@ import org.openscience.cdk.smiles.SmilesParser;
 import tools.labelling.AtomContainerAtomPermutor;
 import tools.labelling.AtomContainerPrinter;
 
-import chemkit.AtomMapping;
-import chemkit.VF2;
-import isomorphism.vf2.atom.VFAtomMapper;
+import chemkit.substructure.VF2;
+import smsd.algorithm.vflib.VF2Sub;
 
 public class PermutationTest {
 
@@ -27,21 +24,30 @@ public class PermutationTest {
         }
     }
 
+    @Test
     private void testWithUIT(IAtomContainer molA, IAtomContainer molB) throws CDKException {
         boolean uitThinks = UniversalIsomorphismTester.isSubgraph(molA, molB);
         System.out.println("UIT thinks " + uitThinks);
     }
 
-    private void testWithChemKitVF2(IAtomContainer molA, IAtomContainer molB) {
-        VF2 vf2 = new VF2();
-        AtomMapping mapping = vf2.isomorphism(molA, molB, true);
-        System.out.println(mapping);
+    @Test
+    private void testWithChemKitVF2(IAtomContainer molA, IAtomContainer molB) throws CDKException {
+        VF2 vf2 = new VF2(true, true);
+        vf2.set(molA, molB);
+
+        if (vf2.isSubgraph()) {
+            System.out.println(vf2.getAllAtomMapping().toArray());
+        }
     }
 
+    @Test
     private void testWithSMSDVF2(IAtomContainer molA, IAtomContainer molB) {
-        VFAtomMapper vf2 = new VFAtomMapper(molA);
-        Map<IAtom, IAtom> mapping = vf2.getFirstMap(molB);
-        System.out.println(mapping.size());
+        VF2Sub vf2 = new VF2Sub(true, true);
+        vf2.set(molA, molB);
+
+        if (vf2.isSubgraph()) {
+            System.out.println(vf2.getAllAtomMapping().toArray());
+        }
     }
 
     @Test
@@ -130,6 +136,7 @@ public class PermutationTest {
 
     }
 
+    @Test
     private void permuteAndFindSubgraph(IAtomContainer q, IAtomContainer t) throws CDKException {
 
         AtomContainerPrinter printer = new AtomContainerPrinter();
