@@ -11,14 +11,21 @@ public class MCSPlusLoop extends AbstractSubgraphIsomorphismLoop implements
         return "MCSPlus";
     }
 
+    /**
+     * 
+     * @param query
+     * @param target
+     */
     @Override
     public void run(IMolecule query, IMolecule target) {
-        MCSPlusHandler mcsplus = new MCSPlusHandler();
-        mcsplus.set(query, target);
-        mcsplus.searchMCS(true, true);
+        if (query.getAtomCount() <= target.getAtomCount()) {
+            MCSPlusHandler mcsplus = new MCSPlusHandler();
+            mcsplus.set(query, target);
+            mcsplus.searchMCS(true, true);
 
-        if (mcsplus.getFirstMapping() != null && !mcsplus.getFirstMapping().isEmpty()) {
-            numberOfResults++;
+            if (mcsplus.getFirstMapping() != null && !mcsplus.getFirstMapping().isEmpty()) {
+                numberOfResults++;
+            }
         }
     }
 }

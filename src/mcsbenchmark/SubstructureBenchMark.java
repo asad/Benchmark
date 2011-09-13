@@ -1,11 +1,13 @@
 package mcsbenchmark;
 
+import helper.AtomContainerComparator;
 import helper.GraphMolecule;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import loop.SMSDVF2;
 import loop.UITLoop;
@@ -49,6 +51,9 @@ public class SubstructureBenchMark {
 
         IIteratingChemObjectReader qFileReader = read(qFile);
 
+        AtomContainerComparator acc = new AtomContainerComparator();
+
+
         if (qFileReader == null) {
             throw new IOException("Unknown input type ");
         }
@@ -68,6 +73,10 @@ public class SubstructureBenchMark {
             mol.setID(String.valueOf(counter++));
             targets.add(mol);
         }
+
+        Collections.sort(targets, acc);
+        Collections.sort(queries, acc);
+
         counter = 1;
         System.out.println(
                 "number of queries " + queries.size()
@@ -95,7 +104,11 @@ public class SubstructureBenchMark {
 //            mcsPlusLoop.run(query, targets);
 //            out += mcsPlusLoop;
 
+//            if (uitLoop.getResultCount() - vfLibLoop.getResultCount() != 0) {
+//                System.out.println(out);
+//            }
             System.out.println(out);
+
             counter++;
         }
 
@@ -105,7 +118,7 @@ public class SubstructureBenchMark {
      *
      * @param file
      * @return
-     * @throws FileNotFoundException
+     * @throws Exception  
      */
     public static IIteratingChemObjectReader read(File file) throws Exception {
         FileReader in = new FileReader(file);
@@ -119,7 +132,6 @@ public class SubstructureBenchMark {
         } else {
             throw new Exception("Unrecognised filetype " + path);
         }
-
     }
 
     private static IAtomContainer configure(IAtomContainer atomContainer) throws CDKException {

@@ -125,6 +125,9 @@ public class VF2Sub extends AbstractSubGraph implements IMCSBase {
      */
     @Override
     public boolean isSubgraph() {
+        if (!testIsSubgraphHeuristics(source, target, isBondMatchFlag())) {
+            return false;
+        }
         setTimeManager(new TimeManager());
 
         if (isMatchRings()) {
@@ -151,6 +154,7 @@ public class VF2Sub extends AbstractSubGraph implements IMCSBase {
             allAtomMCS.addAll(allAtomMCSCopy);
             allMCS.addAll(allMCSCopy);
         }
+
         return !allAtomMCS.isEmpty()
                 && allAtomMCS.iterator().next().getCount()
                 == getReactantMol().getAtomCount() ? true : false;

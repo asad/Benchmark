@@ -21,14 +21,16 @@ public class ChemkitVF2 extends AbstractSubgraphIsomorphismLoop
      */
     @Override
     public void run(IMolecule query, IMolecule target) {
-        VF2 matcher = new VF2(true, true);
-        try {
-            matcher.set(query, target);
-        } catch (CDKException ex) {
-            Logger.getLogger(ChemkitVF2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (!matcher.isSubgraph()) {
-            numberOfResults++;
+        if (query.getAtomCount() <= target.getAtomCount()) {
+            VF2 matcher = new VF2(true, false);
+            try {
+                matcher.set(query, target);
+            } catch (CDKException ex) {
+                Logger.getLogger(ChemkitVF2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (matcher.isSubgraph()) {
+                numberOfResults++;
+            }
         }
     }
 }
